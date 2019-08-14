@@ -1,0 +1,27 @@
+{
+  "name": "babykick-api",
+  "version": "1.0.0",
+  "description": "create api with Nodejs and MongoDB",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chompusama/babykick-api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chompusama/babykick-api/issues"
+  },
+  "homepage": "https://github.com/chompusama/babykick-api#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.6.8",
+    "morgan": "^1.9.1",
+    "nodemon": "^1.19.1"
+  }
+}
