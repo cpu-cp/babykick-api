@@ -44,7 +44,7 @@ router.post("/:lineId", (req, res, next) => {
                     currentDay = docs.history[weekLength - 1].days.length.toString();
                     var _did = currentWeek + 'w' + currentDay + 'd';
                     console.log(_did);
-                    onDay(_did);
+                    onDay(_did.toString());
                 }
                 else {                                      // if time out, start new day or week
                     if (docs.history[weekLength - 1].days.length == 7) {        // start new week
@@ -58,8 +58,9 @@ router.post("/:lineId", (req, res, next) => {
                 }
             }
         }
-    });
 
+
+    });
 
     function newWeek(week, day, _did) {
         userCollection.updateOne({ line_id: lineId }, {
@@ -76,14 +77,8 @@ router.post("/:lineId", (req, res, next) => {
             }
         }, function (err, docs) {
             console.log(err)
-        }).then(result => {
-            console.log('add first week successful!');
-        }).catch(err => {
-            console.log(err);
-            res.status(500).json({
-                error: err
-            });
         });
+        console.log('add first week successful!');
     }
 
     function newDay(currentWeek, day) {
@@ -98,31 +93,33 @@ router.post("/:lineId", (req, res, next) => {
             }
         }, function (err, docs) {
             console.log(err)
-        }).then(result => {
-            console.log('add first day successful!');
-        }).catch(err => {
-            console.log(err);
-            res.status(500).json({
-                error: err
-            });
         });
+        console.log('add first day successful!');
     }
 
+
     function onDay(_did) {
-        userCollection.updateOne({ _did: _did }, {
-            $inc: {                                           // increase merchant's balance
-                ctt_amount: 1
+        userCollection.findOneAndUpdate({ line_id: lineId, 'history.days._did': _did }, {
+            $inc: {
+                'history.$[].days.$[d].ctt_amount': 1
             }
-        }, function (err, docs) {
-            console.log(err)
-        }).then(result => {
-            console.log('increase amount successful!');
-        }).catch(err => {
-            console.log(err);
-            res.status(500).json({
-                error: err
+        }, {
+            arrayFilters: [
+                { 'd._did': _did }
+            ]
+            }, function (err, docs) {
+                console.log(err);
+                if (docs == null || docs == "") {
+                    res.json({
+                        message: '_did id is invalid',
+                    });
+                }
+                else {
+                    // res.json(docs)
+                    console.log(docs)
+                }
             });
-        });
+
     }
 
 });
