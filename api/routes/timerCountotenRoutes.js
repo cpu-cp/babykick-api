@@ -9,23 +9,19 @@
   body required
   line_id : string
   time: string
-
-  next day
-  next week
-
  */
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 // const line = require('@line/bot-sdk');
 
-const User = require("../models/userModel");
+const dataCollection = require("../models/dataModel");
 
 router.post("/", (req, res, next) => {
 
     id = new mongoose.Types.ObjectId()
     
-    User.updateOne({ line_id: req.body.line_id }, {
+    dataCollection.updateOne({ line_id: req.body.line_id }, {
         $set: {
             timer_status: "running",
         }
@@ -38,7 +34,7 @@ router.post("/", (req, res, next) => {
     // when 12 hr already
     setTimeout(function () {
         
-        User.updateOne({ line_id: req.body.line_id }, {
+        dataCollection.updateOne({ line_id: req.body.line_id }, {
             $set: {
                 timer_status: "time out"
             }
@@ -66,7 +62,7 @@ router.post("/", (req, res, next) => {
         //         console.log(err);
         //     });
 
-    }, 43200000);   // 43200000 = 12 hr
+    }, 42000);   // 43200000 = 12 hr
 
 });
 

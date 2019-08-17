@@ -8,6 +8,7 @@ const mongoose = require("mongoose");
 const registerRoutes = require("./api/routes/registerRoutes");
 const timerCounttotenRoutes = require("./api/routes/timerCountotenRoutes");
 const counttotenRoutes = require("./api/routes/countotenRoutes");
+const cttRountes = require("./api/routes/cttRoutes");
 
 // connect to mongoDB
 // username is chompusama and password is digio
@@ -43,6 +44,7 @@ app.use((req, res, next) => {
 app.use("/register", registerRoutes);
 app.use("/counttoten", counttotenRoutes);
 app.use("/timer/counttoten", timerCounttotenRoutes);
+app.use("/v2/counttoten", cttRountes);
 
 app.use((req, res, next) => {
   const error = new Error("Not found");

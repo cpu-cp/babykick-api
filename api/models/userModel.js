@@ -77,22 +77,3 @@ var userSchema = new Schema({
 });
 
 module.exports = mongoose.model('User', userSchema);
-
-
-// var weekHistorySchema = new Schema({
-//     type_transfer:{
-//         type: String
-//     },
-//     customer_transfer: {
-//         type: String
-//     },
-//     business_transfer: {
-//         type: String
-//     },
-//     date_time: {
-//         type: String
-//     },
-//     amount_transfer: {
-//         type: Number
-//     },
-// });

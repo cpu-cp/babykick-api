@@ -1,0 +1,38 @@
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+
+
+var countingSchema = new Schema({
+    week: { type: String },
+    day: { type: String },
+    _did: { type: String },
+    date: {type: String},
+    count_type: { type: String },
+    ctt_amount: { type: Number },
+    sdk_morning: { type: Number },
+    sdk_lunch: { type: Number },
+    sdk_dinner: { type: Number },
+    status: { type: String }
+});
+
+/////////  Main schema //////////
+var dataSchema = new Schema({
+    _id: {
+        type: String
+    },
+    line_id: {
+        type: String
+    },
+    mom_age: {
+        type: String
+    },
+    ges_age_week: {
+        type: Number
+    },
+    timer_status: {
+        type: String
+    },
+    counting: [countingSchema],
+});
+
+module.exports = mongoose.model('Data', dataSchema);

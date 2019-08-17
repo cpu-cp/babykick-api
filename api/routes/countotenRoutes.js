@@ -91,9 +91,11 @@ router.post("/:lineId", (req, res, next) => {
                     ctt_amount: 1
                 }
             }
-        }, function (err, docs) {
-            console.log(err)
-        });
+        }, {
+                arrayFilters: [{ 'd._did': _did }]
+            }, function (err, docs) {
+                console.log(err)
+            });
         console.log('add first day successful!');
     }
 
@@ -104,9 +106,9 @@ router.post("/:lineId", (req, res, next) => {
                 'history.$[].days.$[d].ctt_amount': 1
             }
         }, {
-            arrayFilters: [
-                { 'd._did': _did }
-            ]
+                arrayFilters: [
+                    { 'd._did': _did }
+                ]
             }, function (err, docs) {
                 console.log(err);
                 if (docs == null || docs == "") {
