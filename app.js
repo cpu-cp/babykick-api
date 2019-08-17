@@ -7,8 +7,10 @@ const mongoose = require("mongoose");
 // define path of each routes
 const registerRoutes = require("./api/routes/registerRoutes");
 const timerCounttotenRoutes = require("./api/routes/timerCountotenRoutes");
+const timerSadovskyRoutes = require("./api/routes/timerSadovskyRoutes");
 const counttotenRoutes = require("./api/routes/countotenRoutes");
 const cttRountes = require("./api/routes/cttRoutes");
+const sadovskyRoutes = require("./api/routes/sadovskyRoutes");
 
 // connect to mongoDB
 // username is chompusama and password is digio
@@ -43,7 +45,9 @@ app.use((req, res, next) => {
 // Routes which should handle requests
 app.use("/register", registerRoutes);
 app.use("/counttoten", counttotenRoutes);
+app.use("/sadovsky", sadovskyRoutes);
 app.use("/timer/counttoten", timerCounttotenRoutes);
+app.use("/timer/sadovsky", timerSadovskyRoutes);
 app.use("/v2/counttoten", cttRountes);
 
 app.use((req, res, next) => {

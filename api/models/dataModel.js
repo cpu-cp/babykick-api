@@ -9,9 +9,9 @@ var countingSchema = new Schema({
     date: {type: String},
     count_type: { type: String },
     ctt_amount: { type: Number },
-    sdk_morning: { type: Number },
-    sdk_lunch: { type: Number },
-    sdk_dinner: { type: Number },
+    sdk_first_meal: { type: Number },
+    sdk_second_meal: { type: Number },
+    sdk_third_meal: { type: Number },
     status: { type: String }
 });
 
