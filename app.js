@@ -8,11 +8,11 @@ const mongoose = require("mongoose");
 const registerRoutes = require("./api/routes/registerRoutes");
 const timerCounttotenRoutes = require("./api/routes/timerCountotenRoutes");
 const timerSadovskyRoutes = require("./api/routes/timerSadovskyRoutes");
-const counttotenRoutes = require("./api/routes/countotenRoutes");
 const cttIncreasingRountes = require("./api/routes/cttIncreasingRoutes");
 const cttDecreasingRoutes = require("./api/routes/cttDecreasingRoutes");
 const sdkIncreasingRoutes = require("./api/routes/sdkIncreasingRoutes");
 const sdkDecreasingRoutes = require("./api/routes/sdkDecreasingRoutes");
+const welocomeRoutes = require("./api/routes/welcomeRoutes");
 
 
 // connect to mongoDB
@@ -21,9 +21,17 @@ mongoose.connect(
   "mongodb+srv://chompusama:digio@wallet-nfc-elwkn.mongodb.net/babykick?retryWrites=true&w=majority",
   function(err) {
         if(err) throw err;
-        console.log('Connect to MongoDB successful!')
+        console.log('Connect to MongoDB Atlas successful!')
     }
 );
+
+// mongoose.connect(
+//   "mongodb://atbb.space:27017/babyKickDB",
+//   function(err) {
+//         if(err) throw err;
+//         console.log('Connect to MongoDB successful!')
+//     }
+// );
 
 app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -53,6 +61,7 @@ app.use("/ctt/increasing", cttIncreasingRountes);
 app.use("/ctt/decreasing", cttDecreasingRoutes);
 app.use("/sdk/increasing", sdkIncreasingRoutes);
 app.use("/sdk/decreasing", sdkDecreasingRoutes);
+app.use("/welcome", welocomeRoutes);
 
 app.use((req, res, next) => {
   const error = new Error("Not found");
