@@ -1,9 +1,12 @@
 /**
- *  POST : for sadovsky : Decreasing
- *       : check current week/day
+ *  POST
+ *  for sadovsky : Decreasing
+ *  check current week/day
  * 
  *  Created by CPU on 18/8/19
  */
+
+ // 1hr
 
 const express = require("express");
 const router = express.Router();

@@ -8,11 +8,12 @@ const mongoose = require("mongoose");
 const registerRoutes = require("./api/routes/registerRoutes");
 const timerCounttotenRoutes = require("./api/routes/timerCountotenRoutes");
 const timerSadovskyRoutes = require("./api/routes/timerSadovskyRoutes");
+const timerWeekRoutes = require("./api/routes/timerWeekRoutes");
 const cttIncreasingRountes = require("./api/routes/cttIncreasingRoutes");
 const cttDecreasingRoutes = require("./api/routes/cttDecreasingRoutes");
 const sdkIncreasingRoutes = require("./api/routes/sdkIncreasingRoutes");
 const sdkDecreasingRoutes = require("./api/routes/sdkDecreasingRoutes");
-const welocomeRoutes = require("./api/routes/welcomeRoutes");
+const welcomeRoutes = require("./api/routes/welcomeRoutes");
 
 
 // connect to mongoDB
@@ -29,7 +30,7 @@ mongoose.connect(
 //   "mongodb://atbb.space:27017/babyKickDB",
 //   function(err) {
 //         if(err) throw err;
-//         console.log('Connect to MongoDB successful!')
+//         console.log('Connect to MongoDB atb successful!')
 //     }
 // );
 
@@ -51,17 +52,19 @@ app.use((req, res, next) => {
 });
 
 // makes 'uploads' folder to public
-// app.use(express.static('uploads'))
+app.use(express.static('uploads'))
 
 // Routes which should handle requests
 app.use("/register", registerRoutes);
 app.use("/timer/counttoten", timerCounttotenRoutes);
 app.use("/timer/sadovsky", timerSadovskyRoutes);
+app.use("/timer/week", timerWeekRoutes);
 app.use("/ctt/increasing", cttIncreasingRountes);
 app.use("/ctt/decreasing", cttDecreasingRoutes);
 app.use("/sdk/increasing", sdkIncreasingRoutes);
 app.use("/sdk/decreasing", sdkDecreasingRoutes);
-app.use("/welcome", welocomeRoutes);
+app.use("/welcome", welcomeRoutes);
+
 
 app.use((req, res, next) => {
   const error = new Error("Not found");
