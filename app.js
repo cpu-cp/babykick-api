@@ -14,6 +14,7 @@ const cttDecreasingRoutes = require("./api/routes/cttDecreasingRoutes");
 const sdkIncreasingRoutes = require("./api/routes/sdkIncreasingRoutes");
 const sdkDecreasingRoutes = require("./api/routes/sdkDecreasingRoutes");
 const welcomeRoutes = require("./api/routes/welcomeRoutes");
+const getDataRoutes = require("./api/routes/getDataRoutes");
 
 
 // connect to mongoDB
@@ -64,6 +65,7 @@ app.use("/ctt/decreasing", cttDecreasingRoutes);
 app.use("/sdk/increasing", sdkIncreasingRoutes);
 app.use("/sdk/decreasing", sdkDecreasingRoutes);
 app.use("/welcome", welcomeRoutes);
+app.use("/getdata", getDataRoutes);
 
 
 app.use((req, res, next) => {
