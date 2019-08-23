@@ -19,21 +19,21 @@ const getDataRoutes = require("./api/routes/getDataRoutes");
 
 // connect to mongoDB
 // username is chompusama and password is digio
-mongoose.connect(
-  "mongodb+srv://chompusama:digio@wallet-nfc-elwkn.mongodb.net/babykick?retryWrites=true&w=majority",
-  function(err) {
-        if(err) throw err;
-        console.log('Connect to MongoDB Atlas successful!')
-    }
-);
-
 // mongoose.connect(
-//   "mongodb://atbb.space:27017/babyKickDB",
+//   "mongodb+srv://chompusama:digio@wallet-nfc-elwkn.mongodb.net/babykick?retryWrites=true&w=majority",
 //   function(err) {
 //         if(err) throw err;
-//         console.log('Connect to MongoDB atb successful!')
+//         console.log('Connect to MongoDB Atlas successful!')
 //     }
 // );
+
+mongoose.connect(
+  "mongodb://atbb.space:27017/babyKickDB",
+  function(err) {
+        if(err) throw err;
+        console.log('Connect to MongoDB atb successful!')
+    }
+);
 
 app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
