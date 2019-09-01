@@ -1,30 +1,31 @@
 /**
- *  POST : for save new account to mongoDB 
- *       : completed
+ *  @POST
+ *  for save new account to mongoDB 
+ *  completed
+ * 
+ *
+ *  body required
+ *     line_id: string
+ *     mom_age: string
+ *     ges_age_week: number
  *   
  * 
  *  Created by CPU on 7/8/19
  */
 
-/**
- * body required
- *     line_id: string
- *     mom_age: string
- *     ges_age_week: number
- */
-
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
+const line = require('@line/bot-sdk');
 
 const dataCollection = require('../models/dataModel');
 
 router.post("/", (req, res, next) => {
 
-    var line = req.body.line_id;
+    var lineId = req.body.line_id;
 
     //check input 
-    if (line == null || line == "") {
+    if (lineId == null || lineId == "") {
         res.json({
             status: 'error',
             message: 'please enter line id'
@@ -37,8 +38,8 @@ router.post("/", (req, res, next) => {
         line_id: req.body.line_id,
         mom_age: req.body.mom_age,
         ges_age_week: req.body.ges_age_week,
+        timer_status: 'timeout'
     });
-
 
     //check if account is exists
     dataCollection.find({ line_id: req.body.line_id }, function (err, docs) {
@@ -59,43 +60,42 @@ router.post("/", (req, res, next) => {
                     });
                 });
 
-            //push message to line 
-            const client = new line.Client({
-                channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
-            });
 
-            const message = [
-                {
-                    type: 'text',
-                    text: 'สวัสดีค่ะคุณแม่ \nตอนนี้ลูกน้อยของคุณแม่มีอายุ ' + req.body.ges_age_week + ' สัปดาห์'
-                },
-                {
-                    type: 'text',
-                    text: 'คุณแม่สามารถอ่านคำแนะนำในแต่ละไตรมาส ได้ดังนี้'
-                },
-                {
-                    type: 'text',
-                    text: '\u2763\ufe0f ไตรมาสที่ 1 (1-12 สัปดาห์) เรื่องที่คุณแม่จะต้องให้ความสำคัญ คือ' + '\n' + 
-                    '\t \ud83c\udf71 โภชนาการ' + '\n' + 
-                    '\t \ud83c\udfc3\u200d\u2640\ufe0f การออกกำลังกาย' + '\n' + 
-                    '\t \ud83d\udc6b เพศสัมพันธ์ขณะตั้งครรภ์' + '\n' + 
-                    '\t \ud83d\ude45\u200d\u2640\ufe0f สัญญาณอันตราย'
-                },
-            ];
+            /** push message to line 
+             *  คอมเม้นไว้ก่อน
+            */
 
-            client.pushMessage(req.body.line_id, message)
-                .then(() => {
-                    console.log('push message done!')
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
+            // const client = new line.Client({
+            //     channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
+            // });
+            
+            // const message = [
+            //     {
+            //         type: 'text',
+            //         text: 'สวัสดีค่ะคุณแม่ \nตอนนี้ลูกน้อยของคุณแม่มีอายุ ' + req.body.ges_age_week + ' สัปดาห์'
+            //     },
+            //     {
+            //         type: 'text',
+            //         text: 'คุณแม่สามารถอ่านคำแนะนำในแต่ละไตรมาส ได้ดังนี้'
+            //     },
+            //     {
+            //         type: 'text',
+            //         text: '\u2763\ufe0f ไตรมาสที่ 1 (1-12 สัปดาห์) เรื่องที่คุณแม่จะต้องให้ความสำคัญ คือ\n\ud83c\udf71 โภชนาการ\n\ud83c\udfc3\u200d\u2640\ufe0f การออกกำลังกาย\n\ud83d\udc6b เพศสัมพันธ์ขณะตั้งครรภ์\n\ud83d\ude45\u200d\u2640\ufe0f สัญญาณอันตราย'
+            //     },
+            // ];
 
+            // client.pushMessage(req.body.line_id, message)
+            //     .then(() => {
+            //         console.log('push message done!')
+            //     })
+            //     .catch((err) => {
+            //         console.log(err);
+            //     });
         }
         else {
             res.json({
                 status: '0000',
-                message: 'this line id already exists',
+                message: 'this line id already exists'
             });
         }
 

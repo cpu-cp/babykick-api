@@ -60,7 +60,7 @@ router.post("/", (req, res, next) => {
 
                     dataCollection.updateOne({ line_id: req.body.line_id, 'counting._did': _did }, {
                         $set: {
-                            timer_status: "time out",
+                            timer_status: "timeout",
                             'counting.$.status': 'close'
                         }
                     }, function (err, docs) {

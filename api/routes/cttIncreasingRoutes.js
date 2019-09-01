@@ -1,7 +1,13 @@
 /**
- *  POST : for count to ten
- *       : check current week/day
- *       : pretty complete
+ *  POST
+ *  for count to ten
+ *  check current week/day
+ *  pretty complete
+ * 
+ * 
+ *  params required
+ *      /ctt/increasing/<line_id>
+ * 
  * 
  *  Created by CPU on 11/8/19
  */
@@ -35,7 +41,7 @@ router.post("/:lineId", (req, res, next) => {
             var currentWeek;
             var _did = (week.toString() + 'w' + day.toString() + 'd').toString();
 
-            if (countingLength == 0) {             // if there isn't history data
+            if (countingLength == 0) {                      // if there isn't history data
                 console.log('empty array');
                 newDay('1', '1', 'date');
             }

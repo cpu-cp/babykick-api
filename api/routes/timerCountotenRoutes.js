@@ -1,75 +1,79 @@
 /**
- *  POST : timer for count to ten in 12 hr 
+ *  @POST
+ *  timer for count to ten in 12 hr
+ *  push message to line when time out
+ * 
+ * 
+ *  body required
+ *      line_id : string
+ *      time: string
  *   
  * 
  *  Created by CPU on 13/8/19
  */
 
-/*
-  body required
-  line_id : string
-  time: string
- */
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
-// const line = require('@line/bot-sdk');
+const line = require('@line/bot-sdk');
 
 const dataCollection = require("../models/dataModel");
 
 router.post("/", (req, res, next) => {
 
-    id = new mongoose.Types.ObjectId()
-    
     dataCollection.updateOne({ line_id: req.body.line_id }, {
         $set: {
             timer_status: "running",
-        }
+        },
+
     }, function (err, docs) {
         console.log(err)
     });
-    res.status(200).json({ success: true });
+    res.status(200).json({ success: 'start timer' });
+
+    console.log('timer is running');
 
 
     // when 12 hr already
     setTimeout(function () {
 
         dataCollection.findOne({ line_id: req.body.line_id }, function (err, docs) {
+
             var countingLength = docs.counting.length;
             var latestCounting = countingLength - 1;
             var _did = docs.counting[latestCounting]._did;
 
-            dataCollection.updateOne({ line_id: req.body.line_id, 'counting._did': _did}, {
+            dataCollection.updateOne({ line_id: req.body.line_id, 'counting._did': _did }, {
                 $set: {
-                    timer_status: "time out",
+                    timer_status: "timeout",
                     'counting.$.status': 'close'
                 }
             }, function (err, docs) {
                 console.log(err)
             });
-            
-            // // push message to line
-            // const client = new line.Client({
-            //     channelAccessToken: 'oUYxZKfsKSZMBXokqW9RIKV50MYQ3KOrGFeqyPWjucgyOjO5LVGVaLkJnIeOLZbhZMcaDOsMvskqeJ6U5tBuCCf0Fdi5aCUSOkREPMQr4IJ0w77In6WCCpIqbTUsK2RbL/Ch2IUFQsnRdW3R6f7XCwdB04t89/1O/w1cDnyilFU='
-            // });
-    
-            // const message = {
-            //     type: 'text',
-            //     text: 'ครบ 12 ชั่วโมง การนับลูกดิ้นแบบ Count to ten วันนี้สิ้นสุดแล้วค่ะ'
-            // };
-    
-            // client.pushMessage(line_id, message)
-            //     .then(() => {
-            //         console.log('push message done!')
-            //     })
-            //     .catch((err) => {
-            //         console.log(err);
-            //     });
 
-            console.log('20 sec!')
+            // push message to line
+            const client = new line.Client({
+                channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
+            });
+
+            const message = {
+                type: 'text',
+                text: 'ครบ 12 ชั่วโมงแล้วค่ะ การนับลูกดิ้นแบบ Count to ten วันนี้สิ้นสุดแล้ว แวะมานับใหม่วันพรุ่งนี้นะคะ'
+            };
+
+            client.pushMessage(req.body.line_id, message)
+                .then(() => {
+                    console.log('push message done!')
+                })
+                .catch((err) => {
+                    console.log(err);   // error when use fake line id 
+                });
+
+            console.log('1 min ==> time out!!')
         });
 
-    }, 21000);   // 43200000 = 12 hr
+    }, 3000);   // 43200000 = 12 hr , 21000 = 20 sec , 63000 = 1 min
 
 });
 
