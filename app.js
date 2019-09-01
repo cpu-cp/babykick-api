@@ -15,6 +15,7 @@ const sdkIncreasingRoutes = require("./api/routes/sdkIncreasingRoutes");
 const sdkDecreasingRoutes = require("./api/routes/sdkDecreasingRoutes");
 const welcomeRoutes = require("./api/routes/welcomeRoutes");
 const getDataRoutes = require("./api/routes/getDataRoutes");
+const timerStatus = require("./api/routes/timerStatusRoutes");
 
 
 // connect to mongoDB
@@ -60,6 +61,7 @@ app.use("/register", registerRoutes);
 app.use("/timer/counttoten", timerCounttotenRoutes);
 app.use("/timer/sadovsky", timerSadovskyRoutes);
 app.use("/timer/week", timerWeekRoutes);
+app.use("/timer/status", timerStatus);
 app.use("/ctt/increasing", cttIncreasingRountes);
 app.use("/ctt/decreasing", cttDecreasingRoutes);
 app.use("/sdk/increasing", sdkIncreasingRoutes);
