@@ -8,7 +8,7 @@ const mongoose = require("mongoose");
 const registerRoutes = require("./api/routes/registerRoutes");
 const timerCounttotenRoutes = require("./api/routes/timerCountotenRoutes");
 const timerSadovskyRoutes = require("./api/routes/timerSadovskyRoutes");
-const timerWeekRoutes = require("./api/routes/timerWeekRoutes");
+// const timerWeekRoutes = require("./api/routes/timerWeekRoutes");
 const cttIncreasingRountes = require("./api/routes/cttIncreasingRoutes");
 const cttDecreasingRoutes = require("./api/routes/cttDecreasingRoutes");
 const sdkIncreasingRoutes = require("./api/routes/sdkIncreasingRoutes");
@@ -60,7 +60,7 @@ app.use(express.static('uploads'))
 app.use("/register", registerRoutes);
 app.use("/timer/counttoten", timerCounttotenRoutes);
 app.use("/timer/sadovsky", timerSadovskyRoutes);
-app.use("/timer/week", timerWeekRoutes);
+// app.use("/timer/week", timerWeekRoutes);
 app.use("/timer/status", timerStatus);
 app.use("/ctt/increasing", cttIncreasingRountes);
 app.use("/ctt/decreasing", cttDecreasingRoutes);
