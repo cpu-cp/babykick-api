@@ -1,1 +1,19 @@
-version: "2"
+version: '3'
+services:
+  api:
+    container_name: babykick-api
+    restart: always
+    build: .
+    ports:
+      - '3000:3000'
+    links:
+      - db
+  db:
+    container_name: babykick-db
+    image: mongo
+    volumes:
+      - babykick_db:/data/db
+    ports:
+      - '27017:27017'
+volumes:
+  babykick_db:
