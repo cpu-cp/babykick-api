@@ -40,15 +40,13 @@ router.post("/", (req, res, next) => {
 
             var d = new Date(); // for now
 
-            var hr = (7 + d.getHours()) % 24 ; 
+            var hr = (7 + d.getHours()) % 24;
 
             // if (hr < 10) hr = "0" + hr
 
             var date = d.getDay() + '/' + d.getMonth() + '/' + d.getFullYear();
             var time = hr.toString() + ':' + d.getMinutes() + ':' + d.getSeconds();
 
-
-            
 
             if (countingLength == 0) {                          // if there isn't counting data before
                 firstDay('1', '1', date, time);
@@ -64,8 +62,6 @@ router.post("/", (req, res, next) => {
                 }
             }
         }
-
-
     });
 
 
@@ -86,6 +82,11 @@ router.post("/", (req, res, next) => {
         }, function (err, docs) {
             console.log(err)
             console.log('add first day successful!');
+            res.json({
+                status: 'success',
+                date: date,
+                time: time,
+            });
         });
     }
 
@@ -107,6 +108,11 @@ router.post("/", (req, res, next) => {
         }, function (err, docs) {
             console.log(err)
             console.log('add new day successful!');
+            res.json({
+                status: 'success',
+                date: date,
+                time: time,
+            });
         });
     }
 
@@ -119,7 +125,7 @@ router.post("/", (req, res, next) => {
     }, function (err, docs) {
         console.log(err)
     });
-    res.status(200).json({ success: 'start timer' });
+    // res.status(200).json({ success: 'start timer' });
 
     console.log('timer is running');
 
@@ -142,7 +148,7 @@ router.post("/", (req, res, next) => {
                 console.log(err)
             });
 
-            // push message to line
+            / push message to line */
             // const client = new line.Client({
             //     channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
             // });
@@ -173,7 +179,7 @@ module.exports = router;
 
 
 
-
+/  old version */
 
 // const express = require("express");
 // const router = express.Router();
@@ -241,3 +247,4 @@ module.exports = router;
 // });
 
 // module.exports = router;
+
