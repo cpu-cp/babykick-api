@@ -17,7 +17,7 @@ const mongoose = require("mongoose");
 
 const dataCollection = require('../models/dataModel');
 
-router.get("/", (req, res, next) => {
+router.post("/", (req, res, next) => {
 
     var lineId = req.body.line_id;
 
