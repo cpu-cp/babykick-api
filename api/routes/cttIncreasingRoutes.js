@@ -1,5 +1,5 @@
 /**
- *  POST
+ *  @POST
  *  for count to ten
  *  check current week/day
  *  pretty complete

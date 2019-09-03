@@ -7,6 +7,7 @@ var countingSchema = new Schema({
     day: { type: String },
     _did: { type: String },
     date: {type: String},
+    time: {type: String},
     count_type: { type: String },
     ctt_amount: { type: Number },
     sdk_first_meal: { type: Number },
