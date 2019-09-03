@@ -39,16 +39,13 @@ router.post("/", (req, res, next) => {
             var currentWeek;
             var _did = (week.toString() + 'w' + day.toString() + 'd').toString();
 
-            // // var utc = new Date().toLocaleString("en-US", { timeZone: "Asia/Bangkok" });
+            var utc = new Date().toLocaleString("en-US", { timeZone: "Asia/Bangkok" });
             // var now = new Date();
             // var utc = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
             // // var date = d.getDay() + '/' + d.getMonth() + '/' + d.getFullYear();
             // // var time = d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
-            // var date = utc.toDateString();
-            // var time = utc.toTimeString();
-
-            var date = new Date.now();
-            var time = new Date.now();
+            var date = utc.toDateString();
+            var time = utc.toTimeString();
 
 
             if (countingLength == 0) {                          // if there isn't counting data before
