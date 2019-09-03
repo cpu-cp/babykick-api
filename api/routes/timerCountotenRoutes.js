@@ -7,7 +7,6 @@
  * 
  *  body required
  *      line_id : string
- *      time: string
  *   
  * 
  *  Created by CPU on 13/8/19
@@ -39,14 +38,18 @@ router.post("/", (req, res, next) => {
             var currentWeek;
             var _did = (week.toString() + 'w' + day.toString() + 'd').toString();
 
-            var utc = new Date().toLocaleString("en-US", { timeZone: "Asia/Bangkok" });
-            // var now = new Date();
-            // var utc = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
-            // // var date = d.getDay() + '/' + d.getMonth() + '/' + d.getFullYear();
-            // // var time = d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
-            var date = utc.toDateString();
-            var time = utc.toTimeString();
+            var d = new Date(); // for now
 
+            var hr = (7 + d.getHours()) % 24 ; 
+
+            if (hr > 10) hr = "0" + hr
+
+
+            var date = d.getDay() + '/' + d.getMonth() + '/' + d.getFullYear();
+            var time = hr.toString() + ':' + d.getMinutes() + ':' + d.getSeconds();
+
+
+            
 
             if (countingLength == 0) {                          // if there isn't counting data before
                 firstDay('1', '1', date, time);
