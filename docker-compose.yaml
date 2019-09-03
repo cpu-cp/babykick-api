@@ -1,6 +1,6 @@
 version: '3'
 services:
-  api:
+  api-develop:
     container_name: babykick-api
     restart: always
     build: .
