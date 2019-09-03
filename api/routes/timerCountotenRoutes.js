@@ -42,7 +42,7 @@ router.post("/", (req, res, next) => {
 
             var hr = (7 + d.getHours()) % 24 ; 
 
-            if (hr < 10) hr = "0" + hr
+            // if (hr < 10) hr = "0" + hr
 
             var date = d.getDay() + '/' + d.getMonth() + '/' + d.getFullYear();
             var time = hr.toString() + ':' + d.getMinutes() + ':' + d.getSeconds();
