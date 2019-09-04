@@ -62,33 +62,32 @@ router.post("/", (req, res, next) => {
 
 
             / push messsage to line */
-
-            // const client = new line.Client({
-            //     channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
-            // });
+            const client = new line.Client({
+                channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
+            });
             
-            // const message = [
-            //     {
-            //         type: 'text',
-            //         text: 'สวัสดีค่ะคุณแม่ \nตอนนี้ลูกน้อยของคุณแม่มีอายุ ' + req.body.ges_age_week + ' สัปดาห์'
-            //     },
-            //     {
-            //         type: 'text',
-            //         text: 'คุณแม่สามารถอ่านคำแนะนำในแต่ละไตรมาส ได้ดังนี้'
-            //     },
-            //     {
-            //         type: 'text',
-            //         text: '\u2763\ufe0f ไตรมาสที่ 1 (1-12 สัปดาห์) เรื่องที่คุณแม่จะต้องให้ความสำคัญ คือ\n\ud83c\udf71 โภชนาการ\n\ud83c\udfc3\u200d\u2640\ufe0f การออกกำลังกาย\n\ud83d\udc6b เพศสัมพันธ์ขณะตั้งครรภ์\n\ud83d\ude45\u200d\u2640\ufe0f สัญญาณอันตราย'
-            //     },
-            // ];
+            const message = [
+                {
+                    type: 'text',
+                    text: 'สวัสดีค่ะคุณแม่ \nตอนนี้ลูกน้อยของคุณแม่มีอายุ ' + req.body.ges_age_week + ' สัปดาห์'
+                },
+                {
+                    type: 'text',
+                    text: 'คุณแม่สามารถอ่านคำแนะนำในแต่ละไตรมาส ได้ดังนี้'
+                },
+                {
+                    type: 'text',
+                    text: '\u2763\ufe0f ไตรมาสที่ 1 (1-12 สัปดาห์) เรื่องที่คุณแม่จะต้องให้ความสำคัญ คือ\n\ud83c\udf71 โภชนาการ\n\ud83c\udfc3\u200d\u2640\ufe0f การออกกำลังกาย\n\ud83d\udc6b เพศสัมพันธ์ขณะตั้งครรภ์\n\ud83d\ude45\u200d\u2640\ufe0f สัญญาณอันตราย'
+                },
+            ];
 
-            // client.pushMessage(req.body.line_id, message)
-            //     .then(() => {
-            //         console.log('push message done!')
-            //     })
-            //     .catch((err) => {
-            //         console.log(err);
-            //     });
+            client.pushMessage(req.body.line_id, message)
+                .then(() => {
+                    console.log('push message done!')
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         }
         else {
             res.json({

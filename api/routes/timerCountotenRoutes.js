@@ -163,28 +163,28 @@ router.post("/", (req, res, next) => {
                 console.log(err)
             });
 
+
             / push message to line */
-            // const client = new line.Client({
-            //     channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
-            // });
+            const client = new line.Client({
+                channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
+            });
 
-            // const message = {
-            //     type: 'text',
-            //     text: 'ครบ 12 ชั่วโมงแล้วค่ะ การนับลูกดิ้นแบบ Count to ten วันนี้สิ้นสุดแล้ว แวะมานับใหม่วันพรุ่งนี้นะคะ'
-            // };
+            const message = {
+                type: 'text',
+                text: 'ครบ 12 ชั่วโมงแล้วค่ะ การนับลูกดิ้นแบบ Count to ten วันนี้สิ้นสุดแล้ว แวะมานับใหม่วันพรุ่งนี้นะคะ'
+            };
 
-            // client.pushMessage(req.body.line_id, message)
-            //     .then(() => {
-            //         console.log('push message done!')
-            //     })
-            //     .catch((err) => {
-            //         console.log(err);   // error when use fake line id 
-            //     });
-
-            console.log('1 min ==> time out!!')
+            client.pushMessage(req.body.line_id, message)
+                .then(() => {
+                    console.log('push message done!')
+                })
+                .catch((err) => {
+                    console.log(err);   // error when use fake line id 
+                });
+            console.log('30 sec ==> time out!!')
         });
 
-    }, 21000);   // 43200000 = 12 hr , 21000 = 20 sec , 63000 = 1 min
+    }, 30000);   // 43200000 = 12 hr , 21000 = 20 sec , 63000 = 1 min
 
 });
 

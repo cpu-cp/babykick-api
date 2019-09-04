@@ -59,24 +59,24 @@ router.post("/:lineId", (req, res, next) => {
                             onDay('close', _did);
 
                             / push message to line */
-                            // const client = new line.Client({
-                            //     channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
-                            // });
+                            const client = new line.Client({
+                                channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
+                            });
 
-                            // const message = [
-                            //     {
-                            //         type: 'text',
-                            //         text: 'ยินดีด้วยค่ะ วันนี้ลูกดิ้นดีนะคะ 💃'
-                            //     },
-                            // ];
+                            const message = [
+                                {
+                                    type: 'text',
+                                    text: 'ยินดีด้วยค่ะ วันนี้ลูกดิ้นดีนะคะ 💃'
+                                },
+                            ];
 
-                            // client.pushMessage(req.body.line_id, message)
-                            //     .then(() => {
-                            //         console.log('push message done!')
-                            //     })
-                            //     .catch((err) => {
-                            //         console.log(err);
-                            //     });
+                            client.pushMessage(req.body.line_id, message)
+                                .then(() => {
+                                    console.log('push message done!')
+                                })
+                                .catch((err) => {
+                                    console.log(err);
+                                });
                         }
                         else {
                             console.log(_did);
