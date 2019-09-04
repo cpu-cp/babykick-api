@@ -8,12 +8,15 @@ var countingSchema = new Schema({
     _did: { type: String },
     date: {type: String},
     time: {type: String},
+    timestamp: {type: Number},
+    end_time: {type: String},
     count_type: { type: String },
     ctt_amount: { type: Number },
     sdk_first_meal: { type: Number },
     sdk_second_meal: { type: Number },
     sdk_third_meal: { type: Number },
-    status: { type: String }
+    status: { type: String },
+    result: {type: String}
 });
 
 /////////  Main schema //////////

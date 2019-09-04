@@ -39,33 +39,42 @@ router.post("/", (req, res, next) => {
             var _did = (week.toString() + 'w' + day.toString() + 'd').toString();
 
             var d = new Date(); // for now
+            var timestamp = Date.now(); // for now
 
+            
             var hr = (7 + d.getHours()) % 24;
+            var min = d.getMinutes();
+            var sec = d.getSeconds();
+            var endHr = (19 + d.getHours()) % 24;
 
-            // if (hr < 10) hr = "0" + hr
+            if (hr < 10) hr = '0' + hr;                // add string '0' in front of number 
+            if (min < 10) min = '0' + min;
+            if (sec < 10) sec = '0' + sec;
+
 
             var date = d.getDay() + '/' + d.getMonth() + '/' + d.getFullYear();
-            var time = hr.toString() + ':' + d.getMinutes() + ':' + d.getSeconds();
+            var time = hr.toString() + ':' + min.toString() + ':' + sec.toString();
+            var end_time = endHr.toString() + ':' + min.toString() + ':' + min.toString();
 
 
             if (countingLength == 0) {                          // if there isn't counting data before
-                firstDay('1', '1', date, time);
+                firstDay('1', '1', date, time, timestamp, end_time);
             }
             else {                                              // if there is counting data 
                 if (day == 0) {
                     currentWeek = (week + 1).toString();
-                    newDay(currentWeek, '1', date, time)
+                    newDay(currentWeek, '1', date, time, timestamp, end_time);
                 }
                 else {
                     currentDay = (day + 1).toString();
-                    newDay(week.toString(), currentDay, date, time)
+                    newDay(week.toString(), currentDay, date, time, timestamp, end_time);
                 }
             }
         }
     });
 
 
-    function firstDay(currentWeek, currentDay, date, time) {
+    function firstDay(currentWeek, currentDay, date, time, timestamp, end_time) {
         dataCollection.updateOne({ line_id: req.body.line_id }, {
             $push: {
                 counting: {
@@ -74,6 +83,7 @@ router.post("/", (req, res, next) => {
                     _did: currentWeek + 'w' + currentDay + 'd',
                     date: date,
                     time: time,
+                    timestamp: timestamp,
                     count_type: 'CTT',
                     ctt_amount: 0,
                     status: 'open'
@@ -86,12 +96,14 @@ router.post("/", (req, res, next) => {
                 status: 'success',
                 date: date,
                 time: time,
+                timestamp: timestamp,
+                end_time: end_time
             });
         });
     }
 
 
-    function newDay(currentWeek, currentDay, date, time) {
+    function newDay(currentWeek, currentDay, date, time, timestamp, end_time) {
         dataCollection.updateOne({ line_id: req.body.line_id }, {
             $push: {
                 counting: {
@@ -100,6 +112,7 @@ router.post("/", (req, res, next) => {
                     _did: currentWeek + 'w' + currentDay + 'd',
                     date: date,
                     time: time,
+                    timestamp: timestamp,
                     count_type: 'CTT',
                     ctt_amount: 0,
                     status: 'open'
@@ -112,6 +125,8 @@ router.post("/", (req, res, next) => {
                 status: 'success',
                 date: date,
                 time: time,
+                timestamp: timestamp,
+                end_time: end_time
             });
         });
     }
