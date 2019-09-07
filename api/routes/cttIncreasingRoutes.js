@@ -15,6 +15,7 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
+const line = require('@line/bot-sdk');
 
 const dataCollection = require("../models/dataModel");
 
@@ -57,26 +58,6 @@ router.post("/:lineId", (req, res, next) => {
 
                         if (docs.counting[countingLength - 1].ctt_amount == 9) {
                             onDay('close', _did);
-
-                            / push message to line */
-                            const client = new line.Client({
-                                channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
-                            });
-
-                            const message = [
-                                {
-                                    type: 'text',
-                                    text: 'ยินดีด้วยค่ะ วันนี้ลูกดิ้นดีนะคะ 💃'
-                                },
-                            ];
-
-                            client.pushMessage(req.body.line_id, message)
-                                .then(() => {
-                                    console.log('push message done!')
-                                })
-                                .catch((err) => {
-                                    console.log(err);
-                                });
                         }
                         else {
                             console.log(_did);
@@ -84,14 +65,7 @@ router.post("/:lineId", (req, res, next) => {
                         }
                     }
                     else {  // if status is close
-                        if (day == 0) {
-                            currentWeek = (week + 1).toString();
-                            newDay(currentWeek, '1', 'date')
-                        }
-                        else {
-                            currentDay = (day + 1).toString();
-                            newDay(week.toString(), currentDay, 'date')
-                        }
+                        console.log('now status is close')
                     }
 
                 }
@@ -126,6 +100,25 @@ router.post("/:lineId", (req, res, next) => {
     }
 
     function onDay(status, _did) {
+        if (status == 'close') {
+
+            / push message to line */
+            const client = new line.Client({
+                channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
+            });
+            const message = {
+                type: 'text',
+                text: 'ยินดีด้วยค่ะ วันนี้ลูกดิ้นดีนะคะ 💃'
+            };
+            client.pushMessage(lineId, message)
+                .then(() => {
+                    console.log('push message done!')
+                })
+                .catch((err) => {
+                    console.log(err);   // error when use fake line id 
+                });
+        }
+
         dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
             {
                 $inc: {
@@ -146,7 +139,7 @@ router.post("/:lineId", (req, res, next) => {
                     });
                 }
                 else {
-                    console.log(docs)
+                    // console.log(docs)
                 }
             }
         );
@@ -156,3 +149,5 @@ router.post("/:lineId", (req, res, next) => {
 });
 
 module.exports = router;
+
+// text: 'ยินดีด้วยค่ะ วันนี้ลูกดิ้นดีนะคะ 💃'

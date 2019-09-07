@@ -36,6 +36,9 @@ var dataSchema = new Schema({
     timer_status: {
         type: String
     },
+    week_current: {
+        type: Number
+    },
     counting: [countingSchema],
 });
 
