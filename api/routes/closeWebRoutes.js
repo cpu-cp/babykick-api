@@ -7,7 +7,7 @@
  *      line_id: string,
  *      status_web: 'exit'
  * 
- *  Created by CPU on 24/6/19
+ *  Created by CPU on 9/9/19
  */
 
 const express = require("express");
@@ -20,16 +20,43 @@ const dataCollection = require('../models/dataModel');
 router.post("/", (req, res, next) => {
 
     if (req.body.status_web == 'exit') {
-        res.status(200).json({message: 'web is closed'});
+        res.status(200).json({ message: 'web is closed' });
 
         / push message to line */
         const client = new line.Client({
             channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
         });
-        const message = {
-            type: 'text',
-            text: 'คุณแม่ยังนับไม่ครบเลย อย่าลืมกลับมานับต่อนะคะ 😊'
-        };
+        const message = [
+            {
+                type: 'text',
+                text: 'คุณแม่ยังนับไม่ครบเลย อย่าลืมกลับมานับต่อนะคะ 😊'
+            },
+            {
+                type: "flex",
+                altText: "นับลูกดิ้นต่อ",
+                contents: {
+                    type: "bubble",
+                    body: {
+                        type: "box",
+                        layout: "vertical",
+                        contents: [
+                            {
+                                type: "button",
+                                style: "primary",
+                                height: "sm",
+                                action: {
+                                    type: "uri",
+                                    label: "นับลูกดิ้นต่อ",
+                                    uri: "line://app/1606482498-mYZjO7zo"
+                                },
+                                color: "#dd8cc9"
+                            }
+                        ]
+                    }
+                }
+            }
+        ]
+
         client.pushMessage(req.body.line_id, message)
             .then(() => {
                 console.log('push message verify done!')
@@ -45,3 +72,5 @@ router.post("/", (req, res, next) => {
 });
 
 module.exports = router;
+
+
