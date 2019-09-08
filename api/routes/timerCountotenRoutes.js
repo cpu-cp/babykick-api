@@ -41,7 +41,7 @@ router.post("/", (req, res, next) => {
             var d = new Date(); // for now
             var timestamp = Date.now(); // for now
 
-            
+
             var hr = (7 + d.getHours()) % 24;
             var min = d.getMinutes();
             var sec = d.getSeconds();
@@ -154,34 +154,40 @@ router.post("/", (req, res, next) => {
             var latestCounting = countingLength - 1;
             var _did = docs.counting[latestCounting]._did;
 
-            dataCollection.updateOne({ line_id: req.body.line_id, 'counting._did': _did }, {
-                $set: {
-                    timer_status: "timeout",
-                    'counting.$.status': 'close'
-                }
-            }, function (err, docs) {
-                console.log(err)
-            });
-
-
-            / push message to line */
-            const client = new line.Client({
-                channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
-            });
-
-            const message = {
-                type: 'text',
-                text: 'ครบ 12 ชั่วโมงแล้วค่ะ การนับลูกดิ้นแบบ Count to ten วันนี้สิ้นสุดแล้ว แวะมานับใหม่วันพรุ่งนี้นะคะ'
-            };
-
-            client.pushMessage(req.body.line_id, message)
-                .then(() => {
-                    console.log('push message done!')
-                })
-                .catch((err) => {
-                    console.log(err);   // error when use fake line id 
+            // check if user's count amount is 10, push message to line already
+            if (docs.timer_status == 'timeout' && docs.counting[countingLength - 1].status == 'close') {
+                console.log('set time out : you have been time out and close an array already')
+            }
+            else {
+                dataCollection.updateOne({ line_id: req.body.line_id, 'counting._did': _did }, {
+                    $set: {
+                        timer_status: "timeout",
+                        'counting.$.status': 'close'
+                    }
+                }, function (err, docs) {
+                    console.log(err)
                 });
-            console.log('30 sec ==> time out!!')
+
+
+                / push message to line */
+                const client = new line.Client({
+                    channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
+                });
+
+                const message = {
+                    type: 'text',
+                    text: 'ครบ 12 ชั่วโมงแล้วค่ะ การนับลูกดิ้นแบบ Count to ten วันนี้สิ้นสุดแล้ว แวะมานับใหม่วันพรุ่งนี้นะคะ'
+                };
+
+                client.pushMessage(req.body.line_id, message)
+                    .then(() => {
+                        console.log('push message done!')
+                    })
+                    .catch((err) => {
+                        console.log(err);   // error when use fake line id 
+                    });
+                console.log('30 sec ==> time out!!')
+            }
         });
 
     }, 30000);   // 43200000 = 12 hr , 21000 = 20 sec , 63000 = 1 min
