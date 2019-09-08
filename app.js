@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 
 // define path of each routes
 const registerRoutes = require("./api/routes/registerRoutes");
+const verifyRoutes = require("./api/routes/verifyRoutes");
 const timerCounttotenRoutes = require("./api/routes/timerCountotenRoutes");
 const timerSadovskyRoutes = require("./api/routes/timerSadovskyRoutes");
 // const timerWeekRoutes = require("./api/routes/timerWeekRoutes");
@@ -58,6 +59,7 @@ app.use(express.static('uploads'))
 
 // Routes which should handle requests
 app.use("/register", registerRoutes);
+app.use("/verify", verifyRoutes);
 app.use("/timer/counttoten", timerCounttotenRoutes);
 app.use("/timer/sadovsky", timerSadovskyRoutes);
 // app.use("/timer/week", timerWeekRoutes);
