@@ -102,6 +102,18 @@ router.post("/:lineId", (req, res, next) => {
     function onDay(status, _did) {
         if (status == 'close') {
 
+            dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
+                {
+                    $set: {
+                        timer_status: 'timeout'
+                    }
+                },
+                function (err, docs) {
+                    console.log(err);
+                    console.log('today complete!!');
+                }
+            );
+
             / push message to line */
             const client = new line.Client({
                 channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
@@ -133,14 +145,6 @@ router.post("/:lineId", (req, res, next) => {
             // },
             function (err, docs) {
                 console.log(err);
-                if (docs == null || docs == "") {
-                    res.json({
-                        message: '_did id is invalid',
-                    });
-                }
-                else {
-                    // console.log(docs)
-                }
             }
         );
         console.log('increase ctt amount successfully!');
@@ -149,5 +153,3 @@ router.post("/:lineId", (req, res, next) => {
 });
 
 module.exports = router;
-
-// text: 'ยินดีด้วยค่ะ วันนี้ลูกดิ้นดีนะคะ 💃'
