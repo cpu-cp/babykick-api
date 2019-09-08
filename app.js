@@ -17,6 +17,7 @@ const sdkDecreasingRoutes = require("./api/routes/sdkDecreasingRoutes");
 const welcomeRoutes = require("./api/routes/welcomeRoutes");
 const getDataRoutes = require("./api/routes/getDataRoutes");
 const timerStatus = require("./api/routes/timerStatusRoutes");
+const closeWebRoutes = require("./api/routes/closeWebRoutes");
 
 
 // connect to mongoDB
@@ -70,6 +71,7 @@ app.use("/sdk/increasing", sdkIncreasingRoutes);
 app.use("/sdk/decreasing", sdkDecreasingRoutes);
 app.use("/welcome", welcomeRoutes);
 app.use("/getdata", getDataRoutes);
+app.use("/closeweb", closeWebRoutes);
 
 
 app.use((req, res, next) => {

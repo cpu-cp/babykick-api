@@ -1,11 +1,12 @@
 /**
  *  @POST
  *  check if line account is exists
+ *  @completed
  * 
  *  body require
  *      line_id: string
  * 
- *  Created by CPU on 24/6/19
+ *  Created by CPU on 9/9/19
  */
 
 const express = require("express");
