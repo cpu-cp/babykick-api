@@ -118,10 +118,16 @@ router.post("/:lineId", (req, res, next) => {
             const client = new line.Client({
                 channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
             });
-            const message = {
-                type: 'text',
-                text: 'ยินดีด้วยค่ะ วันนี้ลูกดิ้นดีนะคะ 💃'
-            };
+            const message = [
+                {
+                    type: 'text',
+                    text: 'ยินดีด้วยค่ะ วันนี้ลูกดิ้นดีนะคะ 💃'
+                },
+                {
+                    type: 'text',
+                    text: 'พรุ่งนี้อย่าลืมแวะมานับใหม่น้า'
+                }
+            ]
             client.pushMessage(lineId, message)
                 .then(() => {
                     console.log('push message done!')
