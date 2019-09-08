@@ -174,10 +174,44 @@ router.post("/", (req, res, next) => {
                     channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
                 });
 
-                const message = {
-                    type: 'text',
-                    text: 'ครบ 12 ชั่วโมงแล้วค่ะ การนับลูกดิ้นแบบ Count to ten วันนี้สิ้นสุดแล้ว แวะมานับใหม่วันพรุ่งนี้นะคะ'
-                };
+                const message = [
+                    {
+                        type: 'text',
+                        text: 'ครบ 12 ชั่วโมงแล้วค่ะ แต่ลูกของคุณแม่ดิ้นไม่ครบ 10 ครั้ง 😢'
+                    },
+                    {
+                        type: 'text',
+                        text: 'แนะนำให้คุณแม่กลับไปนวดลูกแปปนึงก่อนนะคะ'
+                    },
+                    {
+                        type: 'text',
+                        text: 'ถ้าคุณแม่นวดลูกเรียบร้อยแล้ว อย่าลืมกลับมานับลูกดิ้นของวันนี้อีกรอบ จิ้มปุ่มนับใหม่ได้เลยค่ะ 😊👇'
+                    },
+                    {
+                        type: "flex",
+                        altText: "นับลูกดิ้นใหม่",
+                        contents: {
+                            type: "bubble",
+                            body: {
+                                type: "box",
+                                layout: "vertical",
+                                contents: [
+                                    {
+                                        type: "button",
+                                        style: "primary",
+                                        height: "sm",
+                                        action: {
+                                            type: "uri",
+                                            label: "นับลูกดิ้นใหม่",
+                                            uri: "line://app/1606482498-mYZjO7zo"
+                                        },
+                                        color: "#dd8cc9"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ]
 
                 client.pushMessage(req.body.line_id, message)
                     .then(() => {
@@ -186,7 +220,6 @@ router.post("/", (req, res, next) => {
                     .catch((err) => {
                         console.log(err);   // error when use fake line id 
                     });
-                console.log('30 sec ==> time out!!')
             }
         });
 
