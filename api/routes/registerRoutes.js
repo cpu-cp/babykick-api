@@ -38,6 +38,7 @@ router.post("/", (req, res, next) => {
         line_id: req.body.line_id,
         mom_age: req.body.mom_age,
         ges_age_week: req.body.ges_age_week,
+        week_current: 0,
         timer_status: 'timeout'
     });
 
