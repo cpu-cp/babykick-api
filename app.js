@@ -22,6 +22,7 @@ const closeWebRoutes = require("./api/routes/closeWebRoutes");
 const getCurrentArray = require("./api/routes/getCurrentArrayRoutes");
 const checkTodayRoutes = require("./api/routes/checkTodayRoutes");
 const checkSdkRoutes = require("./api/routes/checkSdkRoutes");
+const pushOnlyCtt = require("./api/routes/pushOnlyCttRoutes");
 
 
 // connect to mongoDB
@@ -80,6 +81,7 @@ app.use("/closeweb", closeWebRoutes);
 app.use("/get/current", getCurrentArray);
 app.use("/check/today", checkTodayRoutes);
 app.use("/check/sdk", checkSdkRoutes);
+app.use("/push/onlyctt", pushOnlyCtt);
 
 
 app.use((req, res, next) => {
