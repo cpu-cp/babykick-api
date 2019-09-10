@@ -3,13 +3,14 @@
  *  for sadovsky
  *  check current week/day
  * 
- *  Created by CPU on 17/8/19
+ *  Created by CPU on 10/9/19
  */
 
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const line = require('@line/bot-sdk');
+const cron = require('node-cron');
 
 const dataCollection = require("../models/dataModel");
 
@@ -27,15 +28,16 @@ router.post("/:lineId", (req, res, next) => {
             });
         }
         else {
-
             var countingLength = docs.counting.length;
             var week = Math.ceil(countingLength / 7);
             var day = countingLength % 7;
 
-            var currentDay;
-            var currentWeek;
             var _did = (week.toString() + 'w' + day.toString() + 'd').toString();
 
+            var getDate = new Date(Date.now()).getDate();
+            var getMonth = new Date(Date.now()).getMonth() + 1;
+            let sScheduleLunch = '0 12 ' + getDate + ' ' + getMonth + ' *';
+            let sScheduleDinner = '0 18 ' + getDate + ' ' + getMonth + ' *';
 
             if (docs.timer_status == 'running') {
 
@@ -43,18 +45,18 @@ router.post("/:lineId", (req, res, next) => {
 
                 if (docs.counting[countingLength - 1].status == '1st') {
                     if (docs.counting[countingLength - 1].sdk_first_meal == 2) {
-                        onFirstMeal('1st', 'timeout', _did);
+                        onFirstMeal('1st', 'timeout', _did, sScheduleLunch);
                     }
                     else {
-                        onFirstMeal('1st', 'running', _did);
+                        onFirstMeal('1st', 'running', _did, sScheduleLunch);
                     }
                 }
                 else if (docs.counting[countingLength - 1].status == '2nd') {
                     if (docs.counting[countingLength - 1].sdk_second_meal == 2) {
-                        onSecondMeal('2nd', 'timeout', _did);
+                        onSecondMeal('2nd', 'timeout', _did, sScheduleDinner);
                     }
                     else {
-                        onSecondMeal('2nd', 'running', _did);
+                        onSecondMeal('2nd', 'running', _did, sScheduleDinner);
                     }
                 }
                 else if (docs.counting[countingLength - 1].status == '3rd') {
@@ -74,8 +76,9 @@ router.post("/:lineId", (req, res, next) => {
     });
 
 
-    function onFirstMeal(meal, timerStatus, _did) {
+    function onFirstMeal(meal, timerStatus, _did, sScheduleLunch) {
         if (timerStatus == 'timeout') {
+
             / push message to line */
             const client = new line.Client({
                 channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
@@ -96,6 +99,34 @@ router.post("/:lineId", (req, res, next) => {
                 })
                 .catch((err) => {
                     console.log(err);   // error when use fake line id 
+                });
+
+
+            console.log(sSchedule);
+
+            cron.schedule(sSchedule, () => {
+                console.log('Runing a job  at Asia/Bangkok timezone');
+
+                / push message to line */
+                const client = new line.Client({
+                    channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
+                });
+                const message = [
+                    {
+                        type: 'text',
+                        text: 'เที่ยงแล้ว อย่าลืมมานับ Sadovsky ต่อนะคะ'
+                    },
+                ]
+                client.pushMessage(lineId, message)
+                    .then(() => {
+                        console.log('corn : push lunch message done!')
+                    })
+                    .catch((err) => {
+                        console.log(err);   // error when use fake line id 
+                    });
+            }, {
+                    scheduled: true,
+                    timezone: "Asia/Bangkok"
                 });
         }
 
@@ -119,7 +150,7 @@ router.post("/:lineId", (req, res, next) => {
         );
     }
 
-    function onSecondMeal(meal, timerStatus, _did) {
+    function onSecondMeal(meal, timerStatus, _did, sScheduleDinner) {
         if (timerStatus == 'timeout') {
             / push message to line */
             const client = new line.Client({
@@ -141,6 +172,31 @@ router.post("/:lineId", (req, res, next) => {
                 })
                 .catch((err) => {
                     console.log(err);   // error when use fake line id 
+                });
+
+            cron.schedule(sScheduleDinner, () => {
+                console.log('Runing a job  at Asia/Bangkok timezone');
+
+                / push message to line */
+                const client = new line.Client({
+                    channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
+                });
+                const message = [
+                    {
+                        type: 'text',
+                        text: 'เย็นแล้ว อย่าลืมมานับ Sadovsky ต่อนะคะ'
+                    },
+                ]
+                client.pushMessage(lineId, message)
+                    .then(() => {
+                        console.log('corn : push dinner message done!')
+                    })
+                    .catch((err) => {
+                        console.log(err);   // error when use fake line id 
+                    });
+            }, {
+                    scheduled: true,
+                    timezone: "Asia/Bangkok"
                 });
         }
 
@@ -165,7 +221,7 @@ router.post("/:lineId", (req, res, next) => {
 
     }
 
-    function onThirdMeal(meal, timerStatus, _did) {
+    function onThirdMeal(meal, timerStatus, _did, getDate, getMonth) {
         if (timerStatus == 'running') {
             dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
                 {
@@ -196,7 +252,7 @@ router.post("/:lineId", (req, res, next) => {
                         'counting.$.status': 'close',
                         timer_status: timerStatus,
                         sdk_status: 'enable',
-                        extra: 'unenable'
+                        extra: 'disable'
                     }
                 },
                 {
@@ -310,7 +366,7 @@ router.post("/extra/:lineId", (req, res, next) => {
                         'counting.$.status': 'close',
                         timer_status: timerStatus,
                         sdk_status: 'enable',
-                        extra: 'unenable'
+                        extra: 'disable'
                     }
                 },
                 {
