@@ -28,7 +28,7 @@ router.post("/:lineId", (req, res, next) => {
         let currentDate = current.toLocaleDateString();
         
         if (todayDate == currentDate) {
-            res.json({
+            res.status(401).json({
                 add: false
             });
 
@@ -51,7 +51,7 @@ router.post("/:lineId", (req, res, next) => {
                 });
         }
         else {
-            res.json({
+            res.status(200).json({
                 add: true
             });
         }
