@@ -24,8 +24,6 @@ router.post("/", (req, res, next) => {
 
     dataCollection.findOne({ line_id: req.body.line_id }, function (err, docs) {
 
-        var _did;
-
         if (docs == null || docs == "") {
             res.json({
                 status: 'error',
@@ -55,7 +53,7 @@ router.post("/", (req, res, next) => {
                 var countingLength = docs.counting.length;
                 var week = Math.ceil(countingLength / 7);
                 var day = countingLength % 7;
-                _did = (week.toString() + 'w' + day.toString() + 'd').toString();
+                var _did = (week.toString() + 'w' + day.toString() + 'd').toString();
 
                 var d = new Date();         // for now
                 var timestamp = Date.now(); // for now
@@ -125,57 +123,57 @@ router.post("/", (req, res, next) => {
                 });
             });
         });
-    }
 
-    // when 1 hr already
-    try {
-        setTimeout(function () {
-            dataCollection.findOne({ line_id: req.body.line_id }, function (err, docs) {
+        // when 1 hr already
+        try {
+            setTimeout(function () {
+                dataCollection.findOne({ line_id: req.body.line_id }, function (err, docs) {
 
-                // check if user's count amount is 3, push message to line already
-                if (docs.timer_status == 'timeout' && docs.counting[(docs.counting.length) - 1].status == 'close') {
-                    console.log('set time out : you have been time out and close an array already')
-                }
-                else {
-                    dataCollection.updateOne({ line_id: req.body.line_id, 'counting._did': _did }, {
-                        $set: {
-                            timer_status: "timeout",
-                            sdk_status: "disable",
-                            extra: "disable",
-                            'counting.$.status': "close",
-                        }
-                    }, function (err, docs) {
-                        console.log(err)
-                        console.log('whyyyyy')
-                    });
-
-                    / push message to line */
-                    const client = new line.Client({
-                        channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
-                    });
-                    const message = [
-                        {
-                            type: 'text',
-                            text: 'ครบ 1 ชั่วโมงแล้วค่ะ'
-                        },
-                        {
-                            type: 'text',
-                            text: 'ลูกของคุณแม่ดิ้นไม่ครบ 3 ครั้ง ❗ \nเพื่อความปลอดภัยของคุณแม่และลูกน้อย กรุณาติดต่อที่หมายเลข 📞1669 ค่ะ'
-                        },
-                    ]
-                    client.pushMessage(req.body.line_id, message)
-                        .then(() => {
-                            console.log('push message done!')
-                        })
-                        .catch((err) => {
-                            console.log(err);   // error when use fake line id 
+                    // check if user's count amount is 3, push message to line already
+                    if (docs.timer_status == 'timeout' && docs.counting[(docs.counting.length) - 1].status == 'close') {
+                        console.log('set time out : you have been time out and close an array already')
+                    }
+                    else {
+                        dataCollection.updateOne({ line_id: req.body.line_id, 'counting._did': _did }, {
+                            $set: {
+                                timer_status: "timeout",
+                                sdk_status: "disable",
+                                extra: "disable",
+                                'counting.$.status': "close",
+                            }
+                        }, function (err, docs) {
+                            console.log(err)
+                            console.log('whyyyyy')
                         });
-                }
-            });
-        }, 20000);   // 43200000 = 12 hr , 21000 = 20 sec , 63000 = 1 min
 
-    } catch (e) {
-        console.log(e);
+                        / push message to line */
+                        const client = new line.Client({
+                            channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
+                        });
+                        const message = [
+                            {
+                                type: 'text',
+                                text: 'ครบ 1 ชั่วโมงแล้วค่ะ'
+                            },
+                            {
+                                type: 'text',
+                                text: 'ลูกของคุณแม่ดิ้นไม่ครบ 3 ครั้ง ❗ \nเพื่อความปลอดภัยของคุณแม่และลูกน้อย กรุณาติดต่อที่หมายเลข 📞1669 ค่ะ'
+                            },
+                        ]
+                        client.pushMessage(req.body.line_id, message)
+                            .then(() => {
+                                console.log('push message done!')
+                            })
+                            .catch((err) => {
+                                console.log(err);   // error when use fake line id 
+                            });
+                    }
+                });
+            }, 20000);   // 43200000 = 12 hr , 21000 = 20 sec , 63000 = 1 min
+
+        } catch (e) {
+            console.log(e);
+        }
     }
 
 });
