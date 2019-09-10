@@ -165,7 +165,7 @@ router.post("/", (req, res, next) => {
                     dataCollection.updateOne({ line_id: req.body.line_id }, {
                         $set: {
                             timer_status: "timeout",
-                            sdk_status: "unenable"
+                            sdk_status: "disable"
                         },
                     }, function (err, docs) {
                         console.log(err)
@@ -233,8 +233,8 @@ router.post("/", (req, res, next) => {
                         dataCollection.updateOne({ line_id: req.body.line_id }, {
                             $set: {
                                 timer_status: "timeout",
-                                sdk_status: "unenable",
-                                extra: 'unenable',
+                                sdk_status: "disable",
+                                extra: 'disable',
                             },
                         }, function (err, docs) {
                             console.log(err)
@@ -321,7 +321,7 @@ router.post("/", (req, res, next) => {
                     $set: {
                         timer_status: "timeout",
                         sdk_status: 'enable',
-                        extra: 'unenable',
+                        extra: 'disable',
                         'counting.$.status': 'close'
                     }
                 }, function (err, docs) {
