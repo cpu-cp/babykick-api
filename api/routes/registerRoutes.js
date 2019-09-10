@@ -41,7 +41,7 @@ router.post("/", (req, res, next) => {
         week_current: 0,
         timer_status: 'timeout',
         sdk_status: 'enable',
-        extra: 'unenable',
+        extra: 'disable',
     });
 
     //check if account is exists
