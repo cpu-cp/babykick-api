@@ -297,6 +297,31 @@ router.post("/", (req, res, next) => {
                                 type: 'text',
                                 text: 'แนะนำให้คุณแม่กลับไปนวดลูกก่อน แล้วกลับมาลองนับแบบ Sadovsky ของมื้อเย็นใหม่อีกครั้งนะคะ'
                             },
+                            ,
+                            {
+                                type: "flex",
+                                altText: "นับลูกดิ้นมื้อเย็นต่อ",
+                                contents: {
+                                    type: "bubble",
+                                    body: {
+                                        type: "box",
+                                        layout: "vertical",
+                                        contents: [
+                                            {
+                                                type: "button",
+                                                style: "primary",
+                                                height: "sm",
+                                                action: {
+                                                    type: "uri",
+                                                    label: "นับลูกดิ้นมื้อเย็นต่อ",
+                                                    uri: "line://app/1606482498-mYZjO7zo"
+                                                },
+                                                color: "#dd8cc9"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
                         ]
                         client.pushMessage(req.body.line_id, message)
                             .then(() => {
