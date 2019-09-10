@@ -24,6 +24,8 @@ router.post("/", (req, res, next) => {
 
     dataCollection.findOne({ line_id: req.body.line_id }, function (err, docs) {
 
+        var _did;
+
         if (docs == null || docs == "") {
             res.json({
                 status: 'error',
@@ -53,7 +55,7 @@ router.post("/", (req, res, next) => {
                 var countingLength = docs.counting.length;
                 var week = Math.ceil(countingLength / 7);
                 var day = countingLength % 7;
-                var _did = (week.toString() + 'w' + day.toString() + 'd').toString();
+                _did = (week.toString() + 'w' + day.toString() + 'd').toString();
 
                 var d = new Date();         // for now
                 var timestamp = Date.now(); // for now
