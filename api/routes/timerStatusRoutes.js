@@ -40,7 +40,9 @@ router.post("/", (req, res, next) => {
         }
         else {
             res.json({
-                timer_status: docs.timer_status
+                timer_status: docs.timer_status,
+                sdk_status: docs.sdk_status,
+                extra: docs.extra,
             });
         }
 

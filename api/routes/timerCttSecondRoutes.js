@@ -47,7 +47,8 @@ router.post("/", (req, res, next) => {
             if (min < 10) min = '0' + min;
             if (sec < 10) sec = '0' + sec;
 
-            var date = d.getDay() + '/' + d.getMonth() + '/' + d.getFullYear();
+            // var date = d.getDay() + '/' + d.getMonth() + '/' + d.getFullYear();
+            var date = new Date(Date.now());
             var time = hr.toString() + ':' + min.toString() + ':' + sec.toString();
             var end_time = endHr.toString() + ':' + min.toString() + ':' + min.toString();
 
