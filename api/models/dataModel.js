@@ -6,7 +6,7 @@ var countingSchema = new Schema({
     week: { type: String },
     day: { type: String },
     _did: { type: String },
-    date: {type: String},
+    date: {type: Date},
     time: {type: String},
     timestamp: {type: Number},
     end_time: {type: String},
@@ -36,8 +36,14 @@ var dataSchema = new Schema({
     timer_status: {
         type: String
     },
+    sdk_status: {
+        type: String
+    },
     week_current: {
         type: Number
+    },
+    extra: {
+        type: String
     },
     counting: [countingSchema],
 });

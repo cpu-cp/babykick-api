@@ -10,7 +10,7 @@ const verifyRoutes = require("./api/routes/verifyRoutes");
 const timerCounttotenRoutes = require("./api/routes/timerCountotenRoutes");
 const timerCttSecondRoutes = require("./api/routes/timerCttSecondRoutes");
 const timerSadovskyRoutes = require("./api/routes/timerSadovskyRoutes");
-// const timerWeekRoutes = require("./api/routes/timerWeekRoutes");
+const timerSdkExtraRoutes = require("./api/routes/timerSdkExtraRoutes")
 const cttIncreasingRountes = require("./api/routes/cttIncreasingRoutes");
 const cttDecreasingRoutes = require("./api/routes/cttDecreasingRoutes");
 const sdkIncreasingRoutes = require("./api/routes/sdkIncreasingRoutes");
@@ -66,7 +66,7 @@ app.use("/verify", verifyRoutes);
 app.use("/timer/counttoten", timerCounttotenRoutes);
 app.use("/timer/counttoten/second", timerCttSecondRoutes);
 app.use("/timer/sadovsky", timerSadovskyRoutes);
-// app.use("/timer/week", timerWeekRoutes);
+app.use("/timer/sadovsky/extra", timerSdkExtraRoutes);
 app.use("/timer/status", timerStatus);
 app.use("/ctt/increasing", cttIncreasingRountes);
 app.use("/ctt/decreasing", cttDecreasingRoutes);

@@ -39,7 +39,9 @@ router.post("/", (req, res, next) => {
         mom_age: req.body.mom_age,
         ges_age_week: req.body.ges_age_week,
         week_current: 0,
-        timer_status: 'timeout'
+        timer_status: 'timeout',
+        sdk_status: 'enable',
+        extra: 'unenable',
     });
 
     //check if account is exists

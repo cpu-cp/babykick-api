@@ -1,6 +1,7 @@
 /**
- *  POST : for sadovsky
- *       : check current week/day
+ *  @POST
+ *  for sadovsky
+ *  check current week/day
  * 
  *  Created by CPU on 17/8/19
  */
@@ -8,6 +9,7 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
+const line = require('@line/bot-sdk');
 
 const dataCollection = require("../models/dataModel");
 
@@ -25,7 +27,7 @@ router.post("/:lineId", (req, res, next) => {
             });
         }
         else {
-            
+
             var countingLength = docs.counting.length;
             var week = Math.ceil(countingLength / 7);
             var day = countingLength % 7;
@@ -66,13 +68,37 @@ router.post("/:lineId", (req, res, next) => {
             }
             else {
                 console.log('now status is time out')
-                res.json({timer_status: 'timeout'})
+                res.json({ timer_status: 'timeout' })
             }
         }
     });
 
 
     function onFirstMeal(meal, timerStatus, _did) {
+        if (timerStatus == 'timeout') {
+            / push message to line */
+            const client = new line.Client({
+                channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
+            });
+            const message = [
+                {
+                    type: 'text',
+                    text: 'ยินดีด้วยค่ะ \nมื้อเช้าวันนี้ลูกดิ้นดีครบ 3 ครั้ง 🌄'
+                },
+                {
+                    type: 'text',
+                    text: 'ตอนเที่ยงอย่าลืมมานับต่อนะคะ'
+                }
+            ]
+            client.pushMessage(lineId, message)
+                .then(() => {
+                    console.log('push message inc 1st done!')
+                })
+                .catch((err) => {
+                    console.log(err);   // error when use fake line id 
+                });
+        }
+
         dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
             {
                 $inc: {
@@ -94,6 +120,30 @@ router.post("/:lineId", (req, res, next) => {
     }
 
     function onSecondMeal(meal, timerStatus, _did) {
+        if (timerStatus == 'timeout') {
+            / push message to line */
+            const client = new line.Client({
+                channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
+            });
+            const message = [
+                {
+                    type: 'text',
+                    text: 'ยินดีด้วยค่ะ \nมื้อเที่ยงวันนี้ลูกดิ้นดีครบ 3 ครั้ง ☀'
+                },
+                {
+                    type: 'text',
+                    text: 'ตอนเย็นอย่าลืมมานับต่อนะคะ'
+                }
+            ]
+            client.pushMessage(lineId, message)
+                .then(() => {
+                    console.log('push message inc 2nd done!')
+                })
+                .catch((err) => {
+                    console.log(err);   // error when use fake line id 
+                });
+        }
+
         dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
             {
                 $inc: {
@@ -144,6 +194,99 @@ router.post("/:lineId", (req, res, next) => {
                     },
                     $set: {
                         'counting.$.status': 'close',
+                        timer_status: timerStatus,
+                        sdk_status: 'enable',
+                        extra: 'unenable'
+                    }
+                },
+                {
+                    modifiedCount: 1
+                },
+                function (err, docs, res) {
+                    console.log(err);
+                    console.log('increase sdk_third_meal successful!');
+                    // res.json(docs);
+                }
+            );
+
+            / push message to line */
+            const client = new line.Client({
+                channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
+            });
+            const message = [
+                {
+                    type: 'text',
+                    text: 'ยินดีด้วยค่ะ \nมื้อเย็นวันนี้ลูกดิ้นดีครบ 3 ครั้ง 🌅'
+                },
+                {
+                    type: 'text',
+                    text: 'พรุ่งนี้อย่าลืมแวะมานับใหม่น้า'
+                }
+            ]
+            client.pushMessage(lineId, message)
+                .then(() => {
+                    console.log('push message 3rd done!')
+                })
+                .catch((err) => {
+                    console.log(err);   // error when use fake line id 
+                });
+        }
+
+    }
+
+});
+
+
+
+router.post("/extra/:lineId", (req, res, next) => {
+
+    lineId = req.params.lineId;
+
+    // check current week and day 
+    dataCollection.findOne({ line_id: lineId }, function (err, docs) {
+
+        if (docs == null || docs == "") {
+            res.json({
+                status: 'error',
+                message: 'line id is invalid',
+            });
+        }
+        else {
+            if (docs.timer_status == 'running') {
+
+                res.json(docs.counting[(docs.counting.length) - 1]);
+
+                var week = Math.ceil((docs.counting.length) / 7);
+                var day = (docs.counting.length) % 7;
+
+                var currentDay;
+                var currentWeek;
+                var _did = (week.toString() + 'w' + day.toString() + 'd').toString();
+
+                if (docs.counting[(docs.counting.length) - 1].status == '3rd') {
+                    if (docs.counting[(docs.counting.length) - 1].sdk_third_meal == 2) {
+                        onThirdMeal('3rd', 'timeout', _did);
+                    }
+                    else {
+                        onThirdMeal('3rd', 'running', _did);
+                    }
+                }
+            }
+            else {
+                console.log('now status is time out')
+                res.json({ timer_status: 'timeout' })
+            }
+        }
+    });
+
+    function onThirdMeal(meal, timerStatus, _did) {
+        if (timerStatus == 'running') {
+            dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
+                {
+                    $inc: {
+                        'counting.$.sdk_third_meal': 1
+                    },
+                    $set: {
                         timer_status: timerStatus
                     }
                 },
@@ -157,220 +300,52 @@ router.post("/:lineId", (req, res, next) => {
                 }
             );
         }
+        else {
+            dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
+                {
+                    $inc: {
+                        'counting.$.sdk_third_meal': 1
+                    },
+                    $set: {
+                        'counting.$.status': 'close',
+                        timer_status: timerStatus,
+                        sdk_status: 'enable',
+                        extra: 'unenable'
+                    }
+                },
+                {
+                    modifiedCount: 1
+                },
+                function (err, docs, res) {
+                    console.log(err);
+                    console.log('increase sdk_third_meal successful!');
+                    // res.json(docs);
+                }
+            );
 
+            / push message to line */
+            const client = new line.Client({
+                channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
+            });
+            const message = [
+                {
+                    type: 'text',
+                    text: 'ยินดีด้วยค่ะ \nมื้อเย็นวันนี้ลูกดิ้นดีครบ 3 ครั้ง 🌅'
+                },
+                {
+                    type: 'text',
+                    text: 'พรุ่งนี้อย่าลืมแวะมานับใหม่น้า'
+                }
+            ]
+            client.pushMessage(lineId, message)
+                .then(() => {
+                    console.log('push message 3rd done!')
+                })
+                .catch((err) => {
+                    console.log(err);   // error when use fake line id 
+                });
+        }
     }
 
 });
-
 module.exports = router;
-
-
-
-/ old version */
-// router.post("/:lineId", (req, res, next) => {
-
-//     lineId = req.params.lineId;
-
-//     // check current week and day 
-//     dataCollection.findOne({ line_id: lineId }, function (err, docs) {
-
-//         if (docs == null || docs == "") {
-//             res.json({
-//                 status: 'error',
-//                 message: 'line id is invalid',
-//             });
-//         }
-//         else {
-//             res.json(docs.counting)
-//             var countingLength = docs.counting.length;
-//             var week = Math.ceil(countingLength / 7);
-//             var day = countingLength % 7;
-
-//             var currentDay;
-//             var currentWeek;
-//             var _did = (week.toString() + 'w' + day.toString() + 'd').toString();
-
-//             if (countingLength == 0) {             // if there isn't history data
-//                 console.log('empty array');
-//                 newDay('1', '1', 'date');
-//             }
-//             else if (countingLength >= 1) {
-//                 console.log('there is counting data');
-
-//                 if (docs.timer_status == '1st') {
-//                     console.log('timer is 1st');
-//                     console.log('array status is ' + docs.counting[countingLength - 1].status);
-
-//                     if (docs.counting[countingLength - 1].status == 'open') {
-//                         if (docs.counting[countingLength - 1].sdk_first_meal == 2) {
-//                             onFirstMeal('2nd', 'open', _did);
-//                         }
-//                         else {
-//                             onFirstMeal('1st', 'open', _did);
-//                         }
-//                     }
-//                     else {
-//                         if (day == 0) {   //start new week
-//                             currentWeek = (week + 1).toString();
-//                             newDay(currentWeek, '1', 'date')
-//                         }
-//                         else {
-//                             currentDay = (day + 1).toString();
-//                             newDay(week.toString(), currentDay, 'date')
-//                         }
-//                     }
-
-//                 }
-//                 else if (docs.timer_status == '2nd') {
-//                     console.log('timer is 2st');
-//                     if (docs.counting[countingLength - 1].status == 'open') {
-//                         if (docs.counting[countingLength - 1].sdk_second_meal == 2) {
-//                             onSecondMeal('3rd', 'open', _did);
-//                         }
-//                         else {
-//                             onSecondMeal('2st', 'open', _did);
-//                         }
-//                     }
-//                     else {
-//                         if (day == 0) {   //start new week
-//                             currentWeek = (week + 1).toString();
-//                             newDay(currentWeek, '1', 'date')
-//                         }
-//                         else {
-//                             currentDay = (day + 1).toString();
-//                             newDay(week.toString(), currentDay, 'date')
-//                         }
-//                     }
-//                 }
-//                 else if (docs.timer_status == '3rd') {
-//                     console.log('timer is 3st');
-//                     if (docs.counting[countingLength - 1].status == 'open') {
-//                         if (docs.counting[countingLength - 1].sdk_third_meal == 2) {
-//                             onThirdMeal('time out', 'close', _did);
-//                         }
-//                         else {
-//                             onThirdMeal('3rd', 'open', _did);
-//                         }
-//                     }
-//                     else {
-//                         if (day == 0) {   //start new week
-//                             currentWeek = (week + 1).toString();
-//                             newDay(currentWeek, '1', 'date')
-//                         }
-//                         else {
-//                             currentDay = (day + 1).toString();
-//                             newDay(week.toString(), currentDay, 'date')
-//                         }
-//                     }
-//                 }
-//                 else if (docs.timer_status == 'time out') {
-//                     console.log('now status is time out')
-//                     // push message to line 'time out'
-//                 }
-//             }
-//         }
-
-
-//     });
-
-
-//     function newDay(currentWeek, currentDay, date) {
-//         dataCollection.updateOne({ line_id: lineId }, {
-//             $push: {
-//                 counting: {
-//                     week: currentWeek,
-//                     day: currentDay,
-//                     _did: currentWeek + 'w' + currentDay + 'd',
-//                     date: date,
-//                     count_type: 'SDK',
-//                     sdk_first_meal: 1,
-//                     status: 'open'
-//                 }
-//             }
-//         }, function (err, docs) {
-//             console.log(err)
-//         });
-//         console.log('add new day successfully!');
-//     }
-
-//     function onFirstMeal(timerStatus, status, _did) {
-//         dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
-//             {
-//                 $inc: {
-//                     'counting.$.sdk_first_meal': 1
-//                 },
-//                 $set: {
-//                     'counting.$.status': status,
-//                     timer_status: timerStatus
-//                 }
-//             },
-//             function (err, docs) {
-//                 console.log(err);
-//                 if (docs == null || docs == "") {
-//                     res.json({
-//                         message: '_did id is invalid',
-//                     });
-//                 }
-//                 else {
-//                     console.log(docs)
-//                 }
-//             }
-//         );
-//         console.log('increase sdk_first_meal successful!');
-//     }
-
-//     function onSecondMeal(timerStatus, status, _did) {
-//         dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
-//             {
-//                 $inc: {
-//                     'counting.$.sdk_second_meal': 1
-//                 },
-//                 $set: {
-//                     'counting.$.status': status,
-//                     timer_status: timerStatus
-//                 }
-//             },
-//             function (err, docs) {
-//                 console.log(err);
-//                 if (docs == null || docs == "") {
-//                     res.json({
-//                         message: '_did id is invalid',
-//                     });
-//                 }
-//                 else {
-//                     console.log(docs)
-//                 }
-//             }
-//         );
-//         console.log('increase sdk_second_meal successful!');
-//     }
-
-//     function onThirdMeal(timerStatus, status, _did) {
-//         dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
-//             {
-//                 $inc: {
-//                     'counting.$.sdk_third_meal': 1
-//                 },
-//                 $set: {
-//                     'counting.$.status': status,
-//                     timer_status: timerStatus
-//                 }
-//             },
-//             function (err, docs) {
-//                 console.log(err);
-//                 if (docs == null || docs == "") {
-//                     res.json({
-//                         message: '_did id is invalid',
-//                     });
-//                 }
-//                 else {
-//                     console.log(docs)
-//                 }
-//             }
-//         );
-//         console.log('increase sdk_third_meal successful!');
-//     }
-
-// });
-
-// module.exports = router;
