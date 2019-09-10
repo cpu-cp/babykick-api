@@ -26,10 +26,14 @@ router.post("/:lineId", (req, res, next) => {
         
         let todayDate = today.toLocaleDateString();
         let currentDate = current.toLocaleDateString();
+
+        console.log('+++++ ' + currentDate);
+        console.log('++++++ today +++++' + todayDate)
+
         
         if (todayDate == currentDate) {
             res.status(401).json({
-                add: false
+                add: false,
             });
 
             / push messsage to line */
