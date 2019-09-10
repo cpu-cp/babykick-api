@@ -102,9 +102,9 @@ router.post("/:lineId", (req, res, next) => {
                 });
 
 
-            console.log(sSchedule);
+            console.log(sScheduleLunch);
 
-            cron.schedule(sSchedule, () => {
+            cron.schedule(sScheduleLunch, () => {
                 console.log('Runing a job  at Asia/Bangkok timezone');
 
                 / push message to line */
