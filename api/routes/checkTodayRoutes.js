@@ -2,9 +2,10 @@
  *  @POST
  *  check counting array that there is same date in array or not
  *  1 counting per day
+ *  @trycatch
  * 
- *  body require
- *      line_id: string,
+ *  params require
+ *      /check/today/<line_id>
  * 
  *  Created by CPU on 10/9/19
  */
