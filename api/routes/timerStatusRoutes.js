@@ -39,9 +39,8 @@ router.post("/", (req, res, next) => {
                 sdk_status: docs.sdk_status,
                 extra: docs.extra,
             });
-        })
-        .catch(err => {
-            console.log(err);
+        }).catch(err => {
+            console.log(err)
             res.json({
                 message: 'line id not found.',
             });
@@ -50,3 +49,4 @@ router.post("/", (req, res, next) => {
 
 module.exports = router;
 
+// return Promise.reject(err);
