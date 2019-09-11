@@ -31,23 +31,22 @@ router.post("/", (req, res, next) => {
     }
 
     //send response
-    dataCollection.findOne({ line_id: req.body.line_id }, function (err, docs) {
-
-        if (docs == "") {
-            res.json({
-                message: 'this line id not found',
-            });
-        }
-        else {
+    dataCollection.findOne({ line_id: req.body.line_id })
+        .exec()
+        .then(docs => {
             res.json({
                 timer_status: docs.timer_status,
                 sdk_status: docs.sdk_status,
                 extra: docs.extra,
             });
-        }
-
-    });
-
+        })
+        .catch(err => {
+            console.log(err);
+            res.json({
+                message: 'line id not found',
+            });
+        });
 });
 
 module.exports = router;
+
