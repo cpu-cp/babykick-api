@@ -20,18 +20,18 @@ const dataCollection = require('../models/dataModel');
 router.post("/:lineId", (req, res, next) => {
 
     let today = new Date(Date.now());
-    
+
     dataCollection.findOne({ line_id: req.params.lineId }, function (err, docs) {
         current = docs.counting[(docs.counting.length) - 1].date;
-        
+
         let todayDate = today.toLocaleDateString();
         let currentDate = current.toLocaleDateString();
 
-        console.log('+++++ ' + currentDate);
-        console.log('++++++ today +++++' + todayDate)
 
-        
+
         if (todayDate == currentDate) {
+            console.log('+++++ ' + currentDate);
+            console.log('++++++ today +++++' + todayDate)
             res.status(401).json({
                 add: false,
             });
