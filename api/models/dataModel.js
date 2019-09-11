@@ -3,6 +3,7 @@ var Schema = mongoose.Schema;
 
 
 var countingSchema = new Schema({
+    week_by_date: {type: Number},
     week: { type: String },
     day: { type: String },
     _did: { type: String },
@@ -15,8 +16,8 @@ var countingSchema = new Schema({
     sdk_first_meal: { type: Number },
     sdk_second_meal: { type: Number },
     sdk_third_meal: { type: Number },
+    result: {type: String},
     status: { type: String },
-    result: {type: String}
 });
 
 /////////  Main schema //////////

@@ -250,6 +250,7 @@ router.post("/:lineId", (req, res, next) => {
                     },
                     $set: {
                         'counting.$.status': 'close',
+                        'counting.$.result': 'ลูกดิ้นดี',
                         timer_status: timerStatus,
                         sdk_status: 'enable',
                         extra: 'disable'

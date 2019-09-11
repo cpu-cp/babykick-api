@@ -55,10 +55,16 @@ router.post("/", (req, res, next) => {
             var time = hr.toString() + ':' + min.toString() + ':' + sec.toString();
             var end_time = endHr.toString() + ':' + min.toString() + ':' + min.toString();
 
+            Date.prototype.getWeek = function () {
+                var dt = new Date(this.getFullYear(), 0, 1);
+                return Math.ceil((((this - dt) / 86400000) + dt.getDay() + 1) / 7);
+            };
+            var week_by_date = date.getWeek();
+
             if (docs.timer_status == 'timeout' && docs.sdk_status == 'enable') {
                 if (countingLength == 0) {                                  // if there isn't counting data before
                     try {
-                        newDay('1', '1', date, time, timestamp, end_time);
+                        newDay('1', '1', date, time, timestamp, end_time, week_by_date);
                     } catch (e) {
                         console.log(e);
                     }
@@ -69,7 +75,7 @@ router.post("/", (req, res, next) => {
                         if (day == 0) {                             //start new week
                             currentWeek = (week + 1).toString();
                             try {
-                                newDay(currentWeek, '1', date, time, timestamp, end_time);
+                                newDay(currentWeek, '1', date, time, timestamp, end_time, week_by_date);
                             } catch (e) {
                                 console.log(e);
                             }
@@ -77,7 +83,7 @@ router.post("/", (req, res, next) => {
                         else {
                             currentDay = (day + 1).toString();      // start new day
                             try {
-                                newDay(week.toString(), currentDay, date, time, timestamp, end_time);
+                                newDay(week.toString(), currentDay, date, time, timestamp, end_time, week_by_date);
                             } catch (e) {
                                 console.log(e);
                             }
@@ -116,7 +122,7 @@ router.post("/", (req, res, next) => {
     });
 
 
-    function newDay(currentWeek, currentDay, date, time, timestamp, end_time) {
+    function newDay(currentWeek, currentDay, date, time, timestamp, end_time, week_by_date) {
 
         closeAutomatic();
         dataCollection.updateOne({ line_id: req.body.line_id }, {
@@ -125,6 +131,7 @@ router.post("/", (req, res, next) => {
             },
             $push: {
                 counting: {
+                    week_by_date: week_by_date,
                     week: currentWeek,
                     day: currentDay,
                     _did: currentWeek + 'w' + currentDay + 'd',
@@ -135,6 +142,7 @@ router.post("/", (req, res, next) => {
                     sdk_first_meal: 0,
                     sdk_second_meal: 0,
                     sdk_third_meal: 0,
+                    result: '',
                     status: '1st'
                 }
             }
@@ -162,11 +170,12 @@ router.post("/", (req, res, next) => {
                     console.log('set time out : you have been time out and close an array already')
                 }
                 else { // amount != 3, go to ctt
-                    dataCollection.updateOne({ line_id: req.body.line_id }, {
+                    dataCollection.findOneAndUpdate({ line_id: req.body.line_id, 'counting._did': _did }, {
                         $set: {
                             timer_status: "timeout",
                             sdk_status: "disable",
-                            extra: 'disable'
+                            extra: 'disable',
+                            'counting.$.result': 'มีความเสี่ยง',
                         },
                     }, function (err, docs) {
                         console.log(err)
@@ -231,11 +240,12 @@ router.post("/", (req, res, next) => {
                         console.log('set time out : you have been time out and close an array already')
                     }
                     else { // amount != 3, go to ctt
-                        dataCollection.updateOne({ line_id: req.body.line_id }, {
+                        dataCollection.findOneAndUpdate({ line_id: req.body.line_id, 'counting._did': _dids }, {
                             $set: {
                                 timer_status: "timeout",
                                 sdk_status: "disable",
                                 extra: 'disable',
+                                'counting.$.result': 'มีความเสี่ยง',
                             },
                         }, function (err, docs) {
                             console.log(err)
@@ -268,16 +278,18 @@ router.post("/", (req, res, next) => {
             }
             else {                  // else 3rd
                 dataCollection.findOne({ line_id: req.body.line_id }, function (err, docs) {
+                    var _dids = docs.counting[(docs.counting.length) - 1]._did;
 
                     if (docs.counting[(docs.counting.length) - 1].sdk_third_meal == 3) {   // amount = 3 already
                         console.log('set time out : you have been time out and close an array already')
                     }
                     else { // amount != 3, go to ctt
-                        dataCollection.updateOne({ line_id: req.body.line_id }, {
+                        dataCollection.findOneAndUpdate({ line_id: req.body.line_id, 'counting._did': _dids}, {
                             $set: {
                                 timer_status: "timeout",
                                 sdk_status: "enable",
-                                extra: 'enable'
+                                extra: 'enable',
+                                'counting.$.result': 'มีความเสี่ยง',
                             },
                         }, function (err, docs) {
                             console.log(err)
@@ -313,7 +325,7 @@ router.post("/", (req, res, next) => {
                                                 action: {
                                                     type: "uri",
                                                     label: "นับลูกดิ้นมื้อเย็นต่อ",
-                                                    uri: "line://app/1606482498-mYZjO7zo"
+                                                    uri: "line://app/1606482498-bD3NV1ly"
                                                 },
                                                 color: "#dd8cc9"
                                             }
