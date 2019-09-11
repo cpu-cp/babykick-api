@@ -58,6 +58,7 @@ router.post("/:lineId", (req, res, next) => {
 
                         if (docs.counting[countingLength - 1].ctt_amount == 9) {
                             onDay('close', _did);
+                            setResult(_did);
                         }
                         else {
                             console.log(_did);
@@ -154,6 +155,21 @@ router.post("/:lineId", (req, res, next) => {
             }
         );
         console.log('increase ctt amount successfully!');
+    }
+
+
+    function setResult(_did) {
+        dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
+            {
+                $set: {
+                    'counting.$.result': 'ลูกดิ้นดี'
+                }
+            },
+            function (err, docs) {
+                console.log(err);
+                console.log('ctt inc : set result complete');
+            }
+        );
     }
 
 });

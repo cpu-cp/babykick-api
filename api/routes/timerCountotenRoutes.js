@@ -57,28 +57,35 @@ router.post("/", (req, res, next) => {
             var time = hr.toString() + ':' + min.toString() + ':' + sec.toString();
             var end_time = endHr.toString() + ':' + min.toString() + ':' + min.toString();
 
+            Date.prototype.getWeek = function () {
+                var dt = new Date(this.getFullYear(), 0, 1);
+                return Math.ceil((((this - dt) / 86400000) + dt.getDay() + 1) / 7);
+            };
+            var week_by_date = date.getWeek();
+
 
             if (countingLength == 0) {                          // if there isn't counting data before
-                firstDay('1', '1', date, time, timestamp, end_time);
+                firstDay('1', '1', date, time, timestamp, end_time, week_by_date);
             }
             else {                                              // if there is counting data 
                 if (day == 0) {
                     currentWeek = (week + 1).toString();
-                    newDay(currentWeek, '1', date, time, timestamp, end_time);
+                    newDay(currentWeek, '1', date, time, timestamp, end_time, week_by_date);
                 }
                 else {
                     currentDay = (day + 1).toString();
-                    newDay(week.toString(), currentDay, date, time, timestamp, end_time);
+                    newDay(week.toString(), currentDay, date, time, timestamp, end_time, week_by_date);
                 }
             }
         }
     });
 
 
-    function firstDay(currentWeek, currentDay, date, time, timestamp, end_time) {
+    function firstDay(currentWeek, currentDay, date, time, timestamp, end_time, week_by_date) {
         dataCollection.updateOne({ line_id: req.body.line_id }, {
             $push: {
                 counting: {
+                    week_by_date: week_by_date,
                     week: currentWeek,
                     day: currentDay,
                     _did: currentWeek + 'w' + currentDay + 'd',
@@ -87,6 +94,7 @@ router.post("/", (req, res, next) => {
                     timestamp: timestamp,
                     count_type: 'CTT',
                     ctt_amount: 0,
+                    result: '',
                     status: 'open'
                 }
             }
@@ -104,10 +112,11 @@ router.post("/", (req, res, next) => {
     }
 
 
-    function newDay(currentWeek, currentDay, date, time, timestamp, end_time) {
+    function newDay(currentWeek, currentDay, date, time, timestamp, end_time, week_by_date) {
         dataCollection.updateOne({ line_id: req.body.line_id }, {
             $push: {
                 counting: {
+                    week_by_date: week_by_date,
                     week: currentWeek,
                     day: currentDay,
                     _did: currentWeek + 'w' + currentDay + 'd',
@@ -163,7 +172,8 @@ router.post("/", (req, res, next) => {
                 dataCollection.updateOne({ line_id: req.body.line_id, 'counting._did': _did }, {
                     $set: {
                         timer_status: "timeout",
-                        'counting.$.status': 'close'
+                        'counting.$.status': 'close',
+                        'counting.$.result': 'มีความเสี่ยง'
                     }
                 }, function (err, docs) {
                     console.log(err)
@@ -179,7 +189,7 @@ router.post("/", (req, res, next) => {
                     {
                         type: 'text',
                         text: '🕒 ครบ 12 ชั่วโมงแล้วค่ะ แต่ลูกของคุณแม่ดิ้นไม่ครบ 10 ครั้ง'
-                    },{
+                    }, {
                         type: 'text',
                         text: 'เพื่อความปลอดภัยของคุณแม่และลูกน้อย กรุณาติดต่อที่หมายเลข 📞1669 ค่ะ'
                     },
