@@ -91,6 +91,11 @@ router.post("/:lineId", (req, res, next) => {
                 {
                     type: 'text',
                     text: 'ตอนเที่ยงอย่าลืมมานับต่อนะคะ'
+                },
+                {
+                    type: "image",
+                    originalContentUrl: 'https://atb-files.s3.ap-southeast-1.amazonaws.com/sadovsky-morning.jpg',
+                    previewImageUrl: 'https://atb-files.s3.ap-southeast-1.amazonaws.com/sadovsky-morning.jpg'
                 }
             ]
             client.pushMessage(lineId, message)
@@ -164,6 +169,11 @@ router.post("/:lineId", (req, res, next) => {
                 {
                     type: 'text',
                     text: 'ตอนเย็นอย่าลืมมานับต่อนะคะ'
+                },
+                {
+                    type: "image",
+                    originalContentUrl: 'https://atb-files.s3.ap-southeast-1.amazonaws.com/sadovsky-afternoon.jpg',
+                    previewImageUrl: 'https://atb-files.s3.ap-southeast-1.amazonaws.com/sadovsky-afternoon.jpg'
                 }
             ]
             client.pushMessage(lineId, message)
@@ -278,6 +288,11 @@ router.post("/:lineId", (req, res, next) => {
                 {
                     type: 'text',
                     text: 'พรุ่งนี้อย่าลืมแวะมานับใหม่น้า'
+                },
+                {
+                    type: "sticker",
+                    packageId: 3,
+                    stickerId: 184
                 }
             ]
             client.pushMessage(lineId, message)
@@ -392,6 +407,11 @@ router.post("/extra/:lineId", (req, res, next) => {
                 {
                     type: 'text',
                     text: 'พรุ่งนี้อย่าลืมแวะมานับใหม่น้า'
+                },
+                {
+                    type: "sticker",
+                    packageId: 3,
+                    stickerId: 184
                 }
             ]
             client.pushMessage(lineId, message)

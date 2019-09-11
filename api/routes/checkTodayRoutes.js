@@ -44,6 +44,11 @@ router.post("/:lineId", (req, res, next) => {
                     {
                         type: 'text',
                         text: 'วันนี้คุณแม่นับลูกดิ้นแล้วค่ะ'
+                    },
+                    {
+                        type: "sticker",
+                        packageId: 3,
+                        stickerId: 181
                     }
                 ];
                 client.pushMessage(req.params.lineId, message)

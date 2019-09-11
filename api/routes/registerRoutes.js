@@ -82,6 +82,11 @@ router.post("/", (req, res, next) => {
                     type: 'text',
                     text: '\u2763\ufe0f ไตรมาสที่ 1 (1-12 สัปดาห์) เรื่องที่คุณแม่จะต้องให้ความสำคัญ คือ\n\ud83c\udf71 โภชนาการ\n\ud83c\udfc3\u200d\u2640\ufe0f การออกกำลังกาย\n\ud83d\udc6b เพศสัมพันธ์ขณะตั้งครรภ์\n\ud83d\ude45\u200d\u2640\ufe0f สัญญาณอันตราย'
                 },
+                {
+                    type: "sticker",
+                    packageId: 3,
+                    stickerId: 247
+                }
             ];
 
             client.pushMessage(req.body.line_id, message)

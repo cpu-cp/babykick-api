@@ -195,6 +195,11 @@ router.post("/", (req, res, next) => {
                             type: 'text',
                             text: 'แนะนำให้คุณแม่กลับไปนวดลูกก่อน แล้วมาเริ่มนับใหม่โดยใช้แบบ Count to ten นะคะ'
                         },
+                        {
+                            type: "sticker",
+                            packageId: 3,
+                            stickerId: 190
+                        }
                     ]
                     client.pushMessage(req.body.line_id, message)
                         .then(() => {
@@ -265,6 +270,11 @@ router.post("/", (req, res, next) => {
                                 type: 'text',
                                 text: 'แนะนำให้คุณแม่กลับไปนวดลูกก่อน แล้วมาเริ่มนับใหม่โดยใช้แบบ Count to ten นะคะ'
                             },
+                            {
+                                type: "sticker",
+                                packageId: 3,
+                                stickerId: 190
+                            }
                         ]
                         client.pushMessage(req.body.line_id, message)
                             .then(() => {
@@ -308,6 +318,11 @@ router.post("/", (req, res, next) => {
                             {
                                 type: 'text',
                                 text: 'แนะนำให้คุณแม่กลับไปนวดลูกก่อน แล้วกลับมาลองนับแบบ Sadovsky ของมื้อเย็นใหม่อีกครั้งนะคะ'
+                            },
+                            {
+                                type: "sticker",
+                                packageId: 3,
+                                stickerId: 184
                             },
                             {
                                 type: "flex",
