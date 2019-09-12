@@ -21,105 +21,112 @@ const dataCollection = require("../models/dataModel");
 router.post("/", (req, res, next) => {
 
 
-    dataCollection.findOne({ line_id: req.body.line_id }, function (err, docs) {
+    dataCollection.findOne({ line_id: req.body.line_id })
+        .exec()
+        .then(docs => {
 
-        if (docs == null || docs == "") {
-            res.json({
-                status: 'error',
-                message: 'line id is invalid',
-            });
-        }
-        else {
-            var countingLength = docs.counting.length;
-            var week = Math.ceil(countingLength / 7);
-            var day = countingLength % 7;
+            if (docs == null || docs == "") {
+                res.json({
+                    status: 'error',
+                    message: 'line id is invalid',
+                });
+            }
+            else {
+                var countingLength = docs.counting.length;
+                var week = Math.ceil(countingLength / 7);
+                var day = countingLength % 7;
 
-            var currentDay;
-            var currentWeek;
-            var _did = (week.toString() + 'w' + day.toString() + 'd').toString();
+                var currentDay;
+                var currentWeek;
+                var _did = (week.toString() + 'w' + day.toString() + 'd').toString();
 
-            var d = new Date(); // for now
-            var timestamp = Date.now(); // for now
+                var d = new Date(); // for now
+                var timestamp = Date.now(); // for now
 
-            var hr = (7 + d.getHours()) % 24;
-            var min = d.getMinutes();
-            var sec = d.getSeconds();
-            var endHr = (19 + d.getHours()) % 24;
+                var hr = (7 + d.getHours()) % 24;
+                var min = d.getMinutes();
+                var sec = d.getSeconds();
+                var endHr = (19 + d.getHours()) % 24;
 
-            if (hr < 10) hr = '0' + hr;                // add string '0' in front of number 
-            if (min < 10) min = '0' + min;
-            if (sec < 10) sec = '0' + sec;
+                if (hr < 10) hr = '0' + hr;                // add string '0' in front of number 
+                if (min < 10) min = '0' + min;
+                if (sec < 10) sec = '0' + sec;
 
-            // var date = d.getDay() + '/' + d.getMonth() + '/' + d.getFullYear();
-            var date = new Date(Date.now());
-            var time = hr.toString() + ':' + min.toString() + ':' + sec.toString();
-            var end_time = endHr.toString() + ':' + min.toString() + ':' + min.toString();
+                // var date = d.getDay() + '/' + d.getMonth() + '/' + d.getFullYear();
+                var date = new Date(Date.now());
+                var time = hr.toString() + ':' + min.toString() + ':' + sec.toString();
+                var end_time = endHr.toString() + ':' + min.toString() + ':' + min.toString();
 
-            Date.prototype.getWeek = function () {
-                var dt = new Date(this.getFullYear(), 0, 1);
-                return Math.ceil((((this - dt) / 86400000) + dt.getDay() + 1) / 7);
-            };
-            var week_by_date = date.getWeek();
+                Date.prototype.getWeek = function () {
+                    var dt = new Date(this.getFullYear(), 0, 1);
+                    return Math.ceil((((this - dt) / 86400000) + dt.getDay() + 1) / 7);
+                };
+                var week_by_date = date.getWeek();
 
-            if (docs.timer_status == 'timeout' && docs.sdk_status == 'enable') {
-                if (countingLength == 0) {                                  // if there isn't counting data before
-                    try {
-                        newDay('1', '1', date, time, timestamp, end_time, week_by_date);
-                    } catch (e) {
-                        console.log(e);
-                    }
-                }
-                else {
-
-                    if (docs.counting[countingLength - 1].status == 'close') {      // previos array is close, start new counting array
-                        if (day == 0) {                             //start new week
-                            currentWeek = (week + 1).toString();
-                            try {
-                                newDay(currentWeek, '1', date, time, timestamp, end_time, week_by_date);
-                            } catch (e) {
-                                console.log(e);
-                            }
-                        }
-                        else {
-                            currentDay = (day + 1).toString();      // start new day
-                            try {
-                                newDay(week.toString(), currentDay, date, time, timestamp, end_time, week_by_date);
-                            } catch (e) {
-                                console.log(e);
-                            }
-                        }
-                    }
-                    else if (docs.counting[countingLength - 1].status == '1st') {
+                if (docs.timer_status == 'timeout' && docs.sdk_status == 'enable') {
+                    if (countingLength == 0) {                                  // if there isn't counting data before
                         try {
-                            newMeal('2nd', _did, date, time, timestamp, end_time);
-                        } catch (e) {
-                            console.log(e);
-                        }
-                    }
-                    else if (docs.counting[countingLength - 1].status == '2nd') {
-                        try {
-                            newMeal('3rd', _did, date, time, timestamp, end_time);
+                            newDay('1', '1', date, time, timestamp, end_time, week_by_date);
                         } catch (e) {
                             console.log(e);
                         }
                     }
                     else {
-                        console.log(docs.counting[countingLength - 1].status);
+
+                        if (docs.counting[countingLength - 1].status == 'close') {      // previos array is close, start new counting array
+                            if (day == 0) {                             //start new week
+                                currentWeek = (week + 1).toString();
+                                try {
+                                    newDay(currentWeek, '1', date, time, timestamp, end_time, week_by_date);
+                                } catch (e) {
+                                    console.log(e);
+                                }
+                            }
+                            else {
+                                currentDay = (day + 1).toString();      // start new day
+                                try {
+                                    newDay(week.toString(), currentDay, date, time, timestamp, end_time, week_by_date);
+                                } catch (e) {
+                                    console.log(e);
+                                }
+                            }
+                        }
+                        else if (docs.counting[countingLength - 1].status == '1st') {
+                            try {
+                                newMeal('2nd', _did, date, time, timestamp, end_time);
+                            } catch (e) {
+                                console.log(e);
+                            }
+                        }
+                        else if (docs.counting[countingLength - 1].status == '2nd') {
+                            try {
+                                newMeal('3rd', _did, date, time, timestamp, end_time);
+                            } catch (e) {
+                                console.log(e);
+                            }
+                        }
+                        else {
+                            console.log(docs.counting[countingLength - 1].status);
+                        }
+
                     }
-
                 }
-            }
-            else {
-                res.json({
-                    status: 0000,
-                    timer_status: docs.timer_status,
-                    sdk_status: docs.sdk_status,
-                    message: 'can not run timer sdk, status have to be timeout and enable'
-                });
-            }
+                else {
+                    res.json({
+                        status: 0000,
+                        timer_status: docs.timer_status,
+                        sdk_status: docs.sdk_status,
+                        message: 'can not run timer sdk, status have to be timeout and enable'
+                    });
+                }
 
-        }
-    });
+            }
+        }).catch(err => {
+            console.log(err)
+            res.json({
+                message: 'line id not found.',
+            });
+        });
 
 
     function newDay(currentWeek, currentDay, date, time, timestamp, end_time, week_by_date) {
@@ -294,7 +301,7 @@ router.post("/", (req, res, next) => {
                         console.log('set time out : you have been time out and close an array already')
                     }
                     else { // amount != 3, go to ctt
-                        dataCollection.findOneAndUpdate({ line_id: req.body.line_id, 'counting._did': _dids}, {
+                        dataCollection.findOneAndUpdate({ line_id: req.body.line_id, 'counting._did': _dids }, {
                             $set: {
                                 timer_status: "timeout",
                                 sdk_status: "enable",

@@ -45,66 +45,72 @@ router.post("/", (req, res, next) => {
     });
 
     //check if account is exists
-    dataCollection.find({ line_id: req.body.line_id }, function (err, docs) {
+    dataCollection.find({ line_id: req.body.line_id })
+        .exec()
+        .then(docs => {
 
-        if (docs == "") {
-            console.log('this line id does not exist');
+            if (docs == "") {
+                console.log('this line id does not exist');
 
-            userData.save().then(result => {
-                console.log(result);
-                res.status(201).json({
-                    user: result
-                });
-            })
-                .catch(err => {
-                    console.log(err);
-                    res.status(500).json({
-                        error: err
+                userData.save().then(result => {
+                    console.log(result);
+                    res.status(201).json({
+                        user: result
                     });
-                });
-
-
-            / push messsage to line */
-            const client = new line.Client({
-                channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
-            });
-            
-            const message = [
-                {
-                    type: 'text',
-                    text: 'สวัสดีค่ะคุณแม่ \nตอนนี้ลูกน้อยของคุณแม่มีอายุ ' + req.body.ges_age_week + ' สัปดาห์'
-                },
-                {
-                    type: 'text',
-                    text: 'คุณแม่สามารถอ่านคำแนะนำในแต่ละไตรมาส ได้ดังนี้'
-                },
-                {
-                    type: 'text',
-                    text: '\u2763\ufe0f ไตรมาสที่ 1 (1-12 สัปดาห์) เรื่องที่คุณแม่จะต้องให้ความสำคัญ คือ\n\ud83c\udf71 โภชนาการ\n\ud83c\udfc3\u200d\u2640\ufe0f การออกกำลังกาย\n\ud83d\udc6b เพศสัมพันธ์ขณะตั้งครรภ์\n\ud83d\ude45\u200d\u2640\ufe0f สัญญาณอันตราย'
-                },
-                {
-                    type: "sticker",
-                    packageId: 3,
-                    stickerId: 247
-                }
-            ];
-
-            client.pushMessage(req.body.line_id, message)
-                .then(() => {
-                    console.log('push message done!')
                 })
-                .catch((err) => {
-                    console.log(err);
-                });
-        }
-        else {
-            res.json({
-                status: '0000',
-                message: 'this line id already exists'
-            });
-        }
+                    .catch(err => {
+                        console.log(err);
+                        res.status(500).json({
+                            error: err
+                        });
+                    });
 
-    });
+
+                / push messsage to line */
+                const client = new line.Client({
+                    channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
+                });
+
+                const message = [
+                    {
+                        type: 'text',
+                        text: 'สวัสดีค่ะคุณแม่ \nตอนนี้ลูกน้อยของคุณแม่มีอายุ ' + req.body.ges_age_week + ' สัปดาห์'
+                    },
+                    {
+                        type: 'text',
+                        text: 'คุณแม่สามารถอ่านคำแนะนำในแต่ละไตรมาส ได้ดังนี้'
+                    },
+                    {
+                        type: 'text',
+                        text: '\u2763\ufe0f ไตรมาสที่ 1 (1-12 สัปดาห์) เรื่องที่คุณแม่จะต้องให้ความสำคัญ คือ\n\ud83c\udf71 โภชนาการ\n\ud83c\udfc3\u200d\u2640\ufe0f การออกกำลังกาย\n\ud83d\udc6b เพศสัมพันธ์ขณะตั้งครรภ์\n\ud83d\ude45\u200d\u2640\ufe0f สัญญาณอันตราย'
+                    },
+                    {
+                        type: "sticker",
+                        packageId: 3,
+                        stickerId: 247
+                    }
+                ];
+
+                client.pushMessage(req.body.line_id, message)
+                    .then(() => {
+                        console.log('push message done!')
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+            }
+            else {
+                res.json({
+                    status: '0000',
+                    message: 'this line id already exists'
+                });
+            }
+        }).catch(err => {
+            console.log(err)
+            res.json({
+                message: 'line id not found.',
+            });
+        });
 
 });
 

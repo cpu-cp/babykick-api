@@ -21,60 +21,67 @@ router.post("/:lineId", (req, res, next) => {
     lineId = req.params.lineId;
 
     // check current week and day 
-    dataCollection.findOne({ line_id: lineId }, function (err, docs) {
+    dataCollection.findOne({ line_id: lineId })
+        .exec()
+        .then(docs => {
 
-        if (docs == null || docs == "") {
-            res.json({
-                status: 'error',
-                message: 'line id is invalid',
-            });
-        }
-        else {
-
-            var countingLength = docs.counting.length;
-            var week = Math.ceil(countingLength / 7);
-            var day = countingLength % 7;
-
-            var currentDay;
-            var currentWeek;
-            var _did = (week.toString() + 'w' + day.toString() + 'd').toString();
-
-
-            if (docs.timer_status == 'running') {
-
-                res.json(docs.counting[(docs.counting.length) - 1]);
-
-                if (docs.counting[countingLength - 1].status == '1st') {
-                    if (docs.counting[countingLength - 1].sdk_first_meal == 0) {
-                        minimumCount()
-                    }
-                    else {
-                        onFirstMeal('1st', 'running', _did);
-                    }
-                }
-                else if (docs.counting[countingLength - 1].status == '2nd') {
-                    if (docs.counting[countingLength - 1].sdk_second_meal == 0) {
-                        minimumCount()
-                    }
-                    else {
-                        onSecondMeal('2nd', 'running', _did);
-                    }
-                }
-                else if (docs.counting[countingLength - 1].status == '3rd') {
-                    if (docs.counting[countingLength - 1].sdk_third_meal == 0) {
-                        minimumCount()
-                    }
-                    else {
-                        onThirdMeal('3rd', 'running', _did);
-                    }
-                }
+            if (docs == null || docs == "") {
+                res.json({
+                    status: 'error',
+                    message: 'line id is invalid',
+                });
             }
             else {
-                console.log('now status is time out')
-                res.json({ timer_status: 'timeout' })
+
+                var countingLength = docs.counting.length;
+                var week = Math.ceil(countingLength / 7);
+                var day = countingLength % 7;
+
+                var currentDay;
+                var currentWeek;
+                var _did = (week.toString() + 'w' + day.toString() + 'd').toString();
+
+
+                if (docs.timer_status == 'running') {
+
+                    res.json(docs.counting[(docs.counting.length) - 1]);
+
+                    if (docs.counting[countingLength - 1].status == '1st') {
+                        if (docs.counting[countingLength - 1].sdk_first_meal == 0) {
+                            minimumCount()
+                        }
+                        else {
+                            onFirstMeal('1st', 'running', _did);
+                        }
+                    }
+                    else if (docs.counting[countingLength - 1].status == '2nd') {
+                        if (docs.counting[countingLength - 1].sdk_second_meal == 0) {
+                            minimumCount()
+                        }
+                        else {
+                            onSecondMeal('2nd', 'running', _did);
+                        }
+                    }
+                    else if (docs.counting[countingLength - 1].status == '3rd') {
+                        if (docs.counting[countingLength - 1].sdk_third_meal == 0) {
+                            minimumCount()
+                        }
+                        else {
+                            onThirdMeal('3rd', 'running', _did);
+                        }
+                    }
+                }
+                else {
+                    console.log('now status is time out')
+                    res.json({ timer_status: 'timeout' })
+                }
             }
-        }
-    });
+        }).catch(err => {
+            console.log(err)
+            res.json({
+                message: 'line id not found.',
+            });
+        });
 
 
     function onFirstMeal(meal, timerStatus, _did) {
@@ -156,44 +163,51 @@ router.post("/extra/:lineId", (req, res, next) => {
     lineId = req.params.lineId;
 
     // check current week and day 
-    dataCollection.findOne({ line_id: lineId }, function (err, docs) {
+    dataCollection.findOne({ line_id: lineId })
+        .exec()
+        .then(docs => {
 
-        if (docs == null || docs == "") {
-            res.json({
-                status: 'error',
-                message: 'line id is invalid',
-            });
-        }
-        else {
-
-            var countingLength = docs.counting.length;
-            var week = Math.ceil(countingLength / 7);
-            var day = countingLength % 7;
-
-            var currentDay;
-            var currentWeek;
-            var _did = (week.toString() + 'w' + day.toString() + 'd').toString();
-
-
-            if (docs.timer_status == 'running') {
-
-                res.json(docs.counting[(docs.counting.length) - 1]);
-
-                if (docs.counting[countingLength - 1].status == '3rd') {
-                    if (docs.counting[countingLength - 1].sdk_third_meal == 0) {
-                        minimumCount()
-                    }
-                    else {
-                        onThirdMeal('3rd', 'running', _did);
-                    }
-                }
+            if (docs == null || docs == "") {
+                res.json({
+                    status: 'error',
+                    message: 'line id is invalid',
+                });
             }
             else {
-                console.log('now status is time out')
-                res.json({ timer_status: 'timeout' })
+
+                var countingLength = docs.counting.length;
+                var week = Math.ceil(countingLength / 7);
+                var day = countingLength % 7;
+
+                var currentDay;
+                var currentWeek;
+                var _did = (week.toString() + 'w' + day.toString() + 'd').toString();
+
+
+                if (docs.timer_status == 'running') {
+
+                    res.json(docs.counting[(docs.counting.length) - 1]);
+
+                    if (docs.counting[countingLength - 1].status == '3rd') {
+                        if (docs.counting[countingLength - 1].sdk_third_meal == 0) {
+                            minimumCount()
+                        }
+                        else {
+                            onThirdMeal('3rd', 'running', _did);
+                        }
+                    }
+                }
+                else {
+                    console.log('now status is time out')
+                    res.json({ timer_status: 'timeout' })
+                }
             }
-        }
-    });
+        }).catch(err => {
+            console.log(err)
+            res.json({
+                message: 'line id not found.',
+            });
+        });
 
     function onThirdMeal(meal, timerStatus, _did) {
         dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },

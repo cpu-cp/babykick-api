@@ -24,61 +24,66 @@ router.post("/:lineId", (req, res, next) => {
     lineId = req.params.lineId;
 
     // check current week and day 
-    dataCollection.findOne({ line_id: lineId }, function (err, docs) {
+    dataCollection.findOne({ line_id: lineId })
+        .exec()
+        .then(docs => {
 
-        if (docs == null || docs == "") {
+            if (docs == null || docs == "") {
+                res.json({
+                    status: 'error',
+                    message: 'line id is invalid',
+                });
+            }
+            else {
+                res.json(docs.counting)
+                var countingLength = docs.counting.length;
+                var week = Math.ceil(countingLength / 7);
+                var day = countingLength % 7;
+
+                var currentDay;
+                var currentWeek;
+                var _did = (week.toString() + 'w' + day.toString() + 'd').toString();
+
+                if (countingLength == 0) {                      // if there isn't history data
+                    console.log('empty array');
+                    newDay('1', '1', 'date');
+                }
+                else if (countingLength >= 1) {
+                    console.log('there is counting data');
+
+                    if (docs.timer_status == 'running') {
+                        console.log('timer is running');
+                        console.log('array status is ' + docs.counting[countingLength - 1].status);
+
+                        if (docs.counting[countingLength - 1].status == 'open') {
+                            console.log('ctt amount is ' + docs.counting[countingLength - 1].ctt_amount)
+
+                            if (docs.counting[countingLength - 1].ctt_amount == 9) {
+                                onDay('close', _did);
+                                setResult(_did);
+                            }
+                            else {
+                                console.log(_did);
+                                onDay('open', _did);
+                            }
+                        }
+                        else {  // if status is close
+                            console.log('now status is close')
+                        }
+
+                    }
+                    else {
+                        console.log('now status is time out')
+                        // push message to line 'time out'
+                    }
+                }
+            }
+        }).catch(err => {
+            console.log(err)
             res.json({
-                status: 'error',
-                message: 'line id is invalid',
+                message: 'line id not found.',
             });
-        }
-        else {
-            res.json(docs.counting)
-            var countingLength = docs.counting.length;
-            var week = Math.ceil(countingLength / 7);
-            var day = countingLength % 7;
-
-            var currentDay;
-            var currentWeek;
-            var _did = (week.toString() + 'w' + day.toString() + 'd').toString();
-
-            if (countingLength == 0) {                      // if there isn't history data
-                console.log('empty array');
-                newDay('1', '1', 'date');
-            }
-            else if (countingLength >= 1) {
-                console.log('there is counting data');
-
-                if (docs.timer_status == 'running') {
-                    console.log('timer is running');
-                    console.log('array status is ' + docs.counting[countingLength - 1].status);
-
-                    if (docs.counting[countingLength - 1].status == 'open') {
-                        console.log('ctt amount is ' + docs.counting[countingLength - 1].ctt_amount)
-
-                        if (docs.counting[countingLength - 1].ctt_amount == 9) {
-                            onDay('close', _did);
-                            setResult(_did);
-                        }
-                        else {
-                            console.log(_did);
-                            onDay('open', _did);
-                        }
-                    }
-                    else {  // if status is close
-                        console.log('now status is close')
-                    }
-
-                }
-                else {
-                    console.log('now status is time out')
-                    // push message to line 'time out'
-                }
-            }
-        }
-
-
-    });
+        });
 
 
     function newDay(currentWeek, currentDay, date) {

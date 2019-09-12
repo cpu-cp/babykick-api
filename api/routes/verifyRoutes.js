@@ -20,7 +20,7 @@ router.post("/", (req, res, next) => {
 
     dataCollection.find({ line_id: req.body.line_id }, function (err, docs) {
 
-        if (docs == "") {
+        if (docs == "" | docs == null) {
             console.log('can create new account!');
             res.status(200).send('true');
         }
