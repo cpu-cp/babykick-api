@@ -169,29 +169,41 @@ router.post("/", (req, res, next) => {
 
         // when 12 hr already
         setTimeout(function () {
-            / push message to line */
-            const client = new line.Client({
-                channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
-            });
-            const message = [
-                {
-                    type: 'text',
-                    text: '6 ชั่วโมงแล้วน้า นวดลูกบ่อยๆ แล้วอย่าลืมมานับต่อนะคะ'
-                },
-                {
-                    type: "sticker",
-                    packageId: 3,
-                    stickerId: 232
-                }
-            ]
-            client.pushMessage(req.body.line_id, message)
-                .then(() => {
-                    console.log('push message done!')
-                })
-                .catch((err) => {
-                    console.log(err);   // error when use fake line id 
-                });
+            dataCollection.findOne({ line_id: req.body.line_id }, function (err, docs) {
+                var countingLength = docs.counting.length;
+                var latestCounting = countingLength - 1;
+                var _did = docs.counting[latestCounting]._did;
 
+                // check if user's count amount is 10, push message to line already
+                if (docs.timer_status == 'timeout' && docs.counting[countingLength - 1].status == 'close') {
+                    console.log('set time out : you have been time out and close an array already')
+                }
+                else {
+                    / push message to line */
+                    const client = new line.Client({
+                        channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
+                    });
+                    const message = [
+                        {
+                            type: 'text',
+                            text: '6 ชั่วโมงแล้วน้า นวดลูกบ่อยๆ แล้วอย่าลืมมานับต่อนะคะ'
+                        },
+                        {
+                            type: "sticker",
+                            packageId: 3,
+                            stickerId: 232
+                        }
+                    ]
+                    client.pushMessage(req.body.line_id, message)
+                        .then(() => {
+                            console.log('push message done!')
+                        })
+                        .catch((err) => {
+                            console.log(err);   // error when use fake line id 
+                        });
+                }
+            });
+            
             setTimeout(function () {
                 dataCollection.findOne({ line_id: req.body.line_id }, function (err, docs) {
                     var countingLength = docs.counting.length;
