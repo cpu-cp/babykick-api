@@ -111,7 +111,9 @@ router.post("/:lineId", (req, res, next) => {
             dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
                 {
                     $set: {
-                        timer_status: 'timeout'
+                        timer_status: 'timeout',
+                        count_type: 'any',
+                        sdk_status: 'enable',
                     }
                 },
                 function (err, docs) {

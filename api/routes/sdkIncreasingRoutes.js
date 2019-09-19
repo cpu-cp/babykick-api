@@ -158,7 +158,8 @@ router.post("/:lineId", (req, res, next) => {
                         'counting.$.result': 'ลูกดิ้นดี',
                         timer_status: timerStatus,
                         sdk_status: 'enable',
-                        extra: 'disable'
+                        extra: 'disable',
+                        count_type: 'any',
                     }
                 },
                 {
@@ -182,7 +183,8 @@ router.post("/:lineId", (req, res, next) => {
                         'counting.$.result': 'ลูกดิ้นดี',
                         timer_status: timerStatus,
                         sdk_status: 'enable',
-                        extra: 'disable'
+                        extra: 'disable',
+                        count_type: 'any',
                     }
                 },
                 {
@@ -206,7 +208,8 @@ router.post("/:lineId", (req, res, next) => {
                         'counting.$.result': 'ลูกดิ้นดี',
                         timer_status: timerStatus,
                         sdk_status: 'enable',
-                        extra: 'disable'
+                        extra: 'disable',
+                        count_type: 'any',
                     }
                 },
                 {
@@ -308,7 +311,7 @@ router.post("/extra/:lineId", (req, res, next) => {
                         'counting.$.sdk_all_meal': 1
                     },
                     $set: {
-                        timer_status: timerStatus
+                        timer_status: timerStatus,
                     }
                 },
                 {
@@ -333,7 +336,8 @@ router.post("/extra/:lineId", (req, res, next) => {
                         'counting.$.result': 'ลูกดิ้นดี',
                         timer_status: timerStatus,
                         sdk_status: 'enable',
-                        extra: 'disable'
+                        extra: 'disable',
+                        count_type: 'any',
                     }
                 },
                 {

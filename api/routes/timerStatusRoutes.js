@@ -38,7 +38,7 @@ router.post("/", (req, res, next) => {
                 timer_status: docs.timer_status,
                 sdk_status: docs.sdk_status,
                 extra: docs.extra,
-                count_type: docs.counting[(docs.counting.length) - 1].count_type
+                count_type: docs.count_type
             });
         }).catch(err => {
             console.log(err)

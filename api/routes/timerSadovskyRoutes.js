@@ -178,6 +178,7 @@ router.post("/", (req, res, next) => {
         dataCollection.updateOne({ line_id: req.body.line_id }, {
             $set: {
                 timer_status: "running",
+                count_type: 'sdk',
             },
             $push: {
                 counting: {
@@ -220,7 +221,7 @@ router.post("/", (req, res, next) => {
                 if (docs.counting[countingLength - 1].sdk_all_meal == 10) {   // amount = 10
                     console.log('set time out : you have been time out and close an array already')
                 }
-                if (docs.counting[countingLength - 1].sdk_first_meal >= 3) {
+                if (docs.counting[countingLength - 1].sdk_first_meal >= 3) { 
                     dataCollection.findOneAndUpdate({ line_id: req.body.line_id, 'counting._did': _did }, {
                         $set: {
                             timer_status: "timeout",
@@ -294,6 +295,7 @@ router.post("/", (req, res, next) => {
                             timer_status: "timeout",
                             sdk_status: "disable",
                             extra: 'ctt',
+                            count_type: 'ctt',
                             'counting.$.result': 'มีความเสี่ยง',
                         },
                     }, function (err, docs) {
@@ -495,6 +497,7 @@ router.post("/", (req, res, next) => {
                                 timer_status: "timeout",
                                 sdk_status: "enable",
                                 extra: 'enable',
+                                count_type: 'sdk',
                                 'counting.$.result': 'มีความเสี่ยง',
                             },
                         }, function (err, docs) {
@@ -570,6 +573,7 @@ router.post("/", (req, res, next) => {
                         timer_status: "timeout",
                         sdk_status: 'enable',
                         extra: 'disable',
+                        count_type: 'any',
                         'counting.$.status': 'close'
                     }
                 }, function (err, docs) {
@@ -577,7 +581,7 @@ router.post("/", (req, res, next) => {
                     console.log('close automatic success');
                 });
             });
-        }, 300000); / <----------------------------------------- pls come back to set time to 18 hr */
+        }, 900000); / <----------------------------------------- pls come back to set time to 18 hr */
     }
 
 });

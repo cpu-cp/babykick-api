@@ -47,6 +47,9 @@ var dataSchema = new Schema({
     extra: {
         type: String
     },
+    count_type: {
+        type: String
+    },
     counting: [countingSchema],
 });
 

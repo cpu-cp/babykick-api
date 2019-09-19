@@ -42,6 +42,7 @@ router.post("/", (req, res, next) => {
         timer_status: 'timeout',
         sdk_status: 'enable',
         extra: 'disable',
+        count_type: 'any',
     });
 
     //check if account is exists

@@ -106,6 +106,7 @@ router.post("/", (req, res, next) => {
             dataCollection.updateOne({ line_id: req.body.line_id, 'counting._did': _did }, {
                 $set: {
                     timer_status: "running",
+                    count_type: 'sdk',
                 }
             }, function (err, docs) {
                 console.log(err)
@@ -136,6 +137,7 @@ router.post("/", (req, res, next) => {
                                 timer_status: "timeout",
                                 sdk_status: "disable",
                                 extra: "disable",
+                                count_type: 'any',
                                 'counting.$.status': "close",
                                 'counting.$.result': "มีความเสี่ยง",
                             }
@@ -182,17 +184,3 @@ router.post("/", (req, res, next) => {
 });
 
 module.exports = router;
-
-// $push: {
-                //     counting: {
-                //         week: currentWeek,
-                //         day: currentDay,
-                //         _did: _did,
-                //         date: date,
-                //         time: time,
-                //         timestamp: timestamp,
-                //         count_type: 'CTT',
-                //         ctt_amount: 0,
-                //         status: 'open'
-                //     }
-                // }

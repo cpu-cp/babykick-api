@@ -163,6 +163,10 @@ router.post("/", (req, res, next) => {
 
     function firstDay(currentWeek, currentDay, date, time, timestamp, end_time, week_by_date) {
         dataCollection.updateOne({ line_id: req.body.line_id }, {
+            $set: {
+                count_type: 'ctt',
+                sdk_status: 'disable'
+            },
             $push: {
                 counting: {
                     week_by_date: week_by_date,
@@ -194,6 +198,10 @@ router.post("/", (req, res, next) => {
 
     function newDay(currentWeek, currentDay, date, time, timestamp, end_time, week_by_date) {
         dataCollection.updateOne({ line_id: req.body.line_id }, {
+            $set: {
+                count_type: 'ctt',
+                sdk_status: 'disable'
+            },
             $push: {
                 counting: {
                     week_by_date: week_by_date,
@@ -288,6 +296,7 @@ router.post("/", (req, res, next) => {
                             $set: {
                                 timer_status: "timeout",
                                 sdk_status: 'enable',
+                                count_type: 'any',
                                 'counting.$.status': 'close',
                                 'counting.$.result': 'มีความเสี่ยง'
                             }
