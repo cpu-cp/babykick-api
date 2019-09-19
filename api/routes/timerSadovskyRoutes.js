@@ -14,6 +14,7 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const line = require('@line/bot-sdk');
+const cron = require('node-cron');
 
 const dataCollection = require("../models/dataModel");
 
@@ -30,6 +31,48 @@ router.post("/", (req, res, next) => {
                     status: 'error',
                     message: 'line id is invalid',
                 });
+
+                / push message to line */
+                const client = new line.Client({
+                    channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
+                });
+                const message = [
+                    {
+                        type: 'text',
+                        text: 'คุณแม่ต้องลงทะเบียนก่อนใช้งานการนับลูกดิ้นนะคะ'
+                    },
+                    {
+                        type: "flex",
+                        altText: "ลงทะเบียนคุณแม่",
+                        contents: {
+                            type: "bubble",
+                            body: {
+                                type: "box",
+                                layout: "vertical",
+                                contents: [
+                                    {
+                                        type: "button",
+                                        style: "primary",
+                                        height: "sm",
+                                        action: {
+                                            type: "uri",
+                                            label: "ลงทะเบียนคุณแม่",
+                                            uri: "line://app/1606482498-VJdOoZXR"
+                                        },
+                                        color: "#dd8cc9"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ]
+                client.pushMessage(req.body.line_id, message)
+                    .then(() => {
+                        console.log('push message go to ctt done!')
+                    })
+                    .catch((err) => {
+                        console.log(err);   // error when use fake line id 
+                    });
             }
             else {
                 var countingLength = docs.counting.length;
@@ -149,6 +192,7 @@ router.post("/", (req, res, next) => {
                     sdk_first_meal: 0,
                     sdk_second_meal: 0,
                     sdk_third_meal: 0,
+                    sdk_all_meal: 0,
                     result: '',
                     status: '1st'
                 }
@@ -173,15 +217,83 @@ router.post("/", (req, res, next) => {
                 var _did = docs.counting[latestCounting]._did;
 
                 // check if user's count amount is 10, push message to line already
-                if (docs.counting[countingLength - 1].sdk_first_meal == 3) {   // amount = 3
+                if (docs.counting[countingLength - 1].sdk_all_meal == 10) {   // amount = 10
                     console.log('set time out : you have been time out and close an array already')
+                }
+                if (docs.counting[countingLength - 1].sdk_first_meal >= 3) {
+                    dataCollection.findOneAndUpdate({ line_id: req.body.line_id, 'counting._did': _did }, {
+                        $set: {
+                            timer_status: "timeout",
+                            sdk_status: "enable",
+                            extra: 'disable',
+                        },
+                    }, function (err, docs) {
+                        console.log(err)
+                        console.log('1st meal time out >> greater than or equal to 3, see u in 2nd meal')
+                    });
+
+                    / push message to line */
+                    const client = new line.Client({
+                        channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
+                    });
+                    const message = [
+                        {
+                            type: 'text',
+                            text: '👍เยี่ยมมากค่ะคุณแม่ ลูกดิ้นดี 👶🏻😁'
+                        },
+                        {
+                            type: 'text',
+                            text: 'คุณแม่อย่าลืมกลับมานับต่อหลังรับประทานมื้อเที่ยงนะคะ 🍽'
+                        },
+                        {
+                            type: "sticker",
+                            packageId: 3,
+                            stickerId: 184
+                        }
+                    ]
+                    client.pushMessage(lineId, message)
+                        .then(() => {
+                            console.log('push message 1st done!')
+                        })
+                        .catch((err) => {
+                            console.log(err);   // error when use fake line id 
+                        });
+
+                    var getDate = new Date(Date.now()).getDate();
+                    var getMonth = new Date(Date.now()).getMonth() + 1;
+                    let sScheduleLunch = '0 12 ' + getDate + ' ' + getMonth + ' *';
+
+                    cron.schedule(sScheduleLunch, () => {
+                        console.log('Runing a job  at Asia/Bangkok timezone');
+
+                        / push message to line */
+                        const client = new line.Client({
+                            channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
+                        });
+                        const message = [
+                            {
+                                type: 'text',
+                                text: 'เที่ยงแล้ว อย่าลืมมานับ Sadovsky ต่อนะคะ'
+                            },
+                        ]
+                        client.pushMessage(lineId, message)
+                            .then(() => {
+                                console.log('corn : push lunch message done!')
+                            })
+                            .catch((err) => {
+                                console.log(err);   // error when use fake line id 
+                            });
+                    }, {
+                            scheduled: true,
+                            timezone: "Asia/Bangkok"
+                        });
                 }
                 else { // amount != 3, go to ctt
                     dataCollection.findOneAndUpdate({ line_id: req.body.line_id, 'counting._did': _did }, {
                         $set: {
                             timer_status: "timeout",
                             sdk_status: "disable",
-                            extra: 'disable',
+                            extra: 'ctt',
                             'counting.$.result': 'มีความเสี่ยง',
                         },
                     }, function (err, docs) {
@@ -196,11 +308,15 @@ router.post("/", (req, res, next) => {
                     const message = [
                         {
                             type: 'text',
-                            text: '🕒 เช้านี้ครบ 1 ชั่วโมงแล้วค่ะ แต่ลูกของคุณแม่ดิ้นไม่ครบ 3 ครั้ง'
+                            text: '🌞 เช้านี้นับครบ 1 ชั่วโมงแล้ว 🕤 แต่ลูกคุณแม่ดิ้นไม่ครบ 3 ครั้ง 😞'
                         },
                         {
                             type: 'text',
-                            text: 'แนะนำให้คุณแม่กลับไปนวดลูกก่อน แล้วมาเริ่มนับใหม่โดยใช้แบบ Count to ten นะคะ'
+                            text: '📢 แนะนำให้คุณแม่กลับไปกระตุ้นปลุกลูกแล้วมาเริ่มนับใหม่ โดยใช้วิธี Count to ten นะคะ 😁😁'
+                        },
+                        {
+                            type: 'text',
+                            text: '✳️ วิธีกระตุ้นปลุกลูก 👶🏻😀 \n📍ขยับตัว เปลี่ยนท่าทาง 🚶‍♀️ \n📍รับประทานอาหารว่างหรือดื่มน้ำเย็น แล้วรอสัก 2 – 3 นาที 🍉🍍 \n📍นวดเบาๆ หรือลูบท้อง 🤰🏻 \n📍ใช้ไฟฉายส่องที่หน้าท้อง🔦"'
                         },
                         {
                             type: "sticker",
@@ -249,15 +365,83 @@ router.post("/", (req, res, next) => {
                 dataCollection.findOne({ line_id: req.body.line_id }, function (err, docs) {
                     var _dids = docs.counting[(docs.counting.length) - 1]._did;
 
-                    if (docs.counting[(docs.counting.length) - 1].sdk_second_meal == 3) {   // amount = 3 already
+                    if (docs.counting[(docs.counting.length) - 1].sdk_all_meal == 10) {   // amount = 3 already
                         console.log('set time out : you have been time out and close an array already')
+                    }
+                    else if (docs.counting[(docs.counting.length) - 1].sdk_second_meal >= 3) {
+                        dataCollection.findOneAndUpdate({ line_id: req.body.line_id, 'counting._did': _did }, {
+                            $set: {
+                                timer_status: "timeout",
+                                sdk_status: "enable",
+                                extra: 'disable',
+                            },
+                        }, function (err, docs) {
+                            console.log(err)
+                            console.log('2st meal time out >> greater than or equal to 3, see u in 3nd meal')
+                        });
+
+                        / push message to line */
+                        const client = new line.Client({
+                            channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
+                        });
+                        const message = [
+                            {
+                                type: 'text',
+                                text: '👍เยี่ยมมากค่ะคุณแม่ ลูกดิ้นดี 👶🏻😁'
+                            },
+                            {
+                                type: 'text',
+                                text: 'คุณแม่อย่าลืมกลับมานับต่อหลังรับประทานมื้อเย็นนะคะ 🍽'
+                            },
+                            {
+                                type: "sticker",
+                                packageId: 3,
+                                stickerId: 184
+                            }
+                        ]
+                        client.pushMessage(lineId, message)
+                            .then(() => {
+                                console.log('push message 2nd done!')
+                            })
+                            .catch((err) => {
+                                console.log(err);   // error when use fake line id 
+                            });
+
+                        var getDate = new Date(Date.now()).getDate();
+                        var getMonth = new Date(Date.now()).getMonth() + 1;
+                        let sScheduleDinner = '0 18 ' + getDate + ' ' + getMonth + ' *';
+
+                        cron.schedule(sScheduleDinner, () => {
+                            console.log('Runing a job  at Asia/Bangkok timezone');
+
+                            / push message to line */
+                            const client = new line.Client({
+                                channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
+                            });
+                            const message = [
+                                {
+                                    type: 'text',
+                                    text: 'เย็นแล้ว อย่าลืมมานับ Sadovsky ต่อนะคะ'
+                                },
+                            ]
+                            client.pushMessage(lineId, message)
+                                .then(() => {
+                                    console.log('corn : push dinner message done!')
+                                })
+                                .catch((err) => {
+                                    console.log(err);   // error when use fake line id 
+                                });
+                        }, {
+                                scheduled: true,
+                                timezone: "Asia/Bangkok"
+                            });
                     }
                     else { // amount != 3, go to ctt
                         dataCollection.findOneAndUpdate({ line_id: req.body.line_id, 'counting._did': _dids }, {
                             $set: {
                                 timer_status: "timeout",
                                 sdk_status: "disable",
-                                extra: 'disable',
+                                extra: 'ctt',
                                 'counting.$.result': 'มีความเสี่ยง',
                             },
                         }, function (err, docs) {
@@ -272,11 +456,15 @@ router.post("/", (req, res, next) => {
                         const message = [
                             {
                                 type: 'text',
-                                text: '🕒 เที่ยงนี้ครบ 1 ชั่วโมงแล้วค่ะ แต่ลูกของคุณแม่ดิ้นไม่ครบ 3 ครั้ง'
+                                text: '🌞 เที่ยงนี้นับครบ 1 ชั่วโมงแล้ว 🕤 แต่ลูกคุณแม่ดิ้นไม่ครบ 3 ครั้ง 😞'
                             },
                             {
                                 type: 'text',
-                                text: 'แนะนำให้คุณแม่กลับไปนวดลูกก่อน แล้วมาเริ่มนับใหม่โดยใช้แบบ Count to ten นะคะ'
+                                text: '📢 แนะนำให้คุณแม่กลับไปกระตุ้นปลุกลูกแล้วมาเริ่มนับใหม่ โดยใช้วิธี Count to ten นะคะ 😁😁'
+                            },
+                            {
+                                type: 'text',
+                                text: '✳️ วิธีกระตุ้นปลุกลูก 👶🏻😀 \n📍ขยับตัว เปลี่ยนท่าทาง 🚶‍♀️ \n📍รับประทานอาหารว่างหรือดื่มน้ำเย็น แล้วรอสัก 2 – 3 นาที 🍉🍍 \n📍นวดเบาๆ หรือลูบท้อง 🤰🏻 \n📍ใช้ไฟฉายส่องที่หน้าท้อง🔦"'
                             },
                             {
                                 type: "sticker",
@@ -294,14 +482,14 @@ router.post("/", (req, res, next) => {
                     }
                 });
             }
-            else {                  // else 3rd
+            else if (meal == '3rd') {                  // else 3rd
                 dataCollection.findOne({ line_id: req.body.line_id }, function (err, docs) {
                     var _dids = docs.counting[(docs.counting.length) - 1]._did;
 
-                    if (docs.counting[(docs.counting.length) - 1].sdk_third_meal == 3) {   // amount = 3 already
+                    if (docs.counting[(docs.counting.length) - 1].sdk_all_meal == 10) {   // amount = 10 already
                         console.log('set time out : you have been time out and close an array already')
                     }
-                    else { // amount != 3, go to ctt
+                    else { // amount != 10, go to extra
                         dataCollection.findOneAndUpdate({ line_id: req.body.line_id, 'counting._did': _dids }, {
                             $set: {
                                 timer_status: "timeout",
@@ -311,7 +499,7 @@ router.post("/", (req, res, next) => {
                             },
                         }, function (err, docs) {
                             console.log(err)
-                            console.log('3rd meal time out! please go to ctt')
+                            console.log('3rd meal time out! please go to extra')
                         });
 
                         / push message to line */
@@ -321,11 +509,11 @@ router.post("/", (req, res, next) => {
                         const message = [
                             {
                                 type: 'text',
-                                text: '🕒 เย็นนี้ครบ 1 ชั่วโมงแล้วค่ะ แต่ลูกของคุณแม่ดิ้นไม่ครบ 3 ครั้ง'
+                                text: '🌞 เย็นนี้นับครบ 1 ชั่วโมงแล้ว 🕛 แต่ลูกคุณแม่ดิ้นไม่ครบ 3 ครั้ง 😞'
                             },
                             {
                                 type: 'text',
-                                text: 'แนะนำให้คุณแม่กลับไปนวดลูกก่อน แล้วกลับมาลองนับแบบ Sadovsky ของมื้อเย็นใหม่อีกครั้งนะคะ'
+                                text: 'คุณแม่นับต่ออีก 1 ชั่วโมงนะคะ'
                             },
                             {
                                 type: "sticker",
@@ -359,7 +547,7 @@ router.post("/", (req, res, next) => {
                         ]
                         client.pushMessage(req.body.line_id, message)
                             .then(() => {
-                                console.log('push message go to ctt done!')
+                                console.log('push message go to extra done!')
                             })
                             .catch((err) => {
                                 console.log(err);   // error when use fake line id 
@@ -395,3 +583,33 @@ router.post("/", (req, res, next) => {
 });
 
 module.exports = router;
+
+// var getDate = new Date(Date.now()).getDate();
+// var getMonth = new Date(Date.now()).getMonth() + 1;
+// let sScheduleLunch = '0 12 ' + getDate + ' ' + getMonth + ' *';
+// let sScheduleDinner = '0 18 ' + getDate + ' ' + getMonth + ' *';
+
+// cron.schedule(sScheduleLunch, () => {
+    //     console.log('Runing a job  at Asia/Bangkok timezone');
+
+    //     / push message to line */
+    //     const client = new line.Client({
+    //         channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
+    //     });
+    //     const message = [
+    //         {
+    //             type: 'text',
+    //             text: 'เที่ยงแล้ว อย่าลืมมานับ Sadovsky ต่อนะคะ'
+    //         },
+    //     ]
+    //     client.pushMessage(lineId, message)
+    //         .then(() => {
+    //             console.log('corn : push lunch message done!')
+    //         })
+    //         .catch((err) => {
+    //             console.log(err);   // error when use fake line id 
+    //         });
+    // }, {
+    //         scheduled: true,
+    //         timezone: "Asia/Bangkok"
+    //     });

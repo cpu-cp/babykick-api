@@ -35,21 +35,6 @@ router.post("/", (req, res, next) => {
             else {
                 if (docs.extra == 'enable') {
 
-
-                    // remove array
-                    // dataCollection.findOne({ line_id: req.body.line_id }, function (err, docs) {
-                    //     dataCollection.updateOne({ line_id: req.body.line_id, 'counting._did': _did }, {
-                    //         $pull: {
-                    //             counting: {
-                    //                 $elemMatch: { _did: _did }
-                    //             }
-                    //         }
-                    //     }, function (err, docs) {
-                    //         console.log(err)
-                    //         console.log('remove array');
-                    //     });
-                    // });
-
                     var currentDay;
                     var currentWeek;
                     var countingLength = docs.counting.length;
@@ -101,6 +86,12 @@ router.post("/", (req, res, next) => {
                     }
 
                 }
+                else {
+                    res.status(401).json({
+                        message: 'now you can not use extra',
+                        extra: false
+                    });
+                }
             }
         }).catch(err => {
             console.log(err)
@@ -115,7 +106,6 @@ router.post("/", (req, res, next) => {
             dataCollection.updateOne({ line_id: req.body.line_id, 'counting._did': _did }, {
                 $set: {
                     timer_status: "running",
-                    'counting.$.sdk_third_meal': 0,
                 }
             }, function (err, docs) {
                 console.log(err)
@@ -147,6 +137,7 @@ router.post("/", (req, res, next) => {
                                 sdk_status: "disable",
                                 extra: "disable",
                                 'counting.$.status': "close",
+                                'counting.$.result': "มีความเสี่ยง",
                             }
                         }, function (err, docs) {
                             console.log(err)

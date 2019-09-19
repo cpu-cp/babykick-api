@@ -36,34 +36,30 @@ router.post("/:lineId", (req, res, next) => {
 
                 var _did = (week.toString() + 'w' + day.toString() + 'd').toString();
 
-                var getDate = new Date(Date.now()).getDate();
-                var getMonth = new Date(Date.now()).getMonth() + 1;
-                let sScheduleLunch = '0 12 ' + getDate + ' ' + getMonth + ' *';
-                let sScheduleDinner = '0 18 ' + getDate + ' ' + getMonth + ' *';
 
                 if (docs.timer_status == 'running') {
 
                     res.json(docs.counting[(docs.counting.length) - 1]);
 
                     if (docs.counting[countingLength - 1].status == '1st') {
-                        if (docs.counting[countingLength - 1].sdk_first_meal == 2) {
-                            onFirstMeal('1st', 'timeout', _did, sScheduleLunch);
+                        if (docs.counting[countingLength - 1].sdk_all_meal == 9) {
+                            successfully('1st', 'timeout', _did);
                         }
                         else {
-                            onFirstMeal('1st', 'running', _did, sScheduleLunch);
+                            onFirstMeal('1st', 'running', _did);
                         }
                     }
                     else if (docs.counting[countingLength - 1].status == '2nd') {
-                        if (docs.counting[countingLength - 1].sdk_second_meal == 2) {
-                            onSecondMeal('2nd', 'timeout', _did, sScheduleDinner);
+                        if (docs.counting[countingLength - 1].sdk_all_meal == 9) {
+                            successfully('2nd', 'timeout', _did);
                         }
                         else {
-                            onSecondMeal('2nd', 'running', _did, sScheduleDinner);
+                            onSecondMeal('2nd', 'running', _did);
                         }
                     }
                     else if (docs.counting[countingLength - 1].status == '3rd') {
-                        if (docs.counting[countingLength - 1].sdk_third_meal == 2) {
-                            onThirdMeal('3rd', 'timeout', _did);
+                        if (docs.counting[countingLength - 1].sdk_all_meal == 9) {
+                            successfully('3rd', 'timeout', _did);
                         }
                         else {
                             onThirdMeal('3rd', 'running', _did);
@@ -85,68 +81,11 @@ router.post("/:lineId", (req, res, next) => {
 
 
     function onFirstMeal(meal, timerStatus, _did, sScheduleLunch) {
-        if (timerStatus == 'timeout') {
-
-            / push message to line */
-            const client = new line.Client({
-                channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
-            });
-            const message = [
-                {
-                    type: 'text',
-                    text: 'ยินดีด้วยค่ะ \nมื้อเช้าวันนี้ลูกดิ้นดีครบ 3 ครั้ง 🌄'
-                },
-                {
-                    type: 'text',
-                    text: 'ตอนเที่ยงอย่าลืมมานับต่อนะคะ'
-                },
-                {
-                    type: "image",
-                    originalContentUrl: 'https://atb-files.s3.ap-southeast-1.amazonaws.com/sadovsky-morning.jpg',
-                    previewImageUrl: 'https://atb-files.s3.ap-southeast-1.amazonaws.com/sadovsky-morning.jpg'
-                }
-            ]
-            client.pushMessage(lineId, message)
-                .then(() => {
-                    console.log('push message inc 1st done!')
-                })
-                .catch((err) => {
-                    console.log(err);   // error when use fake line id 
-                });
-
-
-            console.log(sScheduleLunch);
-
-            cron.schedule(sScheduleLunch, () => {
-                console.log('Runing a job  at Asia/Bangkok timezone');
-
-                / push message to line */
-                const client = new line.Client({
-                    channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
-                });
-                const message = [
-                    {
-                        type: 'text',
-                        text: 'เที่ยงแล้ว อย่าลืมมานับ Sadovsky ต่อนะคะ'
-                    },
-                ]
-                client.pushMessage(lineId, message)
-                    .then(() => {
-                        console.log('corn : push lunch message done!')
-                    })
-                    .catch((err) => {
-                        console.log(err);   // error when use fake line id 
-                    });
-            }, {
-                    scheduled: true,
-                    timezone: "Asia/Bangkok"
-                });
-        }
-
         dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
             {
                 $inc: {
-                    'counting.$.sdk_first_meal': 1
+                    'counting.$.sdk_first_meal': 1,
+                    'counting.$.sdk_all_meal': 1
                 },
                 $set: {
                     timer_status: timerStatus
@@ -158,70 +97,16 @@ router.post("/:lineId", (req, res, next) => {
             function (err, docs, res) {
                 console.log(err);
                 console.log('increase sdk_first_meal successful!')
-                // res.json(docs);
             }
         );
     }
 
     function onSecondMeal(meal, timerStatus, _did, sScheduleDinner) {
-        if (timerStatus == 'timeout') {
-            / push message to line */
-            const client = new line.Client({
-                channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
-            });
-            const message = [
-                {
-                    type: 'text',
-                    text: 'ยินดีด้วยค่ะ \nมื้อเที่ยงวันนี้ลูกดิ้นดีครบ 3 ครั้ง ☀'
-                },
-                {
-                    type: 'text',
-                    text: 'ตอนเย็นอย่าลืมมานับต่อนะคะ'
-                },
-                {
-                    type: "image",
-                    originalContentUrl: 'https://atb-files.s3.ap-southeast-1.amazonaws.com/sadovsky-afternoon.jpg',
-                    previewImageUrl: 'https://atb-files.s3.ap-southeast-1.amazonaws.com/sadovsky-afternoon.jpg'
-                }
-            ]
-            client.pushMessage(lineId, message)
-                .then(() => {
-                    console.log('push message inc 2nd done!')
-                })
-                .catch((err) => {
-                    console.log(err);   // error when use fake line id 
-                });
-
-            cron.schedule(sScheduleDinner, () => {
-                console.log('Runing a job  at Asia/Bangkok timezone');
-
-                / push message to line */
-                const client = new line.Client({
-                    channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
-                });
-                const message = [
-                    {
-                        type: 'text',
-                        text: 'เย็นแล้ว อย่าลืมมานับ Sadovsky ต่อนะคะ'
-                    },
-                ]
-                client.pushMessage(lineId, message)
-                    .then(() => {
-                        console.log('corn : push dinner message done!')
-                    })
-                    .catch((err) => {
-                        console.log(err);   // error when use fake line id 
-                    });
-            }, {
-                    scheduled: true,
-                    timezone: "Asia/Bangkok"
-                });
-        }
-
         dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
             {
                 $inc: {
-                    'counting.$.sdk_second_meal': 1
+                    'counting.$.sdk_second_meal': 1,
+                    'counting.$.sdk_all_meal': 1
                 },
                 $set: {
                     timer_status: timerStatus
@@ -240,31 +125,33 @@ router.post("/:lineId", (req, res, next) => {
     }
 
     function onThirdMeal(meal, timerStatus, _did, getDate, getMonth) {
-        if (timerStatus == 'running') {
-            dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
-                {
-                    $inc: {
-                        'counting.$.sdk_third_meal': 1
-                    },
-                    $set: {
-                        timer_status: timerStatus
-                    }
+        dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
+            {
+                $inc: {
+                    'counting.$.sdk_third_meal': 1,
+                    'counting.$.sdk_all_meal': 1
                 },
-                {
-                    modifiedCount: 1
-                },
-                function (err, docs, res) {
-                    console.log(err);
-                    console.log('increase sdk_third_meal successful!');
-                    // res.json(docs);
+                $set: {
+                    timer_status: timerStatus
                 }
-            );
-        }
-        else {
+            },
+            {
+                modifiedCount: 1
+            },
+            function (err, docs, res) {
+                console.log(err);
+                console.log('increase sdk_third_meal successful!');
+            }
+        );
+    }
+
+    function successfully(meal, timerStatus, _did) {
+        if (meal == '1st') {
             dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
                 {
                     $inc: {
-                        'counting.$.sdk_third_meal': 1
+                        'counting.$.sdk_first_meal': 1,
+                        'counting.$.sdk_all_meal': 1
                     },
                     $set: {
                         'counting.$.status': 'close',
@@ -279,39 +166,85 @@ router.post("/:lineId", (req, res, next) => {
                 },
                 function (err, docs, res) {
                     console.log(err);
-                    console.log('increase sdk_third_meal successful!');
-                    // res.json(docs);
+                    console.log('sdk successful!');
                 }
             );
-
-            / push message to line */
-            const client = new line.Client({
-                channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
-            });
-            const message = [
+        }
+        else if (meal == '2nd') {
+            dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
                 {
-                    type: 'text',
-                    text: 'ยินดีด้วยค่ะ \nมื้อเย็นวันนี้ลูกดิ้นดีครบ 3 ครั้ง 🌅'
+                    $inc: {
+                        'counting.$.sdk_second_meal': 1,
+                        'counting.$.sdk_all_meal': 1
+                    },
+                    $set: {
+                        'counting.$.status': 'close',
+                        'counting.$.result': 'ลูกดิ้นดี',
+                        timer_status: timerStatus,
+                        sdk_status: 'enable',
+                        extra: 'disable'
+                    }
                 },
                 {
-                    type: 'text',
-                    text: 'พรุ่งนี้อย่าลืมแวะมานับใหม่น้า'
+                    modifiedCount: 1
                 },
-                {
-                    type: "sticker",
-                    packageId: 3,
-                    stickerId: 184
+                function (err, docs, res) {
+                    console.log(err);
+                    console.log('sdk successful!');
                 }
-            ]
-            client.pushMessage(lineId, message)
-                .then(() => {
-                    console.log('push message 3rd done!')
-                })
-                .catch((err) => {
-                    console.log(err);   // error when use fake line id 
-                });
+            );
+        }
+        else if (meal == '3rd') {
+            dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
+                {
+                    $inc: {
+                        'counting.$.sdk_third_meal': 1,
+                        'counting.$.sdk_all_meal': 1
+                    },
+                    $set: {
+                        'counting.$.status': 'close',
+                        'counting.$.result': 'ลูกดิ้นดี',
+                        timer_status: timerStatus,
+                        sdk_status: 'enable',
+                        extra: 'disable'
+                    }
+                },
+                {
+                    modifiedCount: 1
+                },
+                function (err, docs, res) {
+                    console.log(err);
+                    console.log('sdk successful!');
+                }
+            );
         }
 
+        / push message to line */
+        const client = new line.Client({
+            channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
+        });
+        const message = [
+            {
+                type: 'text',
+                text: '👍เยี่ยมมากค่ะคุณแม่ ลูกดิ้นดี 👶🏻😁'
+            },
+            {
+                type: 'text',
+                text: 'วันนี้คุณแม่นับลูกดิ้นเรียบร้อยแล้ว กลับมานับใหม่พรุ่งนี้นะคะ'
+            },
+            {
+                type: "sticker",
+                packageId: 3,
+                stickerId: 184
+            }
+        ]
+        client.pushMessage(lineId, message)
+            .then(() => {
+                console.log('push message 3rd done!')
+            })
+            .catch((err) => {
+                console.log(err);   // error when use fake line id 
+            });
     }
 
 });
@@ -346,7 +279,7 @@ router.post("/extra/:lineId", (req, res, next) => {
                     var _did = (week.toString() + 'w' + day.toString() + 'd').toString();
 
                     if (docs.counting[(docs.counting.length) - 1].status == '3rd') {
-                        if (docs.counting[(docs.counting.length) - 1].sdk_third_meal == 2) {
+                        if (docs.counting[(docs.counting.length) - 1].sdk_all_meal == 9) {
                             onThirdMeal('3rd', 'timeout', _did);
                         }
                         else {
@@ -371,7 +304,8 @@ router.post("/extra/:lineId", (req, res, next) => {
             dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
                 {
                     $inc: {
-                        'counting.$.sdk_third_meal': 1
+                        'counting.$.sdk_third_meal': 1,
+                        'counting.$.sdk_all_meal': 1
                     },
                     $set: {
                         timer_status: timerStatus
@@ -391,10 +325,12 @@ router.post("/extra/:lineId", (req, res, next) => {
             dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
                 {
                     $inc: {
-                        'counting.$.sdk_third_meal': 1
+                        'counting.$.sdk_third_meal': 1,
+                        'counting.$.sdk_all_meal': 1
                     },
                     $set: {
                         'counting.$.status': 'close',
+                        'counting.$.result': 'ลูกดิ้นดี',
                         timer_status: timerStatus,
                         sdk_status: 'enable',
                         extra: 'disable'
@@ -417,11 +353,11 @@ router.post("/extra/:lineId", (req, res, next) => {
             const message = [
                 {
                     type: 'text',
-                    text: 'ยินดีด้วยค่ะ \nนับมื้อเย็นเพิ่มวันนี้ลูกดิ้นดีครบ 3 ครั้ง 🌅'
+                    text: 'ยินดีด้วยค่ะ \nนับมื้อเย็นเพิ่มวันนี้ลูกดิ้นดีครบ 3 ครั้ง'
                 },
                 {
                     type: 'text',
-                    text: 'พรุ่งนี้อย่าลืมแวะมานับใหม่น้า'
+                    text: 'วันนี้คุณแม่นับลูกดิ้นเรียบร้อยแล้ว กลับมานับใหม่พรุ่งนี้นะคะ'
                 },
                 {
                     type: "sticker",

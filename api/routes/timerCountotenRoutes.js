@@ -30,8 +30,51 @@ router.post("/", (req, res, next) => {
                     status: 'error',
                     message: 'line id is invalid',
                 });
+
+                / push message to line */
+                const client = new line.Client({
+                    channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
+                });
+                const message = [
+                    {
+                        type: 'text',
+                        text: 'คุณแม่ต้องลงทะเบียนก่อนใช้งานการนับลูกดิ้นนะคะ'
+                    },
+                    {
+                        type: "flex",
+                        altText: "ลงทะเบียนคุณแม่",
+                        contents: {
+                            type: "bubble",
+                            body: {
+                                type: "box",
+                                layout: "vertical",
+                                contents: [
+                                    {
+                                        type: "button",
+                                        style: "primary",
+                                        height: "sm",
+                                        action: {
+                                            type: "uri",
+                                            label: "ลงทะเบียนคุณแม่",
+                                            uri: "line://app/1606482498-VJdOoZXR"
+                                        },
+                                        color: "#dd8cc9"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ]
+                client.pushMessage(req.body.line_id, message)
+                    .then(() => {
+                        console.log('push message go to ctt done!')
+                    })
+                    .catch((err) => {
+                        console.log(err);   // error when use fake line id 
+                    });
             }
             else {
+
                 var countingLength = docs.counting.length;
                 var week = Math.ceil(countingLength / 7);
                 var day = countingLength % 7;
@@ -65,19 +108,45 @@ router.post("/", (req, res, next) => {
                 };
                 var week_by_date = date.getWeek();
 
+                / check if user re-counting. a _did would not change */
+                if (docs.extra == 'ctt') {
+                    // remove previous array
+                    var _dids = docs.counting[(docs.counting.length) - 1]._did;
+                    console.log('*******', _dids)
+                    dataCollection.updateOne({ line_id: req.body.line_id, /*'counting._did': _dids */ }, {
+                        $set: {
+                            extra: "disable",   //change ctt to disable
+                        },
+                        $pull: {
+                            counting: {
+                                _did: _dids
+                            }
+                        }
+                    }, function (err, docs) {
+                        console.log(err)
+                        console.log('remove array');
+                    });
 
+                    currentWeek = week.toString();
+                    currentDay = day.toString();
+                }
+                else {
+                    currentWeek = (week + 1).toString();        // if normal counting, _did will change
+                    currentDay = (day + 1).toString();
+                }
+
+
+                / create new array */
                 if (countingLength == 0) {                          // if there isn't counting data before
                     firstDay('1', '1', date, time, timestamp, end_time, week_by_date);
                     timer();
                 }
                 else {                                              // if there is counting data 
                     if (day == 0) {
-                        currentWeek = (week + 1).toString();
                         newDay(currentWeek, '1', date, time, timestamp, end_time, week_by_date);
                         timer();
                     }
                     else {
-                        currentDay = (day + 1).toString();
                         newDay(week.toString(), currentDay, date, time, timestamp, end_time, week_by_date);
                         timer();
                     }
@@ -203,7 +272,7 @@ router.post("/", (req, res, next) => {
                         });
                 }
             });
-            
+
             setTimeout(function () {
                 dataCollection.findOne({ line_id: req.body.line_id }, function (err, docs) {
                     var countingLength = docs.counting.length;
@@ -218,6 +287,7 @@ router.post("/", (req, res, next) => {
                         dataCollection.updateOne({ line_id: req.body.line_id, 'counting._did': _did }, {
                             $set: {
                                 timer_status: "timeout",
+                                sdk_status: 'enable',
                                 'counting.$.status': 'close',
                                 'counting.$.result': 'มีความเสี่ยง'
                             }
@@ -264,3 +334,18 @@ router.post("/", (req, res, next) => {
 });
 
 module.exports = router;
+
+
+// remove array
+                    // dataCollection.findOne({ line_id: req.body.line_id }, function (err, docs) {
+                    //     dataCollection.updateOne({ line_id: req.body.line_id, 'counting._did': _did }, {
+                    //         $pull: {
+                    //             counting: {
+                    //                 $elemMatch: { _did: _did }
+                    //             }
+                    //         }
+                    //     }, function (err, docs) {
+                    //         console.log(err)
+                    //         console.log('remove array');
+                    //     });
+                    // });
