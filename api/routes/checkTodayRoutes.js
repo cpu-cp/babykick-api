@@ -55,7 +55,7 @@ router.post("/:lineId", (req, res, next) => {
 
                         / push messsage to line */
                         const client = new line.Client({
-                            channelAccessToken: 'U/6mbMtkbHi+PGkWqm50UCz4tpPV2pVgMRKyLM5ewyp4QhDIqv+wiyFuKR4Vof8Gh09nAGnpbOUhuk3mrkGULX68GRZ/L3rTT/txU6+eqMWE/7DUuzKTOUH1jayB7XPCJGtXQGxQgSxjkHr1+aAV4gdB04t89/1O/w1cDnyilFU='
+                            channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
                         });
                         const message = [
                             {
@@ -86,7 +86,8 @@ router.post("/:lineId", (req, res, next) => {
 
         }).catch(err => {
             console.log(err)
-            res.json({
+            res.status(401).json({
+                account: false,
                 message: 'line id not found.',
             });
         });
@@ -95,3 +96,21 @@ router.post("/:lineId", (req, res, next) => {
 module.exports = router;
 
 
+// router.get("/:lineId", (req, res, next) => {
+//     const lineId = req.params.lineId;
+
+//     Account.find({ line_id: lineId }, function (err, docs) {
+
+//         if (docs == "") {
+//             console.log('can create new account!');
+//             res.status(200).send('true');
+//         }
+//         else {
+//             res.status(200).send('false');          // that account is exists return false string
+//         }
+
+//     });
+
+// });
+
+// module.exports = router;
