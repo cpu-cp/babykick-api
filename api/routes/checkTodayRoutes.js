@@ -86,7 +86,7 @@ router.post("/:lineId", (req, res, next) => {
 
         }).catch(err => {
             console.log(err)
-            res.status(401).json({
+            res.status(200).json({
                 account: false,
                 message: 'line id not found.',
             });
