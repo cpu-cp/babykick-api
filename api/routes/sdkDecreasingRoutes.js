@@ -88,7 +88,8 @@ router.post("/:lineId", (req, res, next) => {
         dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
             {
                 $inc: {
-                    'counting.$.sdk_first_meal': -1
+                    'counting.$.sdk_first_meal': -1,
+                    'counting.$.sdk_all_meal': -1
                 },
                 $set: {
                     timer_status: timerStatus
@@ -109,7 +110,8 @@ router.post("/:lineId", (req, res, next) => {
         dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
             {
                 $inc: {
-                    'counting.$.sdk_second_meal': -1
+                    'counting.$.sdk_second_meal': -1,
+                    'counting.$.sdk_all_meal': -1
                 },
                 $set: {
                     timer_status: timerStatus
@@ -131,7 +133,8 @@ router.post("/:lineId", (req, res, next) => {
         dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
             {
                 $inc: {
-                    'counting.$.sdk_third_meal': -1
+                    'counting.$.sdk_third_meal': -1,
+                    'counting.$.sdk_all_meal': -1
                 },
                 $set: {
                     timer_status: timerStatus
@@ -213,7 +216,8 @@ router.post("/extra/:lineId", (req, res, next) => {
         dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
             {
                 $inc: {
-                    'counting.$.sdk_third_meal': -1
+                    'counting.$.sdk_third_meal': -1,
+                    'counting.$.sdk_all_meal': -1
                 },
                 $set: {
                     timer_status: timerStatus
