@@ -221,7 +221,7 @@ router.post("/", (req, res, next) => {
                 if (docs.counting[countingLength - 1].sdk_all_meal == 10) {   // amount = 10
                     console.log('set time out : you have been time out and close an array already')
                 }
-                if (docs.counting[countingLength - 1].sdk_first_meal >= 3) { 
+                else if (docs.counting[countingLength - 1].sdk_first_meal >= 3 && docs.counting[countingLength - 1].sdk_first_meal < 10) { 
                     dataCollection.findOneAndUpdate({ line_id: req.body.line_id, 'counting._did': _did }, {
                         $set: {
                             timer_status: "timeout",
@@ -370,7 +370,7 @@ router.post("/", (req, res, next) => {
                     if (docs.counting[(docs.counting.length) - 1].sdk_all_meal == 10) {   // amount = 3 already
                         console.log('set time out : you have been time out and close an array already')
                     }
-                    else if (docs.counting[(docs.counting.length) - 1].sdk_second_meal >= 3) {
+                    else if (docs.counting[(docs.counting.length) - 1].sdk_second_meal >= 3 && docs.counting[countingLength - 1].sdk_first_meal < 10) {
                         dataCollection.findOneAndUpdate({ line_id: req.body.line_id, 'counting._did': _did }, {
                             $set: {
                                 timer_status: "timeout",
