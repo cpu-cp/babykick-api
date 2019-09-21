@@ -43,7 +43,7 @@ router.post("/:lineId", (req, res, next) => {
                             add: true
                         });
                     }
-                    else if (docs.counting[(docs.counting.length) - 1].status == '1st' || docs.counting[(docs.counting.length) - 1].status == '2nd' || docs.counting[(docs.counting.length) - 1].status == '3rd') {
+                    else if (docs.counting[(docs.counting.length) - 1].status == '1st' || docs.counting[(docs.counting.length) - 1].status == '2nd' || docs.counting[(docs.counting.length) - 1].status == '3rd' || docs.counting[(docs.counting.length) - 1].status == 'open') {
                         res.status(200).json({
                             add: true
                         });
