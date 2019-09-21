@@ -23,6 +23,7 @@ const getCurrentArray = require("./api/routes/getCurrentArrayRoutes");
 const checkTodayRoutes = require("./api/routes/checkTodayRoutes");
 const checkSdkRoutes = require("./api/routes/checkSdkRoutes");
 const pushType = require("./api/routes/pushTypeRoutes");
+const checkButton = require("./api/routes/checkButton");
 
 
 // connect to mongoDB
@@ -82,6 +83,7 @@ app.use("/get/current", getCurrentArray);
 app.use("/check/today", checkTodayRoutes);
 app.use("/check/sdk", checkSdkRoutes);
 app.use("/push", pushType);
+app.use("/check/btn", checkButton);
 
 
 app.use((req, res, next) => {
