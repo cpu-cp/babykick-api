@@ -246,43 +246,9 @@ router.post("/", (req, res, next) => {
 
         // when 12 hr already
         setTimeout(function () {
-            dataCollection.findOne({ line_id: req.body.line_id }, function (err, docs) {
-                var countingLength = docs.counting.length;
-                var latestCounting = countingLength - 1;
-                var _did = docs.counting[latestCounting]._did;
-
-                // check if user's count amount is 10, push message to line already
-                if (docs.timer_status == 'timeout' && docs.counting[countingLength - 1].status == 'close') {
-                    console.log('set time out : you have been time out and close an array already')
-                }
-                else {
-                    / push message to line */
-                    const client = new line.Client({
-                        channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
-                    });
-                    const message = [
-                        {
-                            type: 'text',
-                            text: '6 ชั่วโมงแล้วน้า นวดลูกบ่อยๆ แล้วอย่าลืมมานับต่อนะคะ'
-                        },
-                        {
-                            type: "sticker",
-                            packageId: 3,
-                            stickerId: 232
-                        }
-                    ]
-                    client.pushMessage(req.body.line_id, message)
-                        .then(() => {
-                            console.log('push message done!')
-                        })
-                        .catch((err) => {
-                            console.log(err);   // error when use fake line id 
-                        });
-                }
-            });
-
-            setTimeout(function () {
-                dataCollection.findOne({ line_id: req.body.line_id }, function (err, docs) {
+            dataCollection.findOne({ line_id: req.body.line_id })
+                .exec()
+                .then(docs => {
                     var countingLength = docs.counting.length;
                     var latestCounting = countingLength - 1;
                     var _did = docs.counting[latestCounting]._did;
@@ -291,40 +257,21 @@ router.post("/", (req, res, next) => {
                     if (docs.timer_status == 'timeout' && docs.counting[countingLength - 1].status == 'close') {
                         console.log('set time out : you have been time out and close an array already')
                     }
-                    else {
-                        dataCollection.updateOne({ line_id: req.body.line_id, 'counting._did': _did }, {
-                            $set: {
-                                timer_status: "timeout",
-                                sdk_status: 'enable',
-                                count_type: 'any',
-                                'counting.$.status': 'close',
-                                'counting.$.result': 'มีความเสี่ยง'
-                            }
-                        }, function (err, docs) {
-                            console.log(err)
-                        });
-
-
+                    else if (docs.timer_status == 'running' && docs.counting[countingLength - 1].status == 'open') {
                         / push message to line */
                         const client = new line.Client({
                             channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
                         });
-
                         const message = [
                             {
                                 type: 'text',
-                                text: 'ครบ 12 ชั่วโมงแล้วค่ะ แต่ลูกของคุณแม่ดิ้นไม่ครบ 10 ครั้ง'
-                            }, {
-                                type: 'text',
-                                text: 'เพื่อความปลอดภัยของคุณแม่และลูกน้อย กรุณาติดต่อที่หมายเลข 📞1669 ค่ะ'
+                                text: '6 ชั่วโมงแล้วนะคะ มากระตุ้นปลุกลูกให้ดิ้นกันเถอะค่ะคุณแม่'
                             },
                             {
-                                type: "sticker",
-                                packageId: 3,
-                                stickerId: 190
-                            }
+                                type: 'text',
+                                text: '✳️ วิธีกระตุ้นปลุกลูก 👶🏻😀 \n\t📍ขยับตัว เปลี่ยนท่าทาง 🚶‍♀️ \n\t📍รับประทานอาหารว่างหรือดื่มน้ำเย็น แล้วรอสัก 2 – 3 นาที 🍉🍍 \n\t📍นวดเบาๆ หรือลูบท้อง 🤰🏻 \n\t📍ใช้ไฟฉายส่องที่หน้าท้อง🔦'
+                            },
                         ]
-
                         client.pushMessage(req.body.line_id, message)
                             .then(() => {
                                 console.log('push message done!')
@@ -333,7 +280,75 @@ router.post("/", (req, res, next) => {
                                 console.log(err);   // error when use fake line id 
                             });
                     }
+                }).catch(err => {
+                    console.log(err)
+                    res.status(200).json({
+                        account: false,
+                        message: 'line id not found.',
+                    });
                 });
+
+            setTimeout(function () {
+                dataCollection.findOne({ line_id: req.body.line_id })
+                    .exec()
+                    .then(docs => {
+                        var countingLength = docs.counting.length;
+                        var latestCounting = countingLength - 1;
+                        var _did = docs.counting[latestCounting]._did;
+
+                        // check if user's count amount is 10, push message to line already
+                        if (docs.timer_status == 'timeout' && docs.counting[countingLength - 1].status == 'close') {
+                            console.log('set time out : you have been time out and close an array already')
+                        }
+                        else if (docs.timer_status == 'running' && docs.counting[countingLength - 1].status == 'open') {
+                            dataCollection.updateOne({ line_id: req.body.line_id, 'counting._did': _did }, {
+                                $set: {
+                                    timer_status: "timeout",
+                                    sdk_status: 'enable',
+                                    count_type: 'any',
+                                    'counting.$.status': 'close',
+                                    'counting.$.result': 'มีความเสี่ยง'
+                                }
+                            }, function (err, docs) {
+                                console.log(err)
+                            });
+
+
+                            / push message to line */
+                            const client = new line.Client({
+                                channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
+                            });
+
+                            const message = [
+                                {
+                                    type: 'text',
+                                    text: '⚠ วันนี้คุณแม่นับลูกดิ้นครบ 12 ชั่วโมงแล้ว แต่ลูกน้อยยังดิ้นไม่ถึง 10 ครั้งเลย ▶ ซึ่งถือเป็นสัญญาณที่บ่งบอกว่าลูกน้อยมีภาวะสุขภาพไม่ดี '
+                                }, {
+                                    type: 'text',
+                                    text: '❗ คุณแม่ควรรีบไปโรงพยาบาลโดยเร็วที่สุด เพื่อให้แพทย์ตรวจเช็คสุขภาพของลูกน้อยในครรภ์ หรือโทร 1669 ❗'
+                                },
+                                {
+                                    type: "sticker",
+                                    packageId: 3,
+                                    stickerId: 190
+                                }
+                            ]
+
+                            client.pushMessage(req.body.line_id, message)
+                                .then(() => {
+                                    console.log('push message done!')
+                                })
+                                .catch((err) => {
+                                    console.log(err);   // error when use fake line id 
+                                });
+                        }
+                    }).catch(err => {
+                        console.log(err)
+                        res.status(200).json({
+                            account: false,
+                            message: 'line id not found.',
+                        });
+                    });
 
             }, 30000);
 

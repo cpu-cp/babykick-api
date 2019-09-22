@@ -43,13 +43,15 @@ router.post("/", (req, res, next) => {
 
                     let type;
                     if (docs.count_type == 'ctt') {
+                        text = 'คุณแม่กำลังนับลูกดิ้น กดไม่ได้นะ'
                         type = 'Count to ten';
                     }
                     else {
+                        text = 'คุณแม่กำลังนับลูกดิ้น กดไม่ได้นะ'
                         type = 'Sadovsky';
                     }
 
-                    let msg = 'ตอนนี้คุณแม่นับได้แค่แบบ ' + type + ' ค่ะ';
+                    let msg = text + '\nตอนนี้คุณแม่นับได้แค่แบบ ' + type + ' ค่ะ';
 
                     / push messsage to line */
                     const client = new line.Client({

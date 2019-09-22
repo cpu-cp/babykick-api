@@ -42,27 +42,17 @@ router.post("/:lineId", (req, res, next) => {
                     res.json(docs.counting[(docs.counting.length) - 1]);
 
                     if (docs.counting[countingLength - 1].status == '1st') {
-                        if (docs.counting[countingLength - 1].sdk_all_meal == 9) {
-                            successfully('1st', 'timeout', _did);
-                        }
-                        else {
-                            onFirstMeal('1st', 'running', _did);
-                        }
+                        onFirstMeal(_did);
                     }
                     else if (docs.counting[countingLength - 1].status == '2nd') {
-                        if (docs.counting[countingLength - 1].sdk_all_meal == 9) {
-                            successfully('2nd', 'timeout', _did);
-                        }
-                        else {
-                            onSecondMeal('2nd', 'running', _did);
-                        }
+                        onSecondMeal(_did);
                     }
                     else if (docs.counting[countingLength - 1].status == '3rd') {
-                        if (docs.counting[countingLength - 1].sdk_all_meal == 9) {
-                            successfully('3rd', 'timeout', _did);
+                        if (docs.counting[countingLength - 1].sdk_all_meal >= 9) {
+                            successfully(_did);
                         }
                         else {
-                            onThirdMeal('3rd', 'running', _did);
+                            onThirdMeal(_did);
                         }
                     }
                 }
@@ -80,7 +70,7 @@ router.post("/:lineId", (req, res, next) => {
 
 
 
-    function onFirstMeal(meal, timerStatus, _did, sScheduleLunch) {
+    function onFirstMeal(_did) {
         dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
             {
                 $inc: {
@@ -88,7 +78,7 @@ router.post("/:lineId", (req, res, next) => {
                     'counting.$.sdk_all_meal': 1
                 },
                 $set: {
-                    timer_status: timerStatus
+                    timer_status: 'running'
                 }
             },
             {
@@ -101,7 +91,7 @@ router.post("/:lineId", (req, res, next) => {
         );
     }
 
-    function onSecondMeal(meal, timerStatus, _did, sScheduleDinner) {
+    function onSecondMeal(_did) {
         dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
             {
                 $inc: {
@@ -109,7 +99,7 @@ router.post("/:lineId", (req, res, next) => {
                     'counting.$.sdk_all_meal': 1
                 },
                 $set: {
-                    timer_status: timerStatus
+                    timer_status: 'running'
                 }
             },
             {
@@ -118,13 +108,12 @@ router.post("/:lineId", (req, res, next) => {
             function (err, docs, res) {
                 console.log(err);
                 console.log('increase sdk_second_meal successful!');
-                // res.json(docs);
             }
         );
 
     }
 
-    function onThirdMeal(meal, timerStatus, _did, getDate, getMonth) {
+    function onThirdMeal(_did) {
         dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
             {
                 $inc: {
@@ -132,7 +121,7 @@ router.post("/:lineId", (req, res, next) => {
                     'counting.$.sdk_all_meal': 1
                 },
                 $set: {
-                    timer_status: timerStatus
+                    timer_status: 'running'
                 }
             },
             {
@@ -145,82 +134,31 @@ router.post("/:lineId", (req, res, next) => {
         );
     }
 
-    function successfully(meal, timerStatus, _did) {
-        if (meal == '1st') {
-            dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
-                {
-                    $inc: {
-                        'counting.$.sdk_first_meal': 1,
-                        'counting.$.sdk_all_meal': 1
-                    },
-                    $set: {
-                        'counting.$.status': 'close',
-                        'counting.$.result': 'ลูกดิ้นดี',
-                        timer_status: timerStatus,
-                        sdk_status: 'enable',
-                        extra: 'disable',
-                        count_type: 'any',
-                    }
+    function successfully(_did) {
+        dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
+            {
+                $inc: {
+                    'counting.$.sdk_third_meal': 1,
+                    'counting.$.sdk_all_meal': 1
                 },
-                {
-                    modifiedCount: 1
-                },
-                function (err, docs, res) {
-                    console.log(err);
-                    console.log('sdk successful!');
+                $set: {
+                    'counting.$.status': 'close',
+                    'counting.$.result': 'ลูกดิ้นดี',
+                    timer_status: 'timeout',
+                    sdk_status: 'enable',
+                    extra: 'disable',
+                    count_type: 'any',
                 }
-            );
-        }
-        else if (meal == '2nd') {
-            dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
-                {
-                    $inc: {
-                        'counting.$.sdk_second_meal': 1,
-                        'counting.$.sdk_all_meal': 1
-                    },
-                    $set: {
-                        'counting.$.status': 'close',
-                        'counting.$.result': 'ลูกดิ้นดี',
-                        timer_status: timerStatus,
-                        sdk_status: 'enable',
-                        extra: 'disable',
-                        count_type: 'any',
-                    }
-                },
-                {
-                    modifiedCount: 1
-                },
-                function (err, docs, res) {
-                    console.log(err);
-                    console.log('sdk successful!');
-                }
-            );
-        }
-        else if (meal == '3rd') {
-            dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
-                {
-                    $inc: {
-                        'counting.$.sdk_third_meal': 1,
-                        'counting.$.sdk_all_meal': 1
-                    },
-                    $set: {
-                        'counting.$.status': 'close',
-                        'counting.$.result': 'ลูกดิ้นดี',
-                        timer_status: timerStatus,
-                        sdk_status: 'enable',
-                        extra: 'disable',
-                        count_type: 'any',
-                    }
-                },
-                {
-                    modifiedCount: 1
-                },
-                function (err, docs, res) {
-                    console.log(err);
-                    console.log('sdk successful!');
-                }
-            );
-        }
+            },
+            {
+                modifiedCount: 1
+            },
+            function (err, docs, res) {
+                console.log(err);
+                console.log('sdk successful!');
+            }
+        );
+
 
         / push message to line */
         const client = new line.Client({
@@ -238,7 +176,7 @@ router.post("/:lineId", (req, res, next) => {
             {
                 type: "sticker",
                 packageId: 3,
-                stickerId: 184
+                stickerId: 180
             }
         ]
         client.pushMessage(lineId, message)
@@ -253,6 +191,7 @@ router.post("/:lineId", (req, res, next) => {
 });
 
 
+/  ====================================== *extra* ======================================= / 
 
 router.post("/extra/:lineId", (req, res, next) => {
 
@@ -276,17 +215,14 @@ router.post("/extra/:lineId", (req, res, next) => {
 
                     var week = Math.ceil((docs.counting.length) / 7);
                     var day = (docs.counting.length) % 7;
-
-                    var currentDay;
-                    var currentWeek;
                     var _did = (week.toString() + 'w' + day.toString() + 'd').toString();
 
                     if (docs.counting[(docs.counting.length) - 1].status == '3rd') {
-                        if (docs.counting[(docs.counting.length) - 1].sdk_all_meal == 9) {
-                            onThirdMeal('3rd', 'timeout', _did);
+                        if (docs.counting[(docs.counting.length) - 1].sdk_all_meal >= 9) {
+                            onThirdMeal('timeout', _did);
                         }
                         else {
-                            onThirdMeal('3rd', 'running', _did);
+                            onThirdMeal('running', _did);
                         }
                     }
                 }
@@ -302,7 +238,7 @@ router.post("/extra/:lineId", (req, res, next) => {
             });
         });
 
-    function onThirdMeal(meal, timerStatus, _did) {
+    function onThirdMeal(timerStatus, _did) {
         if (timerStatus == 'running') {
             dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
                 {
@@ -320,7 +256,6 @@ router.post("/extra/:lineId", (req, res, next) => {
                 function (err, docs, res) {
                     console.log(err);
                     console.log('increase sdk_third_meal successful!');
-                    // res.json(docs);
                 }
             );
         }
@@ -346,7 +281,6 @@ router.post("/extra/:lineId", (req, res, next) => {
                 function (err, docs, res) {
                     console.log(err);
                     console.log('increase sdk_third_meal successful!');
-                    // res.json(docs);
                 }
             );
 
@@ -357,7 +291,7 @@ router.post("/extra/:lineId", (req, res, next) => {
             const message = [
                 {
                     type: 'text',
-                    text: 'ยินดีด้วยค่ะ \nนับมื้อเย็นเพิ่มวันนี้ลูกดิ้นดีครบ 3 ครั้ง'
+                    text: '👍เยี่ยมมากค่ะคุณแม่ ลูกดิ้นดี👶🏻😁'
                 },
                 {
                     type: 'text',
@@ -366,7 +300,7 @@ router.post("/extra/:lineId", (req, res, next) => {
                 {
                     type: "sticker",
                     packageId: 3,
-                    stickerId: 184
+                    stickerId: 180
                 }
             ]
             client.pushMessage(lineId, message)
