@@ -42,16 +42,31 @@ router.post("/:lineId", (req, res, next) => {
                     res.json(docs.counting[(docs.counting.length) - 1]);
 
                     if (docs.counting[countingLength - 1].status == '1st') {
-                        onFirstMeal(_did);
-                    }
-                    else if (docs.counting[countingLength - 1].status == '2nd') {
-                        onSecondMeal(_did);
-                    }
-                    else if (docs.counting[countingLength - 1].status == '3rd') {
-                        if (docs.counting[countingLength - 1].sdk_all_meal >= 9) {
-                            successfully(_did);
+                        if (docs.counting[countingLength - 1].sdk_first_meal == 9) {
+                            successfully(_did, '1st');
                         }
                         else {
+                            onFirstMeal(_did);
+                        }
+                    }
+                    else if (docs.counting[countingLength - 1].status == '2nd') {
+                        if (docs.counting[countingLength - 1].sdk_second_meal == 9) {
+                            successfully(_did, '2nd');
+                        }
+                        else {
+                            onSecondMeal(_did);
+                        }
+                    }
+                    else if (docs.counting[countingLength - 1].status == '3rd') {
+
+                        if (docs.counting[countingLength - 1].sdk_third_meal == 2) {
+                            successfully(_did, '3rd');
+                        }
+                        else if (docs.counting[countingLength - 1].sdk_all_meal >= 9) {
+                            successfully(_did, '3rd');
+                        }
+                        
+                        else if (docs.counting[countingLength - 1].sdk_all_meal < 9) {
                             onThirdMeal(_did);
                         }
                     }
@@ -134,8 +149,59 @@ router.post("/:lineId", (req, res, next) => {
         );
     }
 
-    function successfully(_did) {
-        dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
+    function successfully(_did, meal) {
+        if (meal == '1st') {
+            dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
+            {
+                $inc: {
+                    'counting.$.sdk_first_meal': 1,
+                    'counting.$.sdk_all_meal': 1
+                },
+                $set: {
+                    'counting.$.status': 'close',
+                    'counting.$.result': 'ลูกดิ้นดี',
+                    timer_status: 'timeout',
+                    sdk_status: 'enable',
+                    extra: 'disable',
+                    count_type: 'any',
+                }
+            },
+            {
+                modifiedCount: 1
+            },
+            function (err, docs, res) {
+                console.log(err);
+                console.log('sdk successful!');
+            }
+        );
+        }
+        else if (meal == '2nd') {
+            dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
+            {
+                $inc: {
+                    'counting.$.sdk_second_meal': 1,
+                    'counting.$.sdk_all_meal': 1
+                },
+                $set: {
+                    'counting.$.status': 'close',
+                    'counting.$.result': 'ลูกดิ้นดี',
+                    timer_status: 'timeout',
+                    sdk_status: 'enable',
+                    extra: 'disable',
+                    count_type: 'any',
+                }
+            },
+            {
+                modifiedCount: 1
+            },
+            function (err, docs, res) {
+                console.log(err);
+                console.log('sdk successful!');
+            }
+        );
+        }
+        else if (meal == '3rd') {
+            dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
             {
                 $inc: {
                     'counting.$.sdk_third_meal': 1,
@@ -158,8 +224,8 @@ router.post("/:lineId", (req, res, next) => {
                 console.log('sdk successful!');
             }
         );
-
-
+        }
+        
         / push message to line */
         const client = new line.Client({
             channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
