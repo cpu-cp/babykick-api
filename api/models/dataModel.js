@@ -16,6 +16,7 @@ var countingSchema = new Schema({
     sdk_first_meal: { type: Number },
     sdk_second_meal: { type: Number },
     sdk_third_meal: { type: Number },
+    sdk_extra_meal: {type: Number },
     sdk_all_meal: {type: Number},
     result: {type: String},
     status: { type: String },

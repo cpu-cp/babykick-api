@@ -65,9 +65,19 @@ router.post("/:lineId", (req, res, next) => {
                         else if (docs.counting[countingLength - 1].sdk_all_meal >= 9) {
                             successfully(_did, '3rd');
                         }
-                        
+
                         else if (docs.counting[countingLength - 1].sdk_all_meal < 9) {
                             onThirdMeal(_did);
+                        }
+                    }
+                    else if (docs.counting[countingLength - 1].status == 'extra') {
+
+                        if (docs.counting[countingLength - 1].sdk_all_meal >= 9) {
+                            successfully(_did, 'extra');
+                        }
+
+                        else if (docs.counting[countingLength - 1].sdk_all_meal < 9) {
+                            onExtraMeal(_did);
                         }
                     }
                 }
@@ -149,83 +159,129 @@ router.post("/:lineId", (req, res, next) => {
         );
     }
 
+    function onExtraMeal(_did) {
+        dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
+            {
+                $inc: {
+                    'counting.$.sdk_extra_meal': 1,
+                    'counting.$.sdk_all_meal': 1
+                },
+                $set: {
+                    timer_status: 'running'
+                }
+            },
+            {
+                modifiedCount: 1
+            },
+            function (err, docs, res) {
+                console.log(err);
+                console.log('increase sdk_third_meal successful!');
+            }
+        );
+    }
+
     function successfully(_did, meal) {
         if (meal == '1st') {
             dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
-            {
-                $inc: {
-                    'counting.$.sdk_first_meal': 1,
-                    'counting.$.sdk_all_meal': 1
+                {
+                    $inc: {
+                        'counting.$.sdk_first_meal': 1,
+                        'counting.$.sdk_all_meal': 1
+                    },
+                    $set: {
+                        'counting.$.status': 'close',
+                        'counting.$.result': 'ลูกดิ้นดี',
+                        timer_status: 'timeout',
+                        sdk_status: 'enable',
+                        extra: 'disable',
+                        count_type: 'any',
+                    }
                 },
-                $set: {
-                    'counting.$.status': 'close',
-                    'counting.$.result': 'ลูกดิ้นดี',
-                    timer_status: 'timeout',
-                    sdk_status: 'enable',
-                    extra: 'disable',
-                    count_type: 'any',
+                {
+                    modifiedCount: 1
+                },
+                function (err, docs, res) {
+                    console.log(err);
+                    console.log('sdk successful!');
                 }
-            },
-            {
-                modifiedCount: 1
-            },
-            function (err, docs, res) {
-                console.log(err);
-                console.log('sdk successful!');
-            }
-        );
+            );
         }
         else if (meal == '2nd') {
             dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
-            {
-                $inc: {
-                    'counting.$.sdk_second_meal': 1,
-                    'counting.$.sdk_all_meal': 1
+                {
+                    $inc: {
+                        'counting.$.sdk_second_meal': 1,
+                        'counting.$.sdk_all_meal': 1
+                    },
+                    $set: {
+                        'counting.$.status': 'close',
+                        'counting.$.result': 'ลูกดิ้นดี',
+                        timer_status: 'timeout',
+                        sdk_status: 'enable',
+                        extra: 'disable',
+                        count_type: 'any',
+                    }
                 },
-                $set: {
-                    'counting.$.status': 'close',
-                    'counting.$.result': 'ลูกดิ้นดี',
-                    timer_status: 'timeout',
-                    sdk_status: 'enable',
-                    extra: 'disable',
-                    count_type: 'any',
+                {
+                    modifiedCount: 1
+                },
+                function (err, docs, res) {
+                    console.log(err);
+                    console.log('sdk successful!');
                 }
-            },
-            {
-                modifiedCount: 1
-            },
-            function (err, docs, res) {
-                console.log(err);
-                console.log('sdk successful!');
-            }
-        );
+            );
         }
         else if (meal == '3rd') {
             dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
-            {
-                $inc: {
-                    'counting.$.sdk_third_meal': 1,
-                    'counting.$.sdk_all_meal': 1
+                {
+                    $inc: {
+                        'counting.$.sdk_third_meal': 1,
+                        'counting.$.sdk_all_meal': 1
+                    },
+                    $set: {
+                        'counting.$.status': 'close',
+                        'counting.$.result': 'ลูกดิ้นดี',
+                        timer_status: 'timeout',
+                        sdk_status: 'enable',
+                        extra: 'disable',
+                        count_type: 'any',
+                    }
                 },
-                $set: {
-                    'counting.$.status': 'close',
-                    'counting.$.result': 'ลูกดิ้นดี',
-                    timer_status: 'timeout',
-                    sdk_status: 'enable',
-                    extra: 'disable',
-                    count_type: 'any',
+                {
+                    modifiedCount: 1
+                },
+                function (err, docs, res) {
+                    console.log(err);
+                    console.log('sdk successful!');
                 }
-            },
-            {
-                modifiedCount: 1
-            },
-            function (err, docs, res) {
-                console.log(err);
-                console.log('sdk successful!');
-            }
-        );
+            );
         }
-        
+        else if (meal == 'extra') {
+            dataCollection.findOneAndUpdate({ line_id: lineId, 'counting._did': _did },
+                {
+                    $inc: {
+                        'counting.$.sdk_extra_meal': 1,
+                        'counting.$.sdk_all_meal': 1
+                    },
+                    $set: {
+                        'counting.$.status': 'close',
+                        'counting.$.result': 'ลูกดิ้นดี',
+                        timer_status: 'timeout',
+                        sdk_status: 'enable',
+                        extra: 'disable',
+                        count_type: 'any',
+                    }
+                },
+                {
+                    modifiedCount: 1
+                },
+                function (err, docs, res) {
+                    console.log(err);
+                    console.log('sdk successful!');
+                }
+            );
+        }
+
         / push message to line */
         const client = new line.Client({
             channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
@@ -257,7 +313,7 @@ router.post("/:lineId", (req, res, next) => {
 });
 
 
-/  ====================================== *extra* ======================================= / 
+/  ====================================== *extra* ======================================= /
 
 router.post("/extra/:lineId", (req, res, next) => {
 

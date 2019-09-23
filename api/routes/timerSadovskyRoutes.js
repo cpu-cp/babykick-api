@@ -151,6 +151,7 @@ router.post("/", (req, res, next) => {
                     sdk_first_meal: 0,
                     sdk_second_meal: 0,
                     sdk_third_meal: 0,
+                    sdk_extra_meal: 0,
                     sdk_all_meal: 0,
                     result: '',
                     status: '1st'
@@ -304,7 +305,7 @@ router.post("/", (req, res, next) => {
                         message: 'line id not found.',
                     });
                 });
-        }, 30000); / <----------------------------------------- set time */
+        }, 60000); / <----------------------------------------- set time */
     }
 
 
@@ -471,17 +472,17 @@ router.post("/", (req, res, next) => {
                     .then(docs => {
                         var _dids = docs.counting[(docs.counting.length) - 1]._did;
 
-                        if (docs.counting[(docs.counting.length) - 1].timer_status == 'timeout' && docs.counting[(docs.counting.length) - 1].status == 'close') {
+                        if (docs.timer_status == 'timeout' && docs.counting[(docs.counting.length) - 1].status == 'close') {
                             console.log('set time out 3rd : closed')
                         }
-                        else if (docs.counting[(docs.counting.length) - 1].sdk_all_meal < 10) { // amount != 10, go to extra
+                        else if (docs.counting[(docs.counting.length) - 1].sdk_all_meal < 10) { // go to extra
                             dataCollection.findOneAndUpdate({ line_id: req.body.line_id, 'counting._did': _dids }, {
                                 $set: {
                                     timer_status: "running",
                                     sdk_status: "enable",
                                     extra: 'enable',
                                     count_type: 'sdk',
-                                    // 'counting.$.result': 'มีความเสี่ยง',
+                                    'counting.$.status': 'extra',
                                 },
                             }, function (err, docs) {
                                 console.log(err)
@@ -515,11 +516,11 @@ router.post("/", (req, res, next) => {
                                 dataCollection.findOne({ line_id: req.body.line_id })
                                     .exec()
                                     .then(docs => {
-                                        if (docs.counting[(docs.counting.length) - 1].sdk_all_meal >= 10) {   // amount = 10 already
-                                            console.log('set time out 3rd extra : you have been time out and closed an array already')
+                                        if (docs.timer_status == 'timeout' && docs.counting[(docs.counting.length) - 1].status == 'close') {   // amount = 10 already
+                                            console.log('set time out 3rd extra : closed')
                                         }
-                                        else {
-                                            if (docs.counting[(docs.counting.length) - 1].sdk_third_meal >= 3) {
+                                        else if (docs.timer_status == 'running') {
+                                            if (docs.counting[(docs.counting.length) - 1].sdk_all_meal >= 10) {
                                                 pushMessage('success');
                                                 dataCollection.findOneAndUpdate({ line_id: req.body.line_id, 'counting._did': _dids }, {
                                                     $set: {
@@ -534,7 +535,7 @@ router.post("/", (req, res, next) => {
                                                     console.log('3rd meal time out! please go to extra')
                                                 });
                                             }
-                                            else if (docs.counting[(docs.counting.length) - 1].sdk_third_meal < 3) {
+                                            else if (docs.counting[(docs.counting.length) - 1].sdk_all_meal < 10) {
                                                 pushMessage('failed');
                                                 dataCollection.findOneAndUpdate({ line_id: req.body.line_id, 'counting._did': _dids }, {
                                                     $set: {
@@ -558,7 +559,7 @@ router.post("/", (req, res, next) => {
                                             message: 'line id not found.',
                                         });
                                     });
-                            }, 30000);
+                            }, 60000);
                         }
 
                     }).catch(err => {
@@ -569,7 +570,7 @@ router.post("/", (req, res, next) => {
                         });
                     });
             }
-        }, 30000); / <----------------------------------------- set time */
+        }, 60000); / <----------------------------------------- set time */
     }
 
 
