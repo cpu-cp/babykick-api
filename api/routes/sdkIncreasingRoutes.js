@@ -72,11 +72,11 @@ router.post("/:lineId", (req, res, next) => {
                     }
                     else if (docs.counting[countingLength - 1].status == 'extra') {
 
-                        if (docs.counting[countingLength - 1].sdk_all_meal >= 9) {
+                        if (docs.counting[countingLength - 1].sdk_extra_meal >= 9) {
                             successfully(_did, 'extra');
                         }
 
-                        else if (docs.counting[countingLength - 1].sdk_all_meal < 9) {
+                        else if (docs.counting[countingLength - 1].sdk_extra_meal < 9) {
                             onExtraMeal(_did);
                         }
                     }

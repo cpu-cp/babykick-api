@@ -476,6 +476,16 @@ router.post("/", (req, res, next) => {
                             console.log('set time out 3rd : closed')
                         }
                         else if (docs.counting[(docs.counting.length) - 1].sdk_all_meal < 10) { // go to extra
+
+                            var d = new Date(Date.now());
+                            var hr = (7 + d.getHours()) % 24;
+                            var min = d.getMinutes();
+                            var sec = d.getSeconds();
+                            if (hr < 10) hr = '0' + hr;      
+                            if (min < 10) min = '0' + min;
+                            if (sec < 10) sec = '0' + sec;
+                            var time = hr.toString() + ':' + min.toString() + ':' + sec.toString();
+
                             dataCollection.findOneAndUpdate({ line_id: req.body.line_id, 'counting._did': _dids }, {
                                 $set: {
                                     timer_status: "running",
@@ -483,6 +493,7 @@ router.post("/", (req, res, next) => {
                                     extra: 'enable',
                                     count_type: 'sdk',
                                     'counting.$.status': 'extra',
+                                    'counting.$.time': time,
                                 },
                             }, function (err, docs) {
                                 console.log(err)
