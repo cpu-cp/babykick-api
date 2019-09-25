@@ -1,7 +1,7 @@
 /**
  *  @POST
  *  check present time for use sdk
- *  04.00 - 08.00
+ *  04.00 - 10.00
  * 
  *  params require
  *      /check/sdk/<line_id>
@@ -41,19 +41,22 @@ router.post("/:lineId", (req, res, next) => {
         case 08:
             sdk = true;
             break;
+        case 09:
+            sdk = true;
+            break;
     }
 
     if (sdk == true) {           // if request in 4.00-8.00
         res.json({
             sdk: true
-        });    
+        });
     }
     else {
         res.json({
             sdk: false
         });
     }
-    
+
 });
 
 module.exports = router;

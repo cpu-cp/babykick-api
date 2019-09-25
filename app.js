@@ -22,8 +22,9 @@ const closeWebRoutes = require("./api/routes/closeWebRoutes");
 const getCurrentArray = require("./api/routes/getCurrentArrayRoutes");
 const checkTodayRoutes = require("./api/routes/checkTodayRoutes");
 const checkSdkRoutes = require("./api/routes/checkSdkRoutes");
-const pushType = require("./api/routes/pushTypeRoutes");
+const pushMessage = require("./api/routes/pushMessageRoutes");
 const checkButton = require("./api/routes/checkButton");
+// const timerSadovskyV2Routes = require("./api/routes/timerSadovskyV2Routes");
 
 
 // connect to mongoDB
@@ -70,6 +71,7 @@ app.use("/verify", verifyRoutes);
 app.use("/timer/counttoten", timerCounttotenRoutes);
 app.use("/timer/counttoten/second", timerCttSecondRoutes);
 app.use("/timer/sadovsky", timerSadovskyRoutes);
+// app.use("/timer/sadovsky/v2", timerSadovskyV2Routes);
 app.use("/timer/sadovsky/extra", timerSdkExtraRoutes);
 app.use("/timer/status", timerStatus);
 app.use("/ctt/increasing", cttIncreasingRountes);
@@ -82,7 +84,7 @@ app.use("/closeweb", closeWebRoutes);
 app.use("/get/current", getCurrentArray);
 app.use("/check/today", checkTodayRoutes);
 app.use("/check/sdk", checkSdkRoutes);
-app.use("/push", pushType);
+app.use("/push", pushMessage);
 app.use("/check/btn", checkButton);
 
 
