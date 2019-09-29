@@ -24,7 +24,7 @@ const checkTodayRoutes = require("./api/routes/checkTodayRoutes");
 const checkSdkRoutes = require("./api/routes/checkSdkRoutes");
 const pushMessage = require("./api/routes/pushMessageRoutes");
 const checkButton = require("./api/routes/checkButton");
-// const timerSadovskyV2Routes = require("./api/routes/timerSadovskyV2Routes");
+const timerSadovskyV2Routes = require("./api/routes/timerSadovskyV2Routes");
 
 
 // connect to mongoDB
@@ -38,7 +38,7 @@ const checkButton = require("./api/routes/checkButton");
 // );
 
 mongoose.connect(
-  "mongodb://atbb.space:27017/babyKickDB",
+  "mongodb://babykick.site:27017/babyKickDB",
   function(err) {
         if(err) throw err;
         console.log('Connect to MongoDB atb successful!')
@@ -71,7 +71,7 @@ app.use("/verify", verifyRoutes);
 app.use("/timer/counttoten", timerCounttotenRoutes);
 app.use("/timer/counttoten/second", timerCttSecondRoutes);
 app.use("/timer/sadovsky", timerSadovskyRoutes);
-// app.use("/timer/sadovsky/v2", timerSadovskyV2Routes);
+app.use("/timer/sadovsky/v2", timerSadovskyV2Routes);     / with fix time /
 app.use("/timer/sadovsky/extra", timerSdkExtraRoutes);
 app.use("/timer/status", timerStatus);
 app.use("/ctt/increasing", cttIncreasingRountes);
