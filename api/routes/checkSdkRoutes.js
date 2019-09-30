@@ -19,8 +19,8 @@ const dataCollection = require('../models/dataModel');
 router.post("/:lineId", (req, res, next) => {
 
     let today = new Date(Date.now());
-    // let time = today.toLocaleTimeString('en-TH', { hour12: false });
-    let time = '21:00:00'
+    let time = today.toLocaleTimeString('en-TH', { hour12: false });
+    // let time = '21:00:00'
     var availableTime = false;
 
     console.log(time)
