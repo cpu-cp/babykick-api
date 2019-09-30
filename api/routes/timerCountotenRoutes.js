@@ -31,47 +31,47 @@ router.post("/", (req, res, next) => {
                     message: 'line id is invalid',
                 });
 
-                / push message to line */
-                const client = new line.Client({
-                    channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
-                });
-                const message = [
-                    {
-                        type: 'text',
-                        text: 'คุณแม่ต้องลงทะเบียนก่อนใช้งานการนับลูกดิ้นนะคะ'
-                    },
-                    {
-                        type: "flex",
-                        altText: "ลงทะเบียนคุณแม่",
-                        contents: {
-                            type: "bubble",
-                            body: {
-                                type: "box",
-                                layout: "vertical",
-                                contents: [
-                                    {
-                                        type: "button",
-                                        style: "primary",
-                                        height: "sm",
-                                        action: {
-                                            type: "uri",
-                                            label: "ลงทะเบียนคุณแม่",
-                                            uri: "line://app/1606482498-VJdOoZXR"
-                                        },
-                                        color: "#dd8cc9"
-                                    }
-                                ]
-                            }
-                        }
-                    }
-                ]
-                client.pushMessage(req.body.line_id, message)
-                    .then(() => {
-                        console.log('push message go to ctt done!')
-                    })
-                    .catch((err) => {
-                        console.log(err);   // error when use fake line id 
-                    });
+                // / push message to line */
+                // const client = new line.Client({
+                //     channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
+                // });
+                // const message = [
+                //     {
+                //         type: 'text',
+                //         text: 'คุณแม่ต้องลงทะเบียนก่อนใช้งานการนับลูกดิ้นนะคะ'
+                //     },
+                //     {
+                //         type: "flex",
+                //         altText: "ลงทะเบียนคุณแม่",
+                //         contents: {
+                //             type: "bubble",
+                //             body: {
+                //                 type: "box",
+                //                 layout: "vertical",
+                //                 contents: [
+                //                     {
+                //                         type: "button",
+                //                         style: "primary",
+                //                         height: "sm",
+                //                         action: {
+                //                             type: "uri",
+                //                             label: "ลงทะเบียนคุณแม่",
+                //                             uri: "line://app/1606482498-VJdOoZXR"
+                //                         },
+                //                         color: "#dd8cc9"
+                //                     }
+                //                 ]
+                //             }
+                //         }
+                //     }
+                // ]
+                // client.pushMessage(req.body.line_id, message)
+                //     .then(() => {
+                //         console.log('push message go to ctt done!')
+                //     })
+                //     .catch((err) => {
+                //         console.log(err);   // error when use fake line id 
+                //     });
             }
             else {
 
@@ -327,11 +327,11 @@ router.post("/", (req, res, next) => {
                                     type: 'text',
                                     text: '❗ คุณแม่ควรรีบไปโรงพยาบาลโดยเร็วที่สุด เพื่อให้แพทย์ตรวจเช็คสุขภาพของลูกน้อยในครรภ์ หรือโทร 1669 ❗'
                                 },
-                                {
-                                    type: "sticker",
-                                    packageId: 3,
-                                    stickerId: 190
-                                }
+                                // {
+                                //     type: "sticker",
+                                //     packageId: 3,
+                                //     stickerId: 190
+                                // }
                             ]
 
                             client.pushMessage(req.body.line_id, message)

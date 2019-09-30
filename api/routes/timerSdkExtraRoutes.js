@@ -159,11 +159,11 @@ router.post("/", (req, res, next) => {
                                 type: 'text',
                                 text: 'เพื่อความปลอดภัยของคุณแม่และลูกน้อย กรุณาติดต่อที่หมายเลข 📞1669 ค่ะ'
                             },
-                            {
-                                type: "sticker",
-                                packageId: 3,
-                                stickerId: 184
-                            }
+                            // {
+                            //     type: "sticker",
+                            //     packageId: 3,
+                            //     stickerId: 184
+                            // }
                         ]
                         client.pushMessage(req.body.line_id, message)
                             .then(() => {

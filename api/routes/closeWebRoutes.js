@@ -30,35 +30,41 @@ router.post("/", (req, res, next) => {
                     const client = new line.Client({
                         channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
                     });
+                    // const message = [
+                    //     {
+                    //         type: 'text',
+                    //         text: 'ตอนนี้คุณแม่ยังนับไม่ครบเลย 👶 สามารถกลับเข้ามานับต่อได้เหมือนเดิมค่ะ ที่ปุ่มด้านล่างนี้เลย 👇'
+                    //     },
+                    //     {
+                    //         type: "flex",
+                    //         altText: "นับลูกดิ้นแบบ Count to ten ต่อ",
+                    //         contents: {
+                    //             type: "bubble",
+                    //             body: {
+                    //                 type: "box",
+                    //                 layout: "vertical",
+                    //                 contents: [
+                    //                     {
+                    //                         type: "button",
+                    //                         style: "primary",
+                    //                         height: "sm",
+                    //                         action: {
+                    //                             type: "uri",
+                    //                             label: "นับลูกดิ้นแบบ Count to ten ต่อ",
+                    //                             uri: "line://app/1606482498-mYZjO7zo"
+                    //                         },
+                    //                         color: "#dd8cc9"
+                    //                     }
+                    //                 ]
+                    //             }
+                    //         }
+                    //     }
+                    // ]
                     const message = [
                         {
                             type: 'text',
-                            text: 'ตอนนี้คุณแม่ยังนับไม่ครบเลย 👶 สามารถกลับเข้ามานับต่อได้เหมือนเดิมค่ะ ที่ปุ่มด้านล่างนี้เลย 👇'
+                            text: 'ตอนนี้คุณแม่ยังนับไม่ครบเลย 👶 สามารถกลับเข้ามานับต่อได้เหมือนเดิมค่ะ กดที่ปุ่มเดิมนะคะ'
                         },
-                        {
-                            type: "flex",
-                            altText: "นับลูกดิ้นแบบ Count to ten ต่อ",
-                            contents: {
-                                type: "bubble",
-                                body: {
-                                    type: "box",
-                                    layout: "vertical",
-                                    contents: [
-                                        {
-                                            type: "button",
-                                            style: "primary",
-                                            height: "sm",
-                                            action: {
-                                                type: "uri",
-                                                label: "นับลูกดิ้นแบบ Count to ten ต่อ",
-                                                uri: "line://app/1606482498-mYZjO7zo"
-                                            },
-                                            color: "#dd8cc9"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
                     ]
                     client.pushMessage(req.body.line_id, message)
                         .then(() => {
@@ -73,35 +79,65 @@ router.post("/", (req, res, next) => {
                     const client = new line.Client({
                         channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
                     });
+                    // const message = [
+                    //     {
+                    //         type: 'text',
+                    //         text: 'ตอนนี้คุณแม่ยังนับไม่ครบเลย 👶 สามารถกลับเข้ามานับต่อได้เหมือนเดิมค่ะ ที่ปุ่มด้านล่างนี้เลย 👇'
+                    //     },
+                    //     {
+                    //         type: "flex",
+                    //         altText: "นับลูกดิ้นแบบ Sadovsky ต่อ",
+                    //         contents: {
+                    //             type: "bubble",
+                    //             body: {
+                    //                 type: "box",
+                    //                 layout: "vertical",
+                    //                 contents: [
+                    //                     {
+                    //                         type: "button",
+                    //                         style: "primary",
+                    //                         height: "sm",
+                    //                         action: {
+                    //                             type: "uri",
+                    //                             label: "นับลูกดิ้นแบบ Sadovsky ต่อ",
+                    //                             uri: "line://app/1606482498-lJ8JkE6d"
+                    //                         },
+                    //                         color: "#dd8cc9"
+                    //                     }
+                    //                 ]
+                    //             }
+                    //         }
+                    //     }
+                    // ]
                     const message = [
                         {
                             type: 'text',
-                            text: 'ตอนนี้คุณแม่ยังนับไม่ครบเลย 👶 สามารถกลับเข้ามานับต่อได้เหมือนเดิมค่ะ ที่ปุ่มด้านล่างนี้เลย 👇'
+                            text: 'ตอนนี้คุณแม่ยังนับไม่ครบเลย 👶 สามารถกลับเข้ามานับต่อได้เหมือนเดิมค่ะ กดที่ปุ่มเดิมนะคะ'
                         },
-                        {
-                            type: "flex",
-                            altText: "นับลูกดิ้นแบบ Sadovsky ต่อ",
-                            contents: {
-                                type: "bubble",
-                                body: {
-                                    type: "box",
-                                    layout: "vertical",
-                                    contents: [
-                                        {
-                                            type: "button",
-                                            style: "primary",
-                                            height: "sm",
-                                            action: {
-                                                type: "uri",
-                                                label: "นับลูกดิ้นแบบ Sadovsky ต่อ",
-                                                uri: "line://app/1606482498-lJ8JkE6d"
-                                            },
-                                            color: "#dd8cc9"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
+                        // {
+                        //     type: "flex",
+                        //     altText: "นับลูกดิ้นแบบ Sadovsky ต่อ",
+                        //     contents: {
+                        //         type: "bubble",
+                        //         body: {
+                        //             type: "box",
+                        //             layout: "vertical",
+                        //             contents: [
+                        //                 {
+                        //                     type: "button",
+                        //                     style: "primary",
+                        //                     height: "sm",
+                        //                     action: {
+                        //                         type: "uri",
+                        //                         label: "นับลูกดิ้นแบบ Sadovsky ต่อ",
+                        //                         uri: "line://app/1606482498-lJ8JkE6d"
+                        //                     },
+                        //                     color: "#dd8cc9"
+                        //                 }
+                        //             ]
+                        //         }
+                        //     }
+                        // }
                     ]
 
                     client.pushMessage(req.body.line_id, message)

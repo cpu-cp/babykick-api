@@ -295,11 +295,11 @@ router.post("/:lineId", (req, res, next) => {
                 type: 'text',
                 text: 'วันนี้คุณแม่นับลูกดิ้นเรียบร้อยแล้ว กลับมานับใหม่พรุ่งนี้นะคะ'
             },
-            {
-                type: "sticker",
-                packageId: 3,
-                stickerId: 180
-            }
+            // {
+            //     type: "sticker",
+            //     packageId: 3,
+            //     stickerId: 180
+            // }
         ]
         client.pushMessage(lineId, message)
             .then(() => {
@@ -419,11 +419,11 @@ router.post("/extra/:lineId", (req, res, next) => {
                     type: 'text',
                     text: 'วันนี้คุณแม่นับลูกดิ้นเรียบร้อยแล้ว กลับมานับใหม่พรุ่งนี้นะคะ'
                 },
-                {
-                    type: "sticker",
-                    packageId: 3,
-                    stickerId: 180
-                }
+                // {
+                //     type: "sticker",
+                //     packageId: 3,
+                //     stickerId: 180
+                // }
             ]
             client.pushMessage(lineId, message)
                 .then(() => {
