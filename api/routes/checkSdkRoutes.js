@@ -32,7 +32,7 @@ router.post("/:lineId", (req, res, next) => {
 
             var countingLength = docs.counting.length;
 
-            if (docs.counting.lenght != 0) {
+            if (docs.counting.lenght > 0) {
                 console.log('have array')
 
                 if (docs.timer_status == 'timeout') {
