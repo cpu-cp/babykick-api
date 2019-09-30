@@ -153,7 +153,7 @@ router.post("/", (req, res, next) => {
                     sdk_third_meal: 0,
                     sdk_extra_meal: 0,
                     sdk_all_meal: 0,
-                    result: '',
+                    result: 'มีความเสี่ยง',
                     status: '1st'
                 }
             }

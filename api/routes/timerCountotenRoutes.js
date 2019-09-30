@@ -178,7 +178,7 @@ router.post("/", (req, res, next) => {
                     timestamp: timestamp,
                     count_type: 'CTT',
                     ctt_amount: 0,
-                    result: '',
+                    result: 'มีความเสี่ยง',
                     status: 'open'
                 }
             }
