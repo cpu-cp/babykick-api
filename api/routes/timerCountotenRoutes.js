@@ -82,26 +82,24 @@ router.post("/", (req, res, next) => {
                 var currentDay;
                 var currentWeek;
                 var _did = (week.toString() + 'w' + day.toString() + 'd').toString();
-
-                var d = new Date(); // for now
                 var timestamp = Date.now(); // for now
 
 
-                var hr = (7 + d.getHours()) % 24;
-                var min = d.getMinutes();
-                var sec = d.getSeconds();
-                var endHr = (19 + d.getHours()) % 24;
+                // var hr = (7 + d.getHours()) % 24;
+                // var min = d.getMinutes();
+                // var sec = d.getSeconds();
+                // var endHr = (19 + d.getHours()) % 24;
 
-                if (hr < 10) hr = '0' + hr;                // add string '0' in front of number 
-                if (min < 10) min = '0' + min;
-                if (sec < 10) sec = '0' + sec;
-
+                // if (hr < 10) hr = '0' + hr;                // add string '0' in front of number 
+                // if (min < 10) min = '0' + min;
+                // if (sec < 10) sec = '0' + sec;
 
                 // var date = d.getDay() + '/' + d.getMonth() + '/' + d.getFullYear();
                 var date = new Date(Date.now());
                 // var time = hr.toString() + ':' + min.toString() + ':' + sec.toString();
                 let time = date.toLocaleTimeString('en-TH', { hour12: false });
-                var end_time = endHr.toString() + ':' + min.toString() + ':' + min.toString();
+                // var end_time = endHr.toString() + ':' + min.toString() + ':' + min.toString();
+                var end_time = 'null'
 
                 Date.prototype.getWeek = function () {
                     var dt = new Date(this.getFullYear(), 0, 1);
