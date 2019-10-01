@@ -99,7 +99,8 @@ router.post("/", (req, res, next) => {
 
                 // var date = d.getDay() + '/' + d.getMonth() + '/' + d.getFullYear();
                 var date = new Date(Date.now());
-                var time = hr.toString() + ':' + min.toString() + ':' + sec.toString();
+                // var time = hr.toString() + ':' + min.toString() + ':' + sec.toString();
+                let time = date.toLocaleTimeString('en-TH', { hour12: false });
                 var end_time = endHr.toString() + ':' + min.toString() + ':' + min.toString();
 
                 Date.prototype.getWeek = function () {
