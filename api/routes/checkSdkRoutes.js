@@ -80,12 +80,14 @@ router.post("/:lineId", (req, res, next) => {
             if (availableTime == false) {
                 pushMessage();
                 res.status(401).json({
-                    sdk: false
+                    sdk: false,
+                    time: time
                 });
             }
             else {
                 res.status(200).json({
-                    sdk: true
+                    sdk: true,
+                    time: time
                 });
             }
 
