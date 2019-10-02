@@ -33,6 +33,7 @@ router.post("/:lineId", (req, res, next) => {
         .then(docs => {
 
             var countingLength = docs.counting.length;
+            console.log(countingLength)
 
             if (countingLength > 0) {
                 console.log('have array')
@@ -75,7 +76,7 @@ router.post("/:lineId", (req, res, next) => {
 
             }
             else {
-                checkAvailableTime('close', time);
+                checkAvailableTime('close', time, 'timeout');
                 console.log('no array')
             }
 
@@ -165,16 +166,12 @@ router.post("/:lineId", (req, res, next) => {
             dataCollection.findOne({ line_id: req.params.lineId })
                 .exec()
                 .then(docs => {
-
-                    var _did = docs.counting[(docs.counting.length) - 1]._did;
-
-                    dataCollection.updateOne({ line_id: req.params.lineId, 'counting._did': _did }, {
+                    dataCollection.updateOne({ line_id: req.params.lineId }, {
                         $set: {
                             timer_status: "timeout",
                             sdk_status: 'disable',
                             extra: 'disable',
-                            count_type: 'ctt',
-                            'counting.$.status': 'close'
+                            count_type: 'ctt'
                         }
                     }, function (err, docs) {
                         console.log(err);
