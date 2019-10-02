@@ -133,7 +133,7 @@ router.post("/", (req, res, next) => {
 
     function newDay(currentWeek, currentDay, date, time, timestamp, end_time, week_by_date) {
 
-        closeAutomatic();
+        // closeAutomatic();
         dataCollection.updateOne({ line_id: req.body.line_id }, {
             $set: {
                 timer_status: "running",
@@ -648,34 +648,34 @@ router.post("/", (req, res, next) => {
 
 
     /* close daily counting every 18 hr */
-    function closeAutomatic() {
-        setTimeout(function () {
-            dataCollection.findOne({ line_id: req.body.line_id })
-                .exec()
-                .then(docs => {
-                    var _did = docs.counting[(docs.counting.length) - 1]._did;
+    // function closeAutomatic() {
+    //     setTimeout(function () {
+    //         dataCollection.findOne({ line_id: req.body.line_id })
+    //             .exec()
+    //             .then(docs => {
+    //                 var _did = docs.counting[(docs.counting.length) - 1]._did;
 
-                    dataCollection.updateOne({ line_id: req.body.line_id, 'counting._did': _did }, {
-                        $set: {
-                            timer_status: "timeout",
-                            sdk_status: 'enable',
-                            extra: 'disable',
-                            count_type: 'any',
-                            'counting.$.status': 'close'
-                        }
-                    }, function (err, docs) {
-                        console.log(err);
-                        console.log('close automatic success');
-                    });
-                }).catch(err => {
-                    console.log(err)
-                    res.status(200).json({
-                        account: false,
-                        message: 'line id not found.',
-                    });
-                });
-        }, 64800000); / <----------------------------------------- pls come back to set time to 18 hr */
-    }
+    //                 dataCollection.updateOne({ line_id: req.body.line_id, 'counting._did': _did }, {
+    //                     $set: {
+    //                         timer_status: "timeout",
+    //                         sdk_status: 'enable',
+    //                         extra: 'disable',
+    //                         count_type: 'any',
+    //                         'counting.$.status': 'close'
+    //                     }
+    //                 }, function (err, docs) {
+    //                     console.log(err);
+    //                     console.log('close automatic success');
+    //                 });
+    //             }).catch(err => {
+    //                 console.log(err)
+    //                 res.status(200).json({
+    //                     account: false,
+    //                     message: 'line id not found.',
+    //                 });
+    //             });
+    //     }, 64800000); / <----------------------------------------- pls come back to set time to 18 hr */
+    // }
 
 });
 
