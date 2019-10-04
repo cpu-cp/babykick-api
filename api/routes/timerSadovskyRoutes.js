@@ -2,7 +2,6 @@
  *  @POST
  *  timer for sadovsky, 3 meals
  *  push message to line when time out
- *  @trycatch
  *   
  *  body required
  *      line_id : string
@@ -173,6 +172,7 @@ router.post("/", (req, res, next) => {
 
         / 1st /
         setTimeout(function () {
+            console.log('time sdk set time out : first meal')
             dataCollection.findOne({ line_id: req.body.line_id })
                 .exec()
                 .then(docs => {
@@ -216,9 +216,9 @@ router.post("/", (req, res, next) => {
                             //     stickerId: 184
                             // }
                         ]
-                        client.pushMessage(lineId, message)
+                        client.pushMessage(req.body.line_id, message)
                             .then(() => {
-                                console.log('push message 1st done!')
+                                console.log(req.body.line_id + ' : timerSadovskyRoutes : push message 1st done!')
                             })
                             .catch((err) => {
                                 console.log(err);   // error when use fake line id 
@@ -226,10 +226,12 @@ router.post("/", (req, res, next) => {
 
                         var getDate = new Date(Date.now()).getDate();
                         var getMonth = new Date(Date.now()).getMonth() + 1;
+                        // var getDate = date.getDate();
+                        // var getMonth = date.getMonth() + 1;
                         let sScheduleLunch = '30 11 ' + getDate + ' ' + getMonth + ' *';
 
                         cron.schedule(sScheduleLunch, () => {
-                            console.log('Runing a job  at Asia/Bangkok timezone');
+                            // console.log('Runing a job  at Asia/Bangkok timezone');
 
                             / push message to line */
                             const client = new line.Client({
@@ -241,12 +243,13 @@ router.post("/", (req, res, next) => {
                                     text: 'เที่ยงแล้ว อย่าลืมมานับ Sadovsky ต่อนะคะ'
                                 },
                             ]
-                            client.pushMessage(lineId, message)
+                            client.pushMessage(req.body.line_id, message)
                                 .then(() => {
-                                    console.log('corn : push lunch message done!')
+                                    console.log(req.body.line_id + ' : timerSadovskyRoutes : push 11.30 message done!')
                                 })
                                 .catch((err) => {
-                                    console.log(err);   // error when use fake line id 
+                                    console.log(req.body.line_id);
+                                    console.log(err);  
                                 });
                         }, {
                                 scheduled: true,
@@ -264,7 +267,7 @@ router.post("/", (req, res, next) => {
                             },
                         }, function (err, docs) {
                             console.log(err)
-                            console.log('1st meal time out! please go to ctt')
+                            console.log(req.body.line_id + ' : timerSadovskyRoutes : 1st meal time out! please go to ctt')
                         });
 
                         / push message to line */
@@ -292,7 +295,7 @@ router.post("/", (req, res, next) => {
                         ]
                         client.pushMessage(req.body.line_id, message)
                             .then(() => {
-                                console.log('push message go to ctt done!')
+                                console.log(req.body.line_id + ' : timerSadovskyRoutes : push message go to ctt done!')
                             })
                             .catch((err) => {
                                 console.log(err);   // error when use fake line id 
@@ -306,12 +309,12 @@ router.post("/", (req, res, next) => {
                         message: 'line id not found.',
                     });
                 });
-        }, 3600000); / <----------------------------------------- set time */
+        }, 3600000); / <----------------------------------------- set time */ //3600000
     }
 
 
     function newMeal(meal, _did, date, time, timestamp, end_time) {
-        console.log('start sdk ' + meal);
+        console.log(req.body.line_id + ' : timerSadovskyRoutes : start sdk ' + meal);
 
         dataCollection.findOne({ line_id: req.body.line_id }, function (err, docs) {
             dataCollection.updateOne({ line_id: req.body.line_id, 'counting._did': _did }, {
@@ -342,7 +345,7 @@ router.post("/", (req, res, next) => {
                         var _dids = docs.counting[(docs.counting.length) - 1]._did;
 
                         if (docs.counting[(docs.counting.length) - 1].timer_status == 'timeout' && docs.counting[(docs.counting.length) - 1].status == 'close') {
-                            console.log('set time out 2nd : closed')
+                            console.log(req.body.line_id + ' : timerSadovskyRoutes : set time out 2nd : closed')
                         }
                         else if (docs.counting[(docs.counting.length) - 1].sdk_second_meal >= 3 && docs.counting[(docs.counting.length) - 1].sdk_second_meal < 10) {
                             dataCollection.findOneAndUpdate({ line_id: req.body.line_id, 'counting._did': _did }, {
@@ -354,7 +357,7 @@ router.post("/", (req, res, next) => {
                                 },
                             }, function (err, docs) {
                                 console.log(err)
-                                console.log('2st meal time out >> greater than or equal to 3, see u in 3nd meal')
+                                console.log(req.body.line_id + ' : timerSadovskyRoutes : 2st meal time out >> greater than or equal to 3, see u in 3nd meal')
                             });
 
                             / push message to line */
@@ -376,9 +379,9 @@ router.post("/", (req, res, next) => {
                                 //     stickerId: 184
                                 // }
                             ]
-                            client.pushMessage(lineId, message)
+                            client.pushMessage(req.body.line_id, message)
                                 .then(() => {
-                                    console.log('push message 2nd done!')
+                                    console.log(req.body.line_id + ' : timerSadovskyRoutes : push message 2nd done!')
                                 })
                                 .catch((err) => {
                                     console.log(err);   // error when use fake line id 
@@ -389,7 +392,7 @@ router.post("/", (req, res, next) => {
                             let sScheduleDinner = '0 17 ' + getDate + ' ' + getMonth + ' *';
 
                             cron.schedule(sScheduleDinner, () => {
-                                console.log('Runing a job  at Asia/Bangkok timezone');
+                                // console.log('Runing a job  at Asia/Bangkok timezone');
 
                                 / push message to line */
                                 const client = new line.Client({
@@ -401,9 +404,9 @@ router.post("/", (req, res, next) => {
                                         text: 'เย็นแล้ว อย่าลืมมานับ Sadovsky ต่อนะคะ'
                                     },
                                 ]
-                                client.pushMessage(lineId, message)
+                                client.pushMessage(req.body.line_id, message)
                                     .then(() => {
-                                        console.log('corn : push dinner message done!')
+                                        console.log(req.body.line_id + ' : timerSadovskyRoutes : push dinner message done!')
                                     })
                                     .catch((err) => {
                                         console.log(err);   // error when use fake line id 
@@ -423,7 +426,7 @@ router.post("/", (req, res, next) => {
                                 },
                             }, function (err, docs) {
                                 console.log(err)
-                                console.log('2nd meal time out! please go to ctt')
+                                console.log(req.body.line_id + ' : timerSadovskyRoutes : 2nd meal time out! please go to ctt')
                             });
 
                             / push message to line */
@@ -451,7 +454,7 @@ router.post("/", (req, res, next) => {
                             ]
                             client.pushMessage(req.body.line_id, message)
                                 .then(() => {
-                                    console.log('push message go to ctt done!')
+                                    console.log(req.body.line_id + ' : timerSadovskyRoutes : push message go to ctt done!')
                                 })
                                 .catch((err) => {
                                     console.log(err);   // error when use fake line id 
@@ -474,7 +477,7 @@ router.post("/", (req, res, next) => {
                         var _dids = docs.counting[(docs.counting.length) - 1]._did;
 
                         if (docs.timer_status == 'timeout' && docs.counting[(docs.counting.length) - 1].status == 'close') {
-                            console.log('set time out 3rd : closed')
+                            console.log(req.body.line_id + ' : timerSadovskyRoutes : set time out 3rd : closed')
                         }
                         else if (docs.counting[(docs.counting.length) - 1].sdk_all_meal < 10) { // go to extra
 
@@ -498,7 +501,7 @@ router.post("/", (req, res, next) => {
                                 },
                             }, function (err, docs) {
                                 console.log(err)
-                                console.log('3rd meal time out! please go to extra')
+                                console.log(req.body.line_id + ' : timerSadovskyRoutes : 3rd meal time out! please go to extra')
                             });
 
                             / push message to line */
@@ -517,7 +520,7 @@ router.post("/", (req, res, next) => {
                             ]
                             client.pushMessage(req.body.line_id, message)
                                 .then(() => {
-                                    console.log('push message go to extra done!')
+                                    console.log(req.body.line_id + ' : timerSadovskyRoutes : push message go to extra done!')
                                 })
                                 .catch((err) => {
                                     console.log(err);   // error when use fake line id 
@@ -529,7 +532,7 @@ router.post("/", (req, res, next) => {
                                     .exec()
                                     .then(docs => {
                                         if (docs.timer_status == 'timeout' && docs.counting[(docs.counting.length) - 1].status == 'close') {   // amount = 10 already
-                                            console.log('set time out 3rd extra : closed')
+                                            console.log(req.body.line_id + ' : timerSadovskyRoutes : set time out 3rd extra : closed')
                                         }
                                         else if (docs.timer_status == 'running') {
                                             if (docs.counting[(docs.counting.length) - 1].sdk_all_meal >= 10) {
@@ -544,7 +547,7 @@ router.post("/", (req, res, next) => {
                                                     },
                                                 }, function (err, docs) {
                                                     console.log(err)
-                                                    console.log('3rd meal time out! please go to extra')
+                                                    console.log(req.body.line_id + ' : timerSadovskyRoutes : 3rd meal time out! please go to extra')
                                                 });
                                             }
                                             else if (docs.counting[(docs.counting.length) - 1].sdk_all_meal < 10) {
@@ -559,7 +562,7 @@ router.post("/", (req, res, next) => {
                                                     },
                                                 }, function (err, docs) {
                                                     console.log(err)
-                                                    console.log('3rd meal time out! please go to extra')
+                                                    console.log(req.body.line_id + ' : timerSadovskyRoutes : 3rd meal time out! please go to extra')
                                                 });
                                             }
                                         }
@@ -571,7 +574,7 @@ router.post("/", (req, res, next) => {
                                             message: 'line id not found.',
                                         });
                                     });
-                            }, 3600000);
+                            }, 3600000);                // 3600000
                         }
 
                     }).catch(err => {
@@ -582,7 +585,7 @@ router.post("/", (req, res, next) => {
                         });
                     });
             }
-        }, 3600000); / <----------------------------------------- set time */
+        }, 3600000); / <----------------------------------------- set time */ //3600000
     }
 
 
@@ -609,7 +612,7 @@ router.post("/", (req, res, next) => {
             ]
             client.pushMessage(req.body.line_id, message)
                 .then(() => {
-                    console.log('push message go to extra done!')
+                    console.log(req.body.line_id + ' : timerSadovskyRoutes : push message go to extra done!')
                 })
                 .catch((err) => {
                     console.log(err);   // error when use fake line id 
@@ -638,7 +641,7 @@ router.post("/", (req, res, next) => {
             ]
             client.pushMessage(req.body.line_id, message)
                 .then(() => {
-                    console.log('push message go to extra done!')
+                    console.log(req.body.line_id + ' : timerSadovskyRoutes : push message go to extra done!')
                 })
                 .catch((err) => {
                     console.log(err);   // error when use fake line id 
@@ -699,7 +702,7 @@ module.exports = router;
     //             text: 'เที่ยงแล้ว อย่าลืมมานับ Sadovsky ต่อนะคะ'
     //         },
     //     ]
-    //     client.pushMessage(lineId, message)
+    //     client.pushMessage(req.body.line_id, message)
     //         .then(() => {
     //             console.log('corn : push lunch message done!')
     //         })
