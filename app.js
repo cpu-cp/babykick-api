@@ -4,6 +4,8 @@ const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 
+require('console-stamp')(console, { pattern: 'dd/mm/yyyy HH:MM:ss.l' });
+
 // define path of each routes
 const registerRoutes = require("./api/routes/registerRoutes");
 const verifyRoutes = require("./api/routes/verifyRoutes");
@@ -104,6 +106,8 @@ app.use((error, req, res, next) => {
     }
   });
 });
+
+
 
 
 module.exports = app;
