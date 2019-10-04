@@ -30,7 +30,7 @@ router.post("/onlyctt/:lineId", (req, res, next) => {
     ];
     client.pushMessage(req.params.lineId, message)
         .then(() => {
-            console.log('push only ctt : push message done!')
+            console.log(req.params.lineId + 'pushMessage : push message <only ctt> done!')
         })
         .catch((err) => {
             console.log(err);
@@ -60,7 +60,7 @@ router.post("/onlysdk/:lineId", (req, res, next) => {
     ];
     client.pushMessage(req.params.lineId, message)
         .then(() => {
-            console.log('push only sdk : push message done!')
+            console.log(req.params.lineId + 'pushMessage : push message <only sdk> done!')
         })
         .catch((err) => {
             console.log(err);
@@ -110,7 +110,7 @@ router.post("/verify/:lineId", (req, res, next) => {
     ]
     client.pushMessage(req.params.lineId, message)
         .then(() => {
-            console.log('push verify : go to register done!')
+            console.log(req.params.lineId + 'pushMessage : go to register done!')
         })
         .catch((err) => {
             console.log(err);

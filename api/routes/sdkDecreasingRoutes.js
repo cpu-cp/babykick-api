@@ -72,7 +72,7 @@ router.post("/:lineId", (req, res, next) => {
                     }
                 }
                 else {
-                    console.log('now status is time out')
+                    console.log(req.params.lineId + ' sdkDecreasing : now status is time out')
                     res.json({ timer_status: 'timeout' })
                 }
             }
@@ -100,7 +100,7 @@ router.post("/:lineId", (req, res, next) => {
             },
             function (err, docs, res) {
                 console.log(err);
-                console.log('decrease sdk_first_meal successful!')
+                console.log(req.params.lineId + ' sdkDecreasing : decrease sdk_first_meal successful!')
                 // res.json(docs);
             }
         );
@@ -122,7 +122,7 @@ router.post("/:lineId", (req, res, next) => {
             },
             function (err, docs, res) {
                 console.log(err);
-                console.log('decrease sdk_second_meal successful!');
+                console.log(req.params.lineId + ' sdkDecreasing : decrease sdk_second_meal successful!');
                 // res.json(docs);
             }
         );
@@ -145,7 +145,7 @@ router.post("/:lineId", (req, res, next) => {
             },
             function (err, docs, res) {
                 console.log(err);
-                console.log('decrease sdk_third_meal successful!');
+                console.log(req.params.lineId + ' sdkDecreasing : decrease sdk_third_meal successful!');
                 // res.json(docs);
             }
         );
@@ -153,7 +153,7 @@ router.post("/:lineId", (req, res, next) => {
 
 
     function minimumCount() {
-        console.log('not change, zero is minimun value');
+        console.log(req.params.lineId + ' sdkDecreasing : not change, zero is minimun value');
     }
 
 });
@@ -201,7 +201,7 @@ router.post("/extra/:lineId", (req, res, next) => {
                     }
                 }
                 else {
-                    console.log('now status is time out')
+                    console.log(req.params.lineId + ' sdkDecreasing extra : now status is time out')
                     res.json({ timer_status: 'timeout' })
                 }
             }
@@ -228,7 +228,7 @@ router.post("/extra/:lineId", (req, res, next) => {
             },
             function (err, docs, res) {
                 console.log(err);
-                console.log('decrease sdk_third_meal successful!');
+                console.log(req.params.lineId + ' sdkDecreasing extra: decrease sdk_third_meal successful!');
                 // res.json(docs);
             }
         );
@@ -236,7 +236,7 @@ router.post("/extra/:lineId", (req, res, next) => {
 
 
     function minimumCount() {
-        console.log('not change, zero is minimun value');
+        console.log(req.params.lineId + ' sdkDecreasing extra: not change, zero is minimun value');
     }
 
 });

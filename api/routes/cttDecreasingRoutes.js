@@ -38,23 +38,23 @@ router.post("/:lineId", (req, res, next) => {
                 var _did = (week.toString() + 'w' + day.toString() + 'd').toString();
 
                 if (countingLength == 0) {             // if there isn't history data
-                    console.log('empty array');
+                    // console.log('empty array');
                     newDay('1', '1', 'date');
                 }
                 else if (countingLength >= 1) {
-                    console.log('there is counting data');
+                    // console.log('there is counting data');
 
                     if (docs.timer_status == 'running') {
-                        console.log('timer is running');
-                        console.log('array status is ' + docs.counting[countingLength - 1].status);
+                        // console.log('timer is running');
+                        // console.log('array status is ' + docs.counting[countingLength - 1].status);
 
                         if (docs.counting[countingLength - 1].status == 'open') {
-                            console.log('ctt amount is ' + docs.counting[countingLength - 1].ctt_amount)
+                            // console.log('ctt amount is ' + docs.counting[countingLength - 1].ctt_amount)
                             if (docs.counting[countingLength - 1].ctt_amount == 10) {
                                 onDay('close', _did);
                             }
                             else {
-                                console.log(_did);
+                                // console.log(_did);
                                 onDay('open', _did);
                             }
                         }
@@ -71,7 +71,7 @@ router.post("/:lineId", (req, res, next) => {
 
                     }
                     else {
-                        console.log('now status is time out')
+                        console.log(req.params.lineId + ' cttDecreasing : now status is time out')
                         // push message to line 'time out'
                     }
                 }
@@ -100,7 +100,7 @@ router.post("/:lineId", (req, res, next) => {
         }, function (err, docs) {
             console.log(err)
         });
-        console.log('add new day successfully!');
+        console.log(req.params.lineId + ' cttDecreasing : add new day successfully!');
     }
 
     function onDay(status, _did) {
@@ -124,11 +124,11 @@ router.post("/:lineId", (req, res, next) => {
                     });
                 }
                 else {
-                    console.log(docs)
+                    // console.log(docs)
                 }
             }
         );
-        console.log('increase ctt amount successfully!');
+        console.log(req.params.lineId + ' cttDecreasing : increase ctt amount successfully! = ');
     }
 
 });

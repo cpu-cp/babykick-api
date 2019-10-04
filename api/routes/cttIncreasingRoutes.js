@@ -45,35 +45,35 @@ router.post("/:lineId", (req, res, next) => {
                 var _did = (week.toString() + 'w' + day.toString() + 'd').toString();
 
                 if (countingLength == 0) {                      // if there isn't history data
-                    console.log('empty array');
+                    // console.log('empty array');
                     newDay('1', '1', 'date');
                 }
                 else if (countingLength >= 1) {
-                    console.log('there is counting data');
+                    // console.log('there is counting data');
 
                     if (docs.timer_status == 'running') {
-                        console.log('timer is running');
-                        console.log('array status is ' + docs.counting[countingLength - 1].status);
+                        // console.log('timer is running');
+                        // console.log('array status is ' + docs.counting[countingLength - 1].status);
 
                         if (docs.counting[countingLength - 1].status == 'open') {
-                            console.log('ctt amount is ' + docs.counting[countingLength - 1].ctt_amount)
+                            // console.log('ctt amount is ' + docs.counting[countingLength - 1].ctt_amount)
 
                             if (docs.counting[countingLength - 1].ctt_amount == 9) {
                                 onDay('close', _did);
                                 setResult(_did);
                             }
                             else {
-                                console.log(_did);
+                                // console.log(_did);
                                 onDay('open', _did);
                             }
                         }
                         else {  // if status is close
-                            console.log('now status is close')
+                            console.log(req.params.lineId + ' cttIncreasing : now status is close')
                         }
 
                     }
                     else {
-                        console.log('now status is time out')
+                        console.log(req.params.lineId + ' cttIncreasing : now status is time out')
                         // push message to line 'time out'
                     }
                 }
@@ -102,7 +102,7 @@ router.post("/:lineId", (req, res, next) => {
         }, function (err, docs) {
             console.log(err)
         });
-        console.log('add new day successfully!');
+        console.log(req.params.lineId + ' cttIncreasing : add new day successfully!');
     }
 
     function onDay(status, _did) {
@@ -118,7 +118,7 @@ router.post("/:lineId", (req, res, next) => {
                 },
                 function (err, docs) {
                     console.log(err);
-                    console.log('today complete!!');
+                    console.log(req.params.lineId + ' cttIncreasing : today complete!!');
                 }
             );
 
@@ -143,10 +143,10 @@ router.post("/:lineId", (req, res, next) => {
             ]
             client.pushMessage(lineId, message)
                 .then(() => {
-                    console.log('push message done!')
+                    console.log(req.params.lineId + ' cttIncreasing : push message <successful> done!')
                 })
                 .catch((err) => {
-                    console.log(err);   // error when use fake line id 
+                    console.log(err);  
                 });
         }
 
@@ -166,7 +166,7 @@ router.post("/:lineId", (req, res, next) => {
                 console.log(err);
             }
         );
-        console.log('increase ctt amount successfully!');
+        console.log(req.params.lineId + ' cttIncreasing : increase ctt amount successfully!');
     }
 
 
@@ -179,7 +179,7 @@ router.post("/:lineId", (req, res, next) => {
             },
             function (err, docs) {
                 console.log(err);
-                console.log('ctt inc : set result complete');
+                console.log(req.params.lineId + ' cttIncreasing : set result complete');
             }
         );
     }

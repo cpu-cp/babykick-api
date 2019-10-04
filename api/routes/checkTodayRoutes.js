@@ -35,20 +35,23 @@ router.post("/:lineId", (req, res, next) => {
                 let currentDate = current.toLocaleDateString();
 
                 if (todayDate == currentDate) {
-                    console.log('+++++ ' + currentDate);
-                    console.log('++++++ today +++++' + todayDate)
+                    // console.log('+++++ ' + currentDate);
+                    // console.log('++++++ today +++++' + todayDate)
 
                     if (docs.extra == 'ctt') {   // mom be able to re-counting
+                        console.log(req.params.lineId + ' checkToday : true');
                         res.status(200).json({
                             add: true
                         });
                     }
                     else if (docs.counting[(docs.counting.length) - 1].status == '1st' || docs.counting[(docs.counting.length) - 1].status == '2nd' || docs.counting[(docs.counting.length) - 1].status == '3rd' || docs.counting[(docs.counting.length) - 1].status == 'open') {
+                        console.log(req.params.lineId + ' checkToday : true');
                         res.status(200).json({
                             add: true
                         });
                     }
                     else {
+                        console.log(req.params.lineId + ' checkToday : false');
                         res.status(401).json({
                             add: false,
                         });
@@ -70,7 +73,7 @@ router.post("/:lineId", (req, res, next) => {
                         ];
                         client.pushMessage(req.params.lineId, message)
                             .then(() => {
-                                console.log('check today : push message done!')
+                                console.log(req.params.lineId + ' checkToday : push counted message done!')
                             })
                             .catch((err) => {
                                 console.log(err);
@@ -78,6 +81,7 @@ router.post("/:lineId", (req, res, next) => {
                     }
                 }
                 else {
+                    console.log(req.params.lineId + ' checkToday : true');
                     res.status(200).json({
                         add: true
                     });

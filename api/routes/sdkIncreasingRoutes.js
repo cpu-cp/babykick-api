@@ -82,7 +82,7 @@ router.post("/:lineId", (req, res, next) => {
                     }
                 }
                 else {
-                    console.log('now status is time out')
+                    console.log(req.params.lineId + ' sdkIncreasing : now status is time out')
                     res.json({ timer_status: 'timeout' })
                 }
             }
@@ -111,7 +111,7 @@ router.post("/:lineId", (req, res, next) => {
             },
             function (err, docs, res) {
                 console.log(err);
-                console.log('increase sdk_first_meal successful!')
+                console.log(req.params.lineId + ' sdkIncreasing : increase sdk_first_meal successful!')
             }
         );
     }
@@ -132,7 +132,7 @@ router.post("/:lineId", (req, res, next) => {
             },
             function (err, docs, res) {
                 console.log(err);
-                console.log('increase sdk_second_meal successful!');
+                console.log(req.params.lineId + ' sdkIncreasing : increase sdk_second_meal successful!');
             }
         );
 
@@ -154,7 +154,7 @@ router.post("/:lineId", (req, res, next) => {
             },
             function (err, docs, res) {
                 console.log(err);
-                console.log('increase sdk_third_meal successful!');
+                console.log(req.params.lineId + ' sdkIncreasing : increase sdk_third_meal successful!');
             }
         );
     }
@@ -175,7 +175,7 @@ router.post("/:lineId", (req, res, next) => {
             },
             function (err, docs, res) {
                 console.log(err);
-                console.log('increase sdk_third_meal successful!');
+                console.log(req.params.lineId + ' sdkIncreasing : increase sdk_extra_meal successful!');
             }
         );
     }
@@ -202,7 +202,7 @@ router.post("/:lineId", (req, res, next) => {
                 },
                 function (err, docs, res) {
                     console.log(err);
-                    console.log('sdk successful!');
+                    console.log(req.params.lineId + ' sdkIncreasing : sdk successful!');
                 }
             );
         }
@@ -227,7 +227,7 @@ router.post("/:lineId", (req, res, next) => {
                 },
                 function (err, docs, res) {
                     console.log(err);
-                    console.log('sdk successful!');
+                    console.log(req.params.lineId + ' sdkIncreasing : sdk successful!');
                 }
             );
         }
@@ -252,7 +252,7 @@ router.post("/:lineId", (req, res, next) => {
                 },
                 function (err, docs, res) {
                     console.log(err);
-                    console.log('sdk successful!');
+                    console.log(req.params.lineId + ' sdkIncreasing : sdk successful!');
                 }
             );
         }
@@ -277,7 +277,7 @@ router.post("/:lineId", (req, res, next) => {
                 },
                 function (err, docs, res) {
                     console.log(err);
-                    console.log('sdk successful!');
+                    console.log(req.params.lineId + ' sdkIncreasing : sdk successful!');
                 }
             );
         }
@@ -303,7 +303,7 @@ router.post("/:lineId", (req, res, next) => {
         ]
         client.pushMessage(lineId, message)
             .then(() => {
-                console.log('push message 3rd done!')
+                console.log(req.params.lineId + ' sdkIncreasing : push message <successful> done!')
             })
             .catch((err) => {
                 console.log(err);   // error when use fake line id 
@@ -349,7 +349,7 @@ router.post("/extra/:lineId", (req, res, next) => {
                     }
                 }
                 else {
-                    console.log('now status is time out')
+                    console.log(req.params.lineId + ' sdkIncreasing extra : now status is time out')
                     res.json({ timer_status: 'timeout' })
                 }
             }
@@ -377,7 +377,7 @@ router.post("/extra/:lineId", (req, res, next) => {
                 },
                 function (err, docs, res) {
                     console.log(err);
-                    console.log('increase sdk_third_meal successful!');
+                    console.log(req.params.lineId + ' sdkIncreasing extra : increase sdk_third_meal successful!');
                 }
             );
         }
@@ -402,7 +402,7 @@ router.post("/extra/:lineId", (req, res, next) => {
                 },
                 function (err, docs, res) {
                     console.log(err);
-                    console.log('increase sdk_third_meal successful!');
+                    console.log(req.params.lineId + ' sdkIncreasing extra : increase sdk_third_meal successful!');
                 }
             );
 
@@ -427,7 +427,7 @@ router.post("/extra/:lineId", (req, res, next) => {
             ]
             client.pushMessage(lineId, message)
                 .then(() => {
-                    console.log('push message 3rd done!')
+                    console.log(req.params.lineId + ' sdkIncreasing extra : push message <success> done!')
                 })
                 .catch((err) => {
                     console.log(err);   // error when use fake line id 

@@ -37,7 +37,7 @@ router.post("/", (req, res, next) => {
             };
             client.pushMessage(req.body.line_id, message)
                 .then(() => {
-                    console.log('push message veify done!')
+                    console.log(req.body.line_id + ' verify : push message veify done!')
                 })
                 .catch((err) => {
                     console.log(err);   // error when use fake line id 

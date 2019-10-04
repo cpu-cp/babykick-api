@@ -43,21 +43,8 @@ router.post("/", (req, res, next) => {
                 var _did = (week.toString() + 'w' + day.toString() + 'd').toString();
                 var timestamp = Date.now(); // for now
 
-
-                // var hr = (7 + d.getHours()) % 24;
-                // var min = d.getMinutes();
-                // var sec = d.getSeconds();
-                // var endHr = (19 + d.getHours()) % 24;
-
-                // if (hr < 10) hr = '0' + hr;                // add string '0' in front of number 
-                // if (min < 10) min = '0' + min;
-                // if (sec < 10) sec = '0' + sec;
-
-                // var date = d.getDay() + '/' + d.getMonth() + '/' + d.getFullYear();
                 var date = new Date(Date.now());
-                // var time = hr.toString() + ':' + min.toString() + ':' + sec.toString();
                 let time = date.toLocaleTimeString('en-TH', { hour12: false });
-                // var end_time = endHr.toString() + ':' + min.toString() + ':' + min.toString();
                 var end_time = 'null'
 
                 Date.prototype.getWeek = function () {
@@ -70,7 +57,7 @@ router.post("/", (req, res, next) => {
                 if (docs.extra == 'ctt') {
                     // remove previous array
                     var _dids = docs.counting[(docs.counting.length) - 1]._did;
-                    console.log('*******', _dids)
+
                     dataCollection.updateOne({ line_id: req.body.line_id, /*'counting._did': _dids */ }, {
                         $set: {
                             extra: "disable",   //change ctt to disable
@@ -82,7 +69,7 @@ router.post("/", (req, res, next) => {
                         }
                     }, function (err, docs) {
                         console.log(err)
-                        console.log('remove array');
+                        console.log(req.body.line_id + ' timeCttRoutes : remove array');
                     });
 
                     currentWeek = week.toString();
@@ -142,7 +129,7 @@ router.post("/", (req, res, next) => {
             }
         }, function (err, docs) {
             console.log(err)
-            console.log('add first day successful!');
+            console.log(req.body.line_id + ' timeCttRoutes : add first day successful!');
             res.json({
                 status: 'success',
                 date: date,
@@ -176,7 +163,7 @@ router.post("/", (req, res, next) => {
             }
         }, function (err, docs) {
             console.log(err)
-            console.log('add new day successful!');
+            console.log(req.body.line_id + ' timeCttRoutes : add new day successful!');
             res.json({
                 status: 'success',
                 date: date,
@@ -199,10 +186,10 @@ router.post("/", (req, res, next) => {
         });
         // res.status(200).json({ success: 'start timer' });
 
-        console.log('timer is running');
+        // console.log('timer is running');
 
 
-        // when 12 hr already
+        // when 6 hr already
         setTimeout(function () {
             dataCollection.findOne({ line_id: req.body.line_id })
                 .exec()
@@ -213,7 +200,7 @@ router.post("/", (req, res, next) => {
 
                     // check if user's count amount is 10, push message to line already
                     if (docs.timer_status == 'timeout' && docs.counting[countingLength - 1].status == 'close') {
-                        console.log('set time out : you have been time out and close an array already')
+                        console.log(req.body.line_id + ' timeCttRoutes : set time out : you have been time out and close an array already')
                     }
                     else if (docs.timer_status == 'running' && docs.counting[countingLength - 1].status == 'open') {
                         / push message to line */
@@ -232,7 +219,7 @@ router.post("/", (req, res, next) => {
                         ]
                         client.pushMessage(req.body.line_id, message)
                             .then(() => {
-                                console.log('push message done!')
+                                console.log(req.body.line_id + ' timeCttRoutes : push 6hr message done!')
                             })
                             .catch((err) => {
                                 console.log(err);   // error when use fake line id 
@@ -256,7 +243,7 @@ router.post("/", (req, res, next) => {
 
                         // check if user's count amount is 10, push message to line already
                         if (docs.timer_status == 'timeout' && docs.counting[countingLength - 1].status == 'close') {
-                            console.log('set time out : you have been time out and close an array already')
+                            console.log(req.body.line_id + ' timeCttRoutes : set time out : you have been time out and close an array already')
                         }
                         else if (docs.timer_status == 'running' && docs.counting[countingLength - 1].status == 'open') {
                             dataCollection.updateOne({ line_id: req.body.line_id, 'counting._did': _did }, {
@@ -294,7 +281,7 @@ router.post("/", (req, res, next) => {
 
                             client.pushMessage(req.body.line_id, message)
                                 .then(() => {
-                                    console.log('push message done!')
+                                    console.log(req.body.line_id + ' timeCttRoutes : push 12hr failed message done!')
                                 })
                                 .catch((err) => {
                                     console.log(err);   // error when use fake line id 
@@ -310,7 +297,7 @@ router.post("/", (req, res, next) => {
 
             }, 21600000);
 
-        }, 21600000);   // 43200000 = 12 hr , 21000 = 20 sec , 63000 = 1 min
+        }, 21600000);   // 43200000 = 12 hr , 21000 = 20 sec , 63000 = 1 min , 21600000 = 6 hr
 
     }
 });

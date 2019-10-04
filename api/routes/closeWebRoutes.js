@@ -68,7 +68,7 @@ router.post("/", (req, res, next) => {
                     ]
                     client.pushMessage(req.body.line_id, message)
                         .then(() => {
-                            console.log('push message verify done!')
+                            console.log(req.body.line_id + ' closeWeb : push message <can countinue counting> done!')
                         })
                         .catch((err) => {
                             console.log(err);   // error when use fake line id 
@@ -142,7 +142,7 @@ router.post("/", (req, res, next) => {
 
                     client.pushMessage(req.body.line_id, message)
                         .then(() => {
-                            console.log('push message verify done!')
+                            console.log(req.body.line_id + ' closeWeb : push message <can countinue counting> done!')
                         })
                         .catch((err) => {
                             console.log(err);   // error when use fake line id 

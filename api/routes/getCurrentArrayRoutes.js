@@ -15,7 +15,7 @@ router.post("/", (req, res, next) => {
   dataCollection.findOne({ line_id: req.body.line_id })
     .exec()
     .then(docs => {
-      console.log(docs.counting[(docs.counting.length) - 1]);
+      // console.log(docs.counting[(docs.counting.length) - 1]);
       res.status(200).json(docs.counting[(docs.counting.length) - 1]);
     })
     .catch(err => {

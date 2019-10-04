@@ -23,6 +23,7 @@ router.post("/", (req, res, next) => {
         .then(docs => {
 
             if (req.body.btn_type == docs.count_type) {
+                console.log(req.body.line_id + ' checkButton : match = true')
                 res.status(200).json({
                     match: true,
                     message: 'you can click ' + req.body.btn_type
@@ -30,12 +31,14 @@ router.post("/", (req, res, next) => {
             }
             else {
                 if (docs.count_type == 'any') {
+                    console.log(req.body.line_id + ' checkButton : match = true')
                     res.status(200).json({
                         match: true,
                         message: 'user can click any button'
                     });
                 }
                 else {
+                    console.log(req.body.line_id + ' checkButton : match = false')
                     res.status(200).json({
                         match: false,
                         message: 'you can not click ' + req.body.btn_type
@@ -65,7 +68,7 @@ router.post("/", (req, res, next) => {
                     ];
                     client.pushMessage(req.body.line_id, message)
                         .then(() => {
-                            console.log('check button : push message <dont match> done!')
+                            console.log(req.body.line_id + ' checkButton : push message <dont match> done!')
                         })
                         .catch((err) => {
                             console.log(err);

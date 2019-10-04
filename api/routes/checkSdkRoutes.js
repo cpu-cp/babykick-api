@@ -25,18 +25,18 @@ router.post("/:lineId", (req, res, next) => {
     var availableTime = false;
     var ctt = false;
 
-    console.log(time)
-    console.log(time.slice(0, 2))
+    // console.log(time)
+    // console.log(time.slice(0, 2))
 
     dataCollection.findOne({ line_id: req.params.lineId })
         .exec()
         .then(docs => {
 
             var countingLength = docs.counting.length;
-            console.log(countingLength)
+            // console.log(countingLength)
 
             if (countingLength > 0) {
-                console.log('have array')
+                // console.log('have array')
 
                 if (docs.timer_status == 'timeout') {
 
@@ -77,7 +77,7 @@ router.post("/:lineId", (req, res, next) => {
             }
             else {
                 checkAvailableTime('close', time, 'timeout');
-                console.log('no array')
+                // console.log('no array')
             }
 
 
@@ -132,7 +132,7 @@ router.post("/:lineId", (req, res, next) => {
             ]
             client.pushMessage(req.params.lineId, message)
                 .then(() => {
-                    console.log('push message unavailable done!')
+                    console.log(req.params.lineId + ' checkSdk : push message unavailable done!')
                 })
                 .catch((err) => {
                     console.log(err);   // error when use fake line id 
@@ -151,7 +151,7 @@ router.post("/:lineId", (req, res, next) => {
             ]
             client.pushMessage(req.params.lineId, message)
                 .then(() => {
-                    console.log('push message go to ctt done!')
+                    console.log(req.params.lineId + ' checkSdk : push message go to ctt done!')
                 })
                 .catch((err) => {
                     console.log(err);   // error when use fake line id 
@@ -284,7 +284,7 @@ router.post("/:lineId", (req, res, next) => {
             }
         }
 
-        console.log('availableTime = ' + availableTime);
+        console.log(req.params.lineId + ' checkSdk : availableTime = ' + availableTime);
     }
 
 });
