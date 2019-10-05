@@ -230,26 +230,35 @@ router.post("/", (req, res, next) => {
                         // var getMonth = date.getMonth() + 1;
                         let sScheduleLunch = '30 11 ' + getDate + ' ' + getMonth + ' *';
 
+                        / cron 11.30 */
                         cron.schedule(sScheduleLunch, () => {
                             // console.log('Runing a job  at Asia/Bangkok timezone');
-
-                            / push message to line */
-                            const client = new line.Client({
-                                channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
-                            });
-                            const message = [
-                                {
-                                    type: 'text',
-                                    text: 'เที่ยงแล้ว อย่าลืมมานับ Sadovsky ต่อนะคะ'
-                                },
-                            ]
-                            client.pushMessage(req.body.line_id, message)
-                                .then(() => {
-                                    console.log(req.body.line_id + ' : timerSadovskyRoutes : push 11.30 message done!')
-                                })
-                                .catch((err) => {
-                                    console.log(req.body.line_id);
-                                    console.log(err);  
+                            dataCollection.findOne({ line_id: req.body.line_id })
+                                .exec()
+                                .then(docs => {
+                                    var countingLength = docs.counting.length;
+                                    if (docs.counting[countingLength - 1].sdk_first_meal >= 3 && docs.counting[countingLength - 1].sdk_first_meal < 10 && docs.count_type == 'sdk') {
+                                        / push message to line */
+                                        const client = new line.Client({
+                                            channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
+                                        });
+                                        const message = [
+                                            {
+                                                type: 'text',
+                                                text: 'เที่ยงแล้ว อย่าลืมมานับ Sadovsky ต่อนะคะ'
+                                            },
+                                        ]
+                                        client.pushMessage(req.body.line_id, message)
+                                            .then(() => {
+                                                console.log(req.body.line_id + ' : timerSadovskyRoutes : push 11.30 message done!')
+                                            })
+                                            .catch((err) => {
+                                                console.log(req.body.line_id);
+                                                console.log(err);
+                                            });
+                                    }
+                                }).catch(err => {
+                                    console.log(err)
                                 });
                         }, {
                                 scheduled: true,
@@ -391,25 +400,34 @@ router.post("/", (req, res, next) => {
                             var getMonth = new Date(Date.now()).getMonth() + 1;
                             let sScheduleDinner = '0 17 ' + getDate + ' ' + getMonth + ' *';
 
+                            / cron 17.00*/
                             cron.schedule(sScheduleDinner, () => {
                                 // console.log('Runing a job  at Asia/Bangkok timezone');
-
-                                / push message to line */
-                                const client = new line.Client({
-                                    channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
-                                });
-                                const message = [
-                                    {
-                                        type: 'text',
-                                        text: 'เย็นแล้ว อย่าลืมมานับ Sadovsky ต่อนะคะ'
-                                    },
-                                ]
-                                client.pushMessage(req.body.line_id, message)
-                                    .then(() => {
-                                        console.log(req.body.line_id + ' : timerSadovskyRoutes : push dinner message done!')
-                                    })
-                                    .catch((err) => {
-                                        console.log(err);   // error when use fake line id 
+                                dataCollection.findOne({ line_id: req.body.line_id })
+                                    .exec()
+                                    .then(docs => {
+                                        var countingLength = docs.counting.length;
+                                        if (docs.counting[countingLength - 1].sdk_second_meal >= 3 && docs.counting[countingLength - 1].sdk_second_meal < 10 && docs.count_type == 'sdk') {
+                                            / push message to line */
+                                            const client = new line.Client({
+                                                channelAccessToken: 'SCtu4U76N1oEXS3Ahq1EX9nBNkrtbKGdn8so1vbUZaBIXfTlxGqMldJ3Ego3GscxKGUB7MlfR3DHtTbg6hrYPGU9reSTBcCSiChuKmDCMx4FTtIPXzivaYUi3I6Yk1u/yF5k85Le0IUFrkBNxaETxFGUYhWQfeY8sLGRXgo3xvw='
+                                            });
+                                            const message = [
+                                                {
+                                                    type: 'text',
+                                                    text: 'เย็นแล้ว อย่าลืมมานับ Sadovsky ต่อนะคะ'
+                                                },
+                                            ]
+                                            client.pushMessage(req.body.line_id, message)
+                                                .then(() => {
+                                                    console.log(req.body.line_id + ' : timerSadovskyRoutes : push dinner message done!')
+                                                })
+                                                .catch((err) => {
+                                                    console.log(err);   // error when use fake line id 
+                                                });
+                                        }
+                                    }).catch(err => {
+                                        console.log(err)
                                     });
                             }, {
                                     scheduled: true,
