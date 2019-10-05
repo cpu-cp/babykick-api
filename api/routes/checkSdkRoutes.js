@@ -57,13 +57,13 @@ router.post("/:lineId", (req, res, next) => {
                 else {
 
                     if (docs.counting[countingLength - 1].status == '1st') {        // continue mornig
-                        checkAvailableTime('close', time, 'running')
+                        checkAvailableTimeRunning('1st', time, 'running')
                     }
                     else if (docs.counting[countingLength - 1].status == '2nd') {   // continue lunch
-                        checkAvailableTime('1st', time, 'running')
+                        checkAvailableTimeRunnning('2nd', time, 'running')
                     }
-                    else if (docs.counting[countingLength - 1].status == '3nd') {   // continue dinner
-                        checkAvailableTime('2nd', time, 'running')
+                    else if (docs.counting[countingLength - 1].status == '3rd') {   // continue dinner
+                        checkAvailableTimeRunning('3rd', time, 'running')
                     }
                     else if (docs.counting[countingLength - 1].status == 'extra') { // continue extra
                         availableTime = true;
@@ -205,7 +205,7 @@ router.post("/:lineId", (req, res, next) => {
 
     }
 
-
+    // close
     function checkAvailableTime(status, time, state) {
 
         if (status == 'close') {    // 4.00-10.00
@@ -284,6 +284,84 @@ router.post("/:lineId", (req, res, next) => {
             }
         }
 
+        console.log(req.params.lineId + ' checkSdk : availableTime = ' + availableTime);
+    }
+
+
+
+    //running
+    function checkAvailableTimeRunning(status, time, state) {
+        if (status == '1st') {    // 4.00-10.00
+            switch (parseInt(time.slice(0, 2))) {
+                case 04:
+                    availableTime = true;
+                    break;
+                case 05:
+                    availableTime = true;
+                    break;
+                case 06:
+                    availableTime = true;
+                    break;
+                case 07:
+                    availableTime = true;
+                    break;
+                case 08:
+                    availableTime = true;
+                    break;
+                case 09:
+                    availableTime = true;
+                    break;
+            }
+
+            // greater than 10.00 go to ctt
+            if (parseInt(time.slice(0, 2)) >= 10 && parseInt(time.slice(0, 2)) < 24 && state == 'timeout') {
+                ctt = true;
+                gotoCtt('close');
+            }
+        }
+        else if (status == '2nd') {   // 11.30-14.00
+            switch (parseInt(time.slice(0, 2))) {
+                case 11:
+                    if (parseInt(time.slice(3, 5)) >= 30 && parseInt(time.slice(3, 5)) <= 59) {
+                        availableTime = true;
+                    }
+                    break;
+                case 12:
+                    availableTime = true;
+                    break;
+                case 13:
+                    availableTime = true;
+                    break;
+            }
+
+            // greater than 14.00 go to ctt
+            if (parseInt(time.slice(0, 2)) >= 14 && parseInt(time.slice(0, 2)) < 24 && state == 'timeout') {
+                ctt = true;
+                gotoCtt('1st');
+            }
+        }
+        else if (status == '3rd') {     // 17.00-21.00
+            switch (parseInt(time.slice(0, 2))) {
+                case 17:
+                    availableTime = true;
+                    break;
+                case 18:
+                    availableTime = true;
+                    break;
+                case 19:
+                    availableTime = true;
+                    break;
+                case 20:
+                    availableTime = true;
+                    break;
+            }
+
+            // greater than 21.00 go to ctt
+            if (parseInt(time.slice(0, 2)) >= 21 && parseInt(time.slice(0, 2)) < 24 && state == 'timeout') {
+                ctt = true;
+                gotoCtt('2nd');
+            }
+        }
         console.log(req.params.lineId + ' checkSdk : availableTime = ' + availableTime);
     }
 
