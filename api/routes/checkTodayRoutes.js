@@ -44,7 +44,7 @@ router.post("/:lineId", (req, res, next) => {
                             add: true
                         });
                     }
-                    else if (docs.counting[(docs.counting.length) - 1].status == '1st' || docs.counting[(docs.counting.length) - 1].status == '2nd' || docs.counting[(docs.counting.length) - 1].status == '3rd' || docs.counting[(docs.counting.length) - 1].status == 'open') {
+                    else if (docs.counting[(docs.counting.length) - 1].status == '1st' || docs.counting[(docs.counting.length) - 1].status == '2nd' || docs.counting[(docs.counting.length) - 1].status == '3rd' || docs.counting[(docs.counting.length) - 1].status == 'open' || docs.counting[(docs.counting.length) - 1].status == 'extra') {
                         console.log(req.params.lineId + ' checkToday : true');
                         res.status(200).json({
                             add: true
