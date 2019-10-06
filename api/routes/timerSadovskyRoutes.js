@@ -562,6 +562,7 @@ router.post("/", (req, res, next) => {
                                                         extra: 'disable',
                                                         count_type: 'any',
                                                         'counting.$.result': 'ลูกดิ้นดี',
+                                                        'counting.$.status': 'close',
                                                     },
                                                 }, function (err, docs) {
                                                     console.log(err)
@@ -577,6 +578,7 @@ router.post("/", (req, res, next) => {
                                                         extra: 'disable',
                                                         count_type: 'any',
                                                         'counting.$.result': 'มีความเสี่ยง',
+                                                        'counting.$.status': 'close',
                                                     },
                                                 }, function (err, docs) {
                                                     console.log(err)
