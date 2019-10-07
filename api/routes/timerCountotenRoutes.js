@@ -21,6 +21,18 @@ const dataCollection = require("../models/dataModel");
 
 router.post("/", (req, res, next) => {
 
+    function ISO8601_week_no(dt) {
+        var tdt = new Date(dt.valueOf());
+        var dayn = (dt.getDay() + 6) % 7;
+        tdt.setDate(tdt.getDate() - dayn + 3);
+        var firstThursday = tdt.valueOf();
+        tdt.setMonth(0, 1);
+        if (tdt.getDay() !== 4) {
+            tdt.setMonth(0, 1 + ((4 - tdt.getDay()) + 7) % 7);
+        }
+        return 1 + Math.ceil((firstThursday - tdt) / 604800000);
+    }
+
     dataCollection.findOne({ line_id: req.body.line_id })
         .exec()
         .then(docs => {
@@ -51,7 +63,8 @@ router.post("/", (req, res, next) => {
                     var dt = new Date(this.getFullYear(), 0, 1);
                     return Math.ceil((((this - dt) / 86400000) + dt.getDay() + 1) / 7);
                 };
-                var week_by_date = date.getWeek();
+                // var week_by_date = date.getWeek();
+                var week_by_date = ISO8601_week_no(date);
 
                 / check if user re-counting. a _did would not change */
                 if (docs.extra == 'ctt') {
