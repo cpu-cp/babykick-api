@@ -259,6 +259,30 @@ router.post("/", (req, res, next) => {
                                                 type: 'text',
                                                 text: 'เที่ยงแล้ว อย่าลืมมานับ Sadovsky ต่อนะคะ'
                                             },
+                                            {
+                                                type: "flex",
+                                                altText: "sadovsky",
+                                                contents: {
+                                                    type: "bubble",
+                                                    body: {
+                                                        type: "box",
+                                                        layout: "vertical",
+                                                        contents: [
+                                                            {
+                                                                type: "button",
+                                                                style: "primary",
+                                                                height: "sm",
+                                                                action: {
+                                                                    type: "uri",
+                                                                    label: "🕹นับลูกดิ้น",
+                                                                    uri: "line://app/1606482498-lJ8JkE6d"
+                                                                },
+                                                                color: "#DDBB8C"
+                                                            }
+                                                        ]
+                                                    }
+                                                }
+                                            }
                                         ]
                                         client.pushMessage(req.body.line_id, message)
                                             .then(() => {
@@ -429,6 +453,30 @@ router.post("/", (req, res, next) => {
                                                     type: 'text',
                                                     text: 'เย็นแล้ว อย่าลืมมานับ Sadovsky ต่อนะคะ'
                                                 },
+                                                {
+                                                    type: "flex",
+                                                    altText: "sadovsky",
+                                                    contents: {
+                                                        type: "bubble",
+                                                        body: {
+                                                            type: "box",
+                                                            layout: "vertical",
+                                                            contents: [
+                                                                {
+                                                                    type: "button",
+                                                                    style: "primary",
+                                                                    height: "sm",
+                                                                    action: {
+                                                                        type: "uri",
+                                                                        label: "🕹นับลูกดิ้น",
+                                                                        uri: "line://app/1606482498-lJ8JkE6d"
+                                                                    },
+                                                                    color: "#DDBB8C"
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                }
                                             ]
                                             client.pushMessage(req.body.line_id, message)
                                                 .then(() => {
