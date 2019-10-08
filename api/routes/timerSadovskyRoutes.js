@@ -277,7 +277,7 @@ router.post("/", (req, res, next) => {
                                                                     label: "🕹นับลูกดิ้น",
                                                                     uri: "line://app/1606482498-lJ8JkE6d"
                                                                 },
-                                                                color: "#DDBB8C"
+                                                                color: "#F78FDE"
                                                             }
                                                         ]
                                                     }
@@ -471,7 +471,7 @@ router.post("/", (req, res, next) => {
                                                                         label: "🕹นับลูกดิ้น",
                                                                         uri: "line://app/1606482498-lJ8JkE6d"
                                                                     },
-                                                                    color: "#DDBB8C"
+                                                                    color: "#F78FDE"
                                                                 }
                                                             ]
                                                         }
@@ -589,6 +589,31 @@ router.post("/", (req, res, next) => {
                                     type: 'text',
                                     text: 'คุณแม่นับต่ออีก 1 ชั่วโมงนะคะ'
                                 },
+                                {
+                                    type: "flex",
+                                    altText: "sadovsky extra",
+                                    contents: {
+                                        type: "bubble",
+                                        body: {
+                                            type: "box",
+                                            layout: "vertical",
+                                            contents: [
+                                                {
+                                                    type: "button",
+                                                    style: "secondary",
+                                                    height: "sm",
+                                                    action: {
+                                                        type: "uri",
+                                                        label: "🚨นับลูกดิ้นต่อทันที",
+                                                        uri: "line://app/1606482498-lJ8JkE6d"
+                                                    },
+                                                    color: "#FFDF35"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                                
                             ]
                             client.pushMessage(req.body.line_id, message)
                                 .then(() => {
@@ -707,6 +732,30 @@ router.post("/", (req, res, next) => {
                     type: 'text',
                     text: '❗ คุณแม่ควรรีบไปโรงพยาบาลโดยเร็วที่สุด เพื่อให้แพทย์ตรวจเช็คสุขภาพของลูกน้อยในครรภ์ หรือโทร 1669 ❗'
                 },
+                {
+                    type: "flex",
+                    altText: "สายด่วน 1669",
+                    contents: {
+                        type: "bubble",
+                        body: {
+                            type: "box",
+                            layout: "vertical",
+                            contents: [
+                                {
+                                    type: "button",
+                                    style: "primary",
+                                    height: "sm",
+                                    action: {
+                                        type: "uri",
+                                        label: "🚑สายด่วน 1669",
+                                        uri: "tel:1669"
+                                    },
+                                    color: "#FF3535"
+                                }
+                            ]
+                        }
+                    }
+                }
                 // {
                 //     type: "sticker",
                 //     packageId: 2,
