@@ -1,19 +1,30 @@
 version: '3'
 services:
-  api-develop:
-    container_name: babykick-api
+  bbk-api:
+    container_name: test-api
     restart: always
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: bbk-api:17  
     ports:
-      - '3000:3000'
-    links:
-      - db
-  db:
+      - '3333:3333'
+    environment:
+      - TZ=Asia/Bangkok
+
+  bbk-db:
     container_name: babykick-db
     image: mongo
     volumes:
       - babykick_db:/data/db
     ports:
       - '27017:27017'
+    networks:
+      - app-network
+
 volumes:
   babykick_db:
+
+networks:
+  app-network:
+    driver: bridge
