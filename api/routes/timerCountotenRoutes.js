@@ -285,11 +285,30 @@ router.post("/", (req, res, next) => {
                                     type: 'text',
                                     text: '❗ คุณแม่ควรรีบไปโรงพยาบาลโดยเร็วที่สุด เพื่อให้แพทย์ตรวจเช็คสุขภาพของลูกน้อยในครรภ์ หรือโทร 1669 ❗'
                                 },
-                                // {
-                                //     type: "sticker",
-                                //     packageId: 3,
-                                //     stickerId: 190
-                                // }
+                                {
+                                    type: "flex",
+                                    altText: "สายด่วน 1669",
+                                    contents: {
+                                        type: "bubble",
+                                        body: {
+                                            type: "box",
+                                            layout: "vertical",
+                                            contents: [
+                                                {
+                                                    type: "button",
+                                                    style: "primary",
+                                                    height: "sm",
+                                                    action: {
+                                                        type: "uri",
+                                                        label: "🚑สายด่วน 1669",
+                                                        uri: "tel:1669"
+                                                    },
+                                                    color: "#FF3535"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
                             ]
 
                             client.pushMessage(req.body.line_id, message)
