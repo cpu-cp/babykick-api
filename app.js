@@ -28,7 +28,7 @@ const pushMessage = require("./api/routes/pushMessageRoutes");
 const checkButton = require("./api/routes/checkButton");
 const timerSadovskyV2Routes = require("./api/routes/timerSadovskyV2Routes");
 const jobAutomaticRoutes = require("./api/routes/jobAutomaticRoutes");
-const resetRoutes = require("./api/routes/resetRoutes");
+const resetAllRoutes = require("./api/routes/resetAllRoutes");
 
 
 // connect to mongoDB
@@ -91,7 +91,7 @@ app.use("/check/sdk", checkSdkRoutes);
 app.use("/push", pushMessage);
 app.use("/check/btn", checkButton);
 app.use("/job/auto", jobAutomaticRoutes);
-app.use("/cron/reset", resetRoutes);
+app.use("/all/reset", resetAllRoutes);
 
 
 app.use((req, res, next) => {
