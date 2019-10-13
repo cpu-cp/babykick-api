@@ -59,7 +59,7 @@ router.post("/", (req, res, next) => {
                         console.log(result);
 
                         pushMessage('register');
-                        resetAutomatic();
+                        // resetAutomatic();
 
                         res.status(201).json({
                             user: result
@@ -230,7 +230,7 @@ router.post("/", (req, res, next) => {
                     console.log('push message ctt_good done!')
                 })
                 .catch((err) => {
-                    console.log(err);  
+                    console.log(err);
                 });
         }
         else if (state == 'ctt_bad') {
@@ -252,7 +252,7 @@ router.post("/", (req, res, next) => {
                     console.log('push message ctt_bad done!')
                 })
                 .catch((err) => {
-                    console.log(err); 
+                    console.log(err);
                 });
         }
     }
