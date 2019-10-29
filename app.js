@@ -42,12 +42,20 @@ const resetAllRoutes = require("./api/routes/resetAllRoutes");
 // );
 
 mongoose.connect(
-  "mongodb://103.74.254.119:27017/babyKickDB",
-  function(err) {
-        if(err) throw err;
-        console.log('Connect to MongoDB atb successful!')
-    }
+  "mongodb://108.160.140.11:27017/babyKickDB",
+  function (err) {
+    if (err) throw err;
+    console.log('Connect to MongoDB atb 108 successful!')
+  }
 );
+
+// mongoose.connect(
+//   "mongodb://103.74.254.119:27017/babyKickDB",
+//   function(err) {
+//         if(err) throw err;
+//         console.log('Connect to MongoDB atb 103 successful!')
+//     }
+// );
 
 app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -75,7 +83,7 @@ app.use("/verify", verifyRoutes);
 app.use("/timer/counttoten", timerCounttotenRoutes);
 app.use("/timer/counttoten/second", timerCttSecondRoutes);
 app.use("/timer/sadovsky", timerSadovskyRoutes);
-app.use("/timer/sadovsky/v2", timerSadovskyV2Routes);     / with fix time /
+app.use("/timer/sadovsky/v2", timerSadovskyV2Routes); / with fix time /
 app.use("/timer/sadovsky/extra", timerSdkExtraRoutes);
 app.use("/timer/status", timerStatus);
 app.use("/ctt/increasing", cttIncreasingRountes);
