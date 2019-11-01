@@ -42,10 +42,10 @@ const resetAllRoutes = require("./api/routes/resetAllRoutes");
 // );
 
 mongoose.connect(
-  "mongodb://108.160.140.11:27017/babyKickDB",
+  "mongodb://45.77.233.169:27017/babyKickDB",
   function (err) {
     if (err) throw err;
-    console.log('Connect to MongoDB atb 108 successful!')
+    console.log('Connect to MongoDB atb 45 successful!')
   }
 );
 
