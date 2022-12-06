@@ -19,9 +19,9 @@
   "homepage": "https://github.com/chompusama/babykick-api#readme",
   "dependencies": {
     "@line/bot-sdk": "^6.8.2",
-    "body-parser": "^1.19.0",
+    "body-parser": "^1.20.1",
     "console-stamp": "^3.0.0-rc2.0",
-    "express": "^4.17.1",
+    "express": "^4.18.2",
     "fs": "0.0.1-security",
     "fs-extra": "^8.1.0",
     "handlebars": "^4.4.2",
